@@ -1,23 +1,24 @@
 # eDNA/Metabarcoding Workshop LAB 2025
 In this workshop we will learn how to analyze illumina reads from eDNA or other mixed DNA sources
 
-1. [Computer and RStudio Preparation](#1---computer-and-rstudio-preparation) </br>
-  1.1. [Install and Update Computer Programs](#install-and-update-computer-programs) </br>
-  1.2. [Get Raw Reads](#get-raw-reads) </br>
-  1.3. [RStudio Preparation](#rstudio-preparation) </br>
-2. [Cutadapt](#2---cutadapt) </br>
-3. [DADA2](#3---dada2) </br>
-4. [Visualize Results](#4---visualize-results) </br>
-5. [Assign Taxonomy](#5---assign-taxonomy) </br>
-6. [Reformat and Export Files](#6---reformat-and-export-files) </br>
-7. [Import and Combine Files](#7---import-and-combine-files) </br>
-8. [Phyloseq](#8---phyloseq) </br>
+* [Computer Preparation](computer-preparation) </br>
+    * [Install and Update R and RStudio](install-and-update-r-and-rstudio) </br>
+    * [Create Directories](#create-directories) </br>
+    * [Get Raw Reads](#get-raw-reads) </br>
+* [RStudio]("rstudio) </br>
+    * [Install Cutadapt and Blast](#install-cutadapt-and-blast) </br>
+    * [RStudio Preparation](#rstudio-preparation) </br>
+    * [Cutadapt](#2---cutadapt) </br>
+    * [DADA2](#3---dada2) </br>
+    * [Visualize Results](#4---visualize-results) </br>
+    * [Assign Taxonomy](#5---assign-taxonomy) </br>
+    * [Phyloseq](#8---phyloseq) </br>
 
 This protocol is for paired-end demultiplexed miseq sequences that have sufficient overlap to merge R1 and R2, and are going to be run on your computer, not on Hydra. It is broken up into sections, each section an `.R` document that can be opened in RStudio or (VSCode with the [R extension](https://code.visualstudio.com/docs/languages/r)). Once in RStudio, each command can be run using the `Run` button, or with `control + return`. The directions for each section are in that section file. You can download this entire pipeline, including the RStudio files using this link: [Metabarcoding Workshop 2025 - RStudio Documents](https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/archive/refs/heads/main.zip). Download this .zip file and save it in the working directory of run.
 
 However, before running RStudio, you must make sure the necessary programs are installed, and the illumina demultiplexed sequences have been downloaded.
 
-## 1 - Computer and Preparation
+## Computer Preparation
 ### Install and Update R and RStudio
 If you do not have R and/or RStudio installed on your computer, go to [Installing R and RStudio](https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/blob/main/r-install.md) to install either or both.
 
@@ -43,16 +44,21 @@ Raw reads are available for download from the github repository. Download the da
 Move your compressed raw reads into PROJECTNAME/data/raw. We will decompress later through R.  
 The rest of this pipeline will be run in RStudio.
 
-### RStudio Preparation
-The first thing to do after opening RStudio is create a new project. When you do this it will ask if you want to create it from an "Existing Directory"; choose yes and find the project directory that you made earlier. Once you have created this project, it will automatically make this directory the current working directory, and you won't need to set your working directory later.
+## RStudio
 
+Open RStudio and create a new project. When you do this it will ask if you want to create it from an "Existing Directory" or a new directory. Choose existing and browse to the project directory that you made earlier. Once you have created this project, it will automatically make this directory the current working directory, and you won't need to set your working directory later.
+
+## Install Cutadapt and Blast
+Go to [Install Cutadapt and Blast](https://xxxxxx). Copy this text into the Source Editor (typically the top left panel). We will run the remainder of this section through RStudio. You can run commands in the source editor using the "Run" button or `control + return`
+
+### RStudio Preparation
 Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. 
 
-Open RStudio, and open `1_Metabarcoding_R_Pipeline_RstudioPrep.R` in the Source Editor (typically the top left pane). You can run all commands in the source editor using the `Run` button or `control + return`.
+Open RStudio, and open `Metabarcoding_RstudioPrep.R` in the Source Editor 
 
 [1.3 - Metabarcoding RStudioPrep.R](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/1_3_Metabarcoding_R_Pipeline_RStudioPrep.R)
 
-## 2 - Cutadapt
+## 3 - Cutadapt
 We use Cutadapt to remove primer sequences from our raw reads. This section ends with primer-trimmed sequences. There are two versions of Cutadapt in this pipeline. The first version (2a) is for Illumina runs with only a single gene-product. Use the second (2b) if you have more than one gene product in your run. In this case, cutadapt will trim primers, but also sort reads depending upon which gene-specific primers it removed (e.g. it will move reads from which it removed 18S primers into an 18S folder, and reads from which it removed COI primers into a COI folder).
 
 [2 - Cutadapt-trim](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/2a%20Metabarcoding_Cutadapt_trim.R) </br>
