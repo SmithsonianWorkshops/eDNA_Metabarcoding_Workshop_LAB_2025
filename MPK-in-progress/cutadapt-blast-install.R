@@ -19,7 +19,7 @@ pixi_archive <- switch (os,
 
 # Download and extract the pixi executable
 pixi_url <- paste0("https://github.com/prefix-dev/pixi/releases/latest/download/", pixi_archive)
-download.file( pixi_url, pixi_archive)
+download.file(pixi_url, pixi_archive)
 
 # Decompress the tar.bz2 file and then remove it
 untar(pixi_archive)
