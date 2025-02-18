@@ -17,41 +17,34 @@ This protocol is for paired-end demultiplexed miseq sequences that have sufficie
 
 However, before running RStudio, you must make sure the necessary programs are installed, and the illumina demultiplexed sequences have been downloaded.
 
-## 1 - Computer and RStudio Preparation
-### Install and Update Computer Programs
+## 1 - Computer and Preparation
+### Install and Update R and RStudio
 If you do not have R and/or RStudio installed on your computer, go to [Installing R and RStudio](https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/blob/main/r-install.md) to install either or both.
 
-#### Install cutadapt
-First, open the terminal app.
+### Create Directories
+You first need to create a project directory to run these analyses and within this directory a data/raw directory to hold your raw Illumina reads. You can do this either through the terminal or using Finder (MAC)/File Explorer (windows).
 
-Install cutadapt. I typically check the anoconda webpage for cutadapt https://anaconda.org/bioconda/cutadapt and specify the version listed. The most up-to-date version is not always installed if not specified. v4.4 is an example, replace with the current version.
+Through a terminal on a Mac, use
 ```
-conda create -n cutadapt cutadapt=4.4
+mkdir -p PROJECTNAME/data/raw
 ```
-You may get an error telling you that cutadapt 4.4 does not exist or cannot be found. This typically happens when installing on a Mac with M1/M2 architecture. In this case, you have to use an altered version of this code.
+
+Through a terminal on a Windows machine use
 ```
-CONDA_SUBDIR=osx-64 conda create -n cutadapt cutadapt=4.4
+md PROJECTNAME/data/raw
 ```
-Installation usually only has to be done once for your computer. Periodically you may want to update these programs.
-
-### Install Blast
-Download the [lastest version of blast+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/). For Windows users, download [win64.exe](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.16.0+-win64.exe). 
-
-
-
 ### Get Raw Reads
-Get raw reads. If you download them directly using BaseSpace Downloader, it creates a directory that will be your working directory for this pipeline.  Place this directory where you want to run the pipeline.  If you get reads already downloaded in a folder, then either place that folder wherever you want to run this pipeline, and use it as the working directory, or make a new run-specific directory to place these sequences. Below is an example for making a run-specific directory to place your sequences. I perform all my metabarcoding analyses directly in the BaseSpace-downloaded directory within a parent directory called "/Projects_Metabarcoding".
+Raw reads are available for download from the github repository. Download the dataset you have been assigned from the following list:  
+[Dataset1a](https://xxxxxx)  
+[Dataset 1b](https://xxxxxx)  
+[Dataset 2a](https://xxxxxx)  
+[Dataset 2b](https://xxxxxx)  
 
-DO NOT USE THIS COMMAND AS-IS, USE YOUR OWN PATH, INCLUDING YOUR USERNAME AND WHATEVER PROJECT NAME YOU WANT TO USE!
-```
-mkdir -p /Users/USERNAME/Dropbox\ \(Smithsonian\)/Projects_Metabarcoding/PROJECTNAME
-```
-Download the folder containing your raw reads into this project directory using basespace.
-
-The rest of this pipeline is run through RStudio.
+Move your compressed raw reads into PROJECTNAME/data/raw. We will decompress later through R.  
+The rest of this pipeline will be run in RStudio.
 
 ### RStudio Preparation
-The first thing to do after opening RStudio is create a new project, select to create it from an "Existing Directory", and chose the directory that you will be using as your working directory. Once you have created this project, it will make this directory the current working directory, and you won't need to set your working directory later.
+The first thing to do after opening RStudio is create a new project. When you do this it will ask if you want to create it from an "Existing Directory"; choose yes and find the project directory that you made earlier. Once you have created this project, it will automatically make this directory the current working directory, and you won't need to set your working directory later.
 
 Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. 
 
