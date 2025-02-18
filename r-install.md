@@ -27,7 +27,7 @@ Even if you already have R installed, follow these steps to make sure the latest
 * Select the `.pkg` file for the latest R version.
   * For newer M-series Macs, choose the `arm64.pkg` option.
   * For older, Intel Macs, choose the `x86_64.pkg` option.
-  * Not sure? Choose the `x86_64.pkg` option, the Intel version will work on newer Macs, but somewhay less optimally.
+  * Not sure? Choose the `x86_64.pkg` option, the Intel version will work on newer Macs, but slightly less optimally.
 * Double click on the downloaded file to install R
 * Go to the [RStudio download page](https://www.rstudio.com/products/rstudio/download/#download)
 * The website should autodetect your OS and give you a link to "Download RStudio for macOS 13+"
