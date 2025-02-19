@@ -8,13 +8,13 @@ In this workshop we will learn how to analyze illumina reads from eDNA or other 
 * [RStudio]("rstudio) </br>
     * [Install Cutadapt and Blast](#install-cutadapt-and-blast) </br>
     * [RStudio Preparation](#rstudio-preparation) </br>
-    * [Cutadapt](#2---cutadapt) </br>
-    * [DADA2](#3---dada2) </br>
-    * [Visualize Results](#4---visualize-results) </br>
-    * [Assign Taxonomy](#5---assign-taxonomy) </br>
-    * [Phyloseq](#8---phyloseq) </br>
+    * [Cutadapt](cutadapt) </br>
+    * [DADA2](dada2) </br>
+    * [Visualize Results](visualize-results) </br>
+    * [Assign Taxonomy](assign-taxonomy) </br>
+    * [phyloseq](phyloseq) </br>
 
-This protocol is for paired-end demultiplexed miseq sequences that have sufficient overlap to merge R1 and R2, and are going to be run on your computer, not on Hydra. It is broken up into sections, each section an `.R` document that can be opened in RStudio or (VSCode with the [R extension](https://code.visualstudio.com/docs/languages/r)). Once in RStudio, each command can be run using the `Run` button, or with `control + return`. The directions for each section are in that section file. You can download this entire pipeline, including the RStudio files using this link: [Metabarcoding Workshop 2025 - RStudio Documents](https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/archive/refs/heads/main.zip). Download this .zip file and save it in the working directory of run.
+This protocol is for paired-end demultiplexed miseq sequences that have sufficient overlap to merge R1 and R2, and are going to be run on your computer, not on Hydra. It is broken up into sections, each section an `.R` document that can be opened in RStudio or (VSCode with the [R extension](https://code.visualstudio.com/docs/languages/r)).
 
 However, before running RStudio, you must make sure the necessary programs are installed, and the illumina demultiplexed sequences have been downloaded.
 
@@ -52,54 +52,30 @@ Open RStudio and create a new project. When you do this it will ask if you want 
 Go to [Install Cutadapt and Blast](https://xxxxxx). Copy this text into the Source Editor (typically the top left panel). We will run the remainder of this section through RStudio. You can run commands in the source editor using the "Run" button or `control + return`
 
 ### RStudio Preparation
-Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. 
+Download this entire pipeline, including the RStudio files using this link: [Metabarcoding Workshop 2025 - RStudio Documents](https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/archive/refs/heads/main.zip). Download this .zip file and move/save it in the working directory of your project.
 
-Open RStudio, and open `Metabarcoding_RstudioPrep.R` in the Source Editor 
-
-[1.3 - Metabarcoding RStudioPrep.R](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/1_3_Metabarcoding_R_Pipeline_RStudioPrep.R)
-
-## 3 - Cutadapt
-We use Cutadapt to remove primer sequences from our raw reads. This section ends with primer-trimmed sequences. There are two versions of Cutadapt in this pipeline. The first version (2a) is for Illumina runs with only a single gene-product. Use the second (2b) if you have more than one gene product in your run. In this case, cutadapt will trim primers, but also sort reads depending upon which gene-specific primers it removed (e.g. it will move reads from which it removed 18S primers into an 18S folder, and reads from which it removed COI primers into a COI folder).
-
-[2 - Cutadapt-trim](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/2a%20Metabarcoding_Cutadapt_trim.R) </br>
+Copy this next script into the Source Editor of RStudio and run it. This will unzip the pipeline, organize files and directories, and remove the zipped file. We run all the scripts for this pipeline from this download so we have a record of your analysis, including any changes made and any comments that may be needed along the way.
+```
+pipeline <- "eDNA_Metabarcoding_Workshop_LAB_2025.zip"
+untar(pipeline)
+file.remove(pipeline)
+```
 
 
-## 3 - DADA2
-Here we use DADA2 to quality-filter and quality-trim reads, estimate error rates and denoise reads, merge paired reads, and remove chimeric sequences. This section ends with a sequence-table, which is a table containing columns of `ASV's` (Amplicon Sequence Variants), rows of `samples`, and cell values equal `# of reads`. There are two versions for this section of the pipeline too. Section 3a is for Illumina runs with a single target gene, where you used Cutadapt 2a. If you used Cutadapt 2b, and had multiple genes in your run, use DADA2 3b.
+Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. Open [RStudioPrep.R](https://xxxxxx) by on the Files tab in the lower right panel, naviagating to the list of files, and selecting the appropriate file. This will open the chosen file in the Source Editor.
 
-[3 - DADA2](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/3a%20Metabarcoding_Dada2.R) </br>
+## Cutadapt
+We use Cutadapt to remove primer sequences from our raw reads. This section ends with primer-trimmed sequences. Open [Cutadapt_trim.R](https://xxxxxx) and follow the directions.
 
-## 4 - Visualize Results
-Here we use several programs to visualize your results. We are going  to assign taxonomic identities to ASV's. This section requires a reference library. LAB has libraries available for both COI and 12S, but you may want to use your own. How to do so is described in the section description.
+## DADA2
+Here we use DADA2 to quality-filter and quality-trim reads, estimate error rates and denoise reads, merge paired reads, and remove chimeric sequences. This section ends with a sequence-table, which is a table containing columns of ASV's (Amplicon Sequence Variants), rows of samples, and cell values equal "# of reads", a feature-table (rows of ASVs and columns of samples - same as the output of Qiime2) a fasta file containing all ASVs, and a file associating ASVs with their unique md5 hash. Open [Data2.R](https://xxxxxx) and follow the directions.
 
-[4 - Visualize Results](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/6%20Metabarcoding_R_Pipeline_RStudio_TaxAssignment.R)
+## Assign Taxonomy
+Here we use DADA2s RDP identifier and blast to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get and create your own reference database. Open [TaxAssignment.R](https://xxxxxx) and follow the directions.
 
-## 5 - Assign Taxonomy
-Here we use DADA2s RDP identifier and also blast to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get your own reference database.
+## Visualize Results
+Here we use several programs to visualize your results. We are going  to assign taxonomic identities to ASV's. This section requires a reference library. LAB has libraries available for both COI and 12S, but you may want to use your own. How to do so is described in the section description. Open [VisualizeResults](https://xxxxxx) and follow the directions.
 
-[5 - Assign Taxonomy](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/6%20Metabarcoding_R_Pipeline_RStudio_TaxAssignment.R)
-
-
-## 4 - Reformat and Export Files
-Here we create and export variants of the sequence-table created in section 3. Many of these are not necessary for your analysis, but may be useful in some cases, as described in the section descriptions. 
-
-One variant is a Sequence-List table (a tidy table containing columns of `sample name`, `ASV`, and   `# of reads`. There is a separate row for each `sample name`/`ASV` combination.) This table is useful if you have sequences for multiple runs, because they can be directly concatenated in a text file and condensed back into a sequence-table for downstream analysis.
-
-A second variant is a feature-table. This table contains columns of `sample names` with rows of `ASV's`, and cell values equal to `# of reads`. This is essentially a transposed sequence-table. It is also the output of the metabarcoding program Qiime2, and is included in case you have other analyses in this program that you may want to combine or compare. One aspect of the Qiime2 feature-table is that ASV's are not shown as entire sequences, but as a md5 hash (see section description for for information about md5 encryption), and this section will also add md5 hash information for each ASV. Even if a feature-table is not needed, it is often good to have md5 hash's available for downstreama analyses.
-
-Finally, you can also create and export your data in a format we refer to as "feature-to-fasta". This creates a fasta file containing all the ASV's/sample combinations found (i.e. each well of the sequence-table or feature-table will have a sequence in the fasta). Each sequence will be labeled with the `sample name`, `ASV hash`, and `# of reads` for that `sample name`/`ASV` combination. This format is useful for making trees (espicially in low-diversity studies, or when sequencing single-organism samples) to look at distribution of ASV's across samples, and to visualize possible "pseudogenes".
-
-[4 - Format and Export Files](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/4%20Metabarcoding_R_Pipeline_RStudio_FormatandExportFiles.R)
-
-## 5 - Import and Combine Files
-Here we import and combine trimming/denoising results from multiple runs into a single project table for downstream analyses.  The specific procedure used depends upon the format of the information being imported and combined. This section is only needed for importing denoised data for analysis, or if combining data from multiple Illumina runs.
-
-[5 - Import and Combine Files](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/5%20Metabarcoding_R_Pipeline_RStudio_ImportCombine.R)
-
-
-
-## 7 - Phyloseq
-Phyloseq is a R library that allows for manipulation, visualization, and analysis of metabarcoding data. This section describes how to set up and load your denoised results from DADA2 into Phyloseq, how to perform some preliminary analyses, ana how to visualize a few basic results.
-
-[7 - Phyloseq](https://github.com/trippster08/Metabarcoding-in-RStudio-LAB/blob/main/RStudio%20Files/7%20Metabarcoding_R_Pipeline_RStudio_Phyloseq.R)
+## phyloseq
+Phyloseq is a R library that allows for manipulation, visualization, and analysis of metabarcoding data. This section describes how to set up and load your denoised results from DADA2 into phyloseq, how to perform some preliminary analyses, ana how to visualize a few basic results. Open [phyloseq](https://xxxxxx) and follow the directions.
 
