@@ -11,6 +11,7 @@
 
 library(phyloseq)
 library(ape)
+library(msa)
 library(DECIPHER)
 
 ## Prepare Components to be Imported Into Phyloseq =============================
@@ -122,7 +123,7 @@ sequences.dna <- DNAStringSet(sequences)
 # "better" alignment, but increasing these will take more computing time.
 
 # Make an alignment from your DNA data.
-alignment.dna <- AlignSeqs(
+alignment.decipher <- AlignSeqs(
   sequences.dna,
   guideTree = NULL,
   anchor = NA,
@@ -136,16 +137,33 @@ alignment.dna <- AlignSeqs(
 )
 # Look at a brief "summary" of the alignment. This shows the alignment length,
 # the first 5 and last 5 ASVs and the first 50 and last 50 bps of the alignment.
-alignment.dna
+alignment.decipher
 
 # You can also look at the entire alignment in your browser.
-BrowseSeqs(alignment.dna)
+BrowseSeqs(alignment.decipher)
 
 # Create a reference sequence (refseq) object from the alignment. This contains
 # the ASV sequences, using the md5 hashes as names.
-REFSEQ.md5 <- DNAStringSet(alignment.dna, use.names = TRUE)
+REFSEQ.md5 <- DNAStringSet(alignment.decipher, use.names = TRUE)
 # Look at the refseq object, just to make sure it worked
 head(REFSEQ.md5)
+
+# Align using msa. msa aligns DNA or AA sequences using three possible alignment
+# algorithms (ClustalW, ClustalOega, and MUSCLE). The input format can be a
+# DNAStringSet or direct reading of a fasta file.
+
+alignment.msa <- msa(
+  sequences.dna,
+  method = "ClustalW",
+  gapOpening = 15,
+  gapExtension = 0.2,
+  substitutionMatrix = "clustalw",
+  maxiters = 16,
+  type = "dna",
+  order = "input",
+  verbose = TRUE,
+)
+
 
 ### phy_tree -------------------------------------------------------------------
 # We can create a phylogenetic (or at least, a phenetic) tree using the
