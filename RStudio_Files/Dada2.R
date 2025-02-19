@@ -1,4 +1,4 @@
-# 4 DADA2 ######################################################################
+# DADA2 ########################################################################
 # We use Dada2 to filter and trim reads, estimate error rates and use these
 # estimates to denoise reads, merge paired reads, and remove chimeric sequences
 
