@@ -10,7 +10,8 @@ library(tidyverse)
 library(seqinr)
 
 ## Assign Taxonomy With DADA2 ==================================================
-# Assign taxonomy. tryRC determines whether to also include the reverse
+# Assign taxonomy using the RDP naive Bayesian classifier. tryRC determines
+# whether to also include the reverse
 # complement of each sequence. outputBootstraps results in a second table with
 # bootstrap support values for each taxonomic assignment. minBoot gives the
 # minimum bootstrap required to assign taxonomy. Use whatever table you obtained
@@ -110,3 +111,6 @@ write.table(
   sep="\t",
   row.names = FALSE
 )
+
+## Assign Taxonomy With BLAST+ ==================================================
+
