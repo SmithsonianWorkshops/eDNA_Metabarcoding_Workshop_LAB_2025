@@ -10,8 +10,10 @@ if (!requireNamespace("BiocManager", quietly = TRUE)){
 # Install Dada2. You may get an error telling you to install a different version
 # of Dada2. Change "3.17" to whatever version RStudio tells you.
 BiocManager::install("dada2", version = "3.19")
-# Install Phyloseq
+# Install phyloseq
 BiocManager::install("phyloseq")
+# Install msa
+BiocManager::install("msa")
 # Install DECIPHER
 BiocManager::install("DECIPHER")
 
