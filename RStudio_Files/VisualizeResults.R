@@ -177,90 +177,122 @@ read.count.asv.count.meta <-  left_join(
   by = join_by(Sample_ID)
 )
 
-read.count.asv.count.meta.plot <- ggplot(read.count.asv.count.meta, aes(x = reads, y = ASVs, fill = depth_ft, color = depth_ft)) +
-  geom_point() +
+read.count.asv.count.meta.plot <- ggplot(read.count.asv.count.meta, aes(x = reads, y = ASVs)) +
+  geom_point(size = 4, aes(fill = depth_ft, color = depth_ft, shape = fraction)) +
   scale_x_continuous(labels = scales::comma)
-read.count.asv.count.plot
-# Next we want to look at some rarefaction curves. vegan can give you a 
-# rarefaction curve on it's own, but your ability to  
-# We want to import our
+read.count.asv.count.meta.plot
 
+# Next we want to look at some rarefaction curves. vegan can give you a
+# rarefaction curve on it's own, but your ability to modify it is limited
+rarecurve(seqtab.nochim.md5, step = 1000)
 
-
-
-
-
-raremin <- min(rowSums(seqtab.nochim.md5))
-sRare <- rarefy(seqtab.nochim.md5, raremin)
-View(sRare)
-
-dim(seqtab.nochim.md5)
-# I want to look at read distributions among the samples
-reads.rows <- rowSums(seqtab.nochim.md5)
-View(reads.rows)
-reads <- data.frame(rowSums(seqtab.nochim.md5)) %>%
-  cbind(rownames(.), data.frame(., row.names=NULL)) %>%
-reads.rows.df <- enframe(rowSums(seqtab.nochim.md5))
-
-col <- c("Sample_ID","reads")
-colnames(reads.rows.df) <- col
-
-View(reads.rows.df)
-
-drop.meta <- read.delim(
-  "DROP_ARMS_metadata_2015_2019.tsv",
-  header = TRUE,
-  sep = "\t",
-  colClasses = c(depth_ft = "character")
-)
-
-reads.rows.meta <- left_join(
-  reads.rows.df,
-  drop.meta,
-  by = join_by(Sample_ID)
-)
-
-ggplot(reads.rows.df,
-       aes(x = rownames(reads.rows.df), y = reads)) +
-  geom_bar(stat = "identity") +
-  scale_y_continuous(labels = scales::comma) +
-  scale_x_discrete(labels = reads.rows.df$Sample_ID, guide = guide_axis(angle=90))
-
-reads.minimum <- min(rowSums(seqtab.nochim.md5))
-
-
-
-
-
+# Instead we use the arguement "tidy = TRUE", and rarecurve gives you the
+# rarefied curvews in tabular form, so you can make your own figure.
 rarecurve.df <- rarecurve(
   seqtab.nochim.md5,
-  samples = reads.minimum,
   step = 500,
   tidy = TRUE
-)
+) %>%
+  rename(
+    Sample_ID = Site,
+    ASVs = Species,
+    reads = Sample
+  )
 head(rarecurve.df)
 
+# Lets add the metadata to this, so we can look at treatment affects
 rarecurve.df.meta <- left_join(
   rarecurve.df,
-  drop.meta,
-  join_by(Site == Sample_ID)
+  meta,
+  join_by(Sample_ID)
 )
 head(rarecurve.df.meta)
 
-unique(rarecurve.df.meta$Site)
+# You can look at the different variables and see how many different values
+# there are
+unique(rarecurve.df.meta$Sample_ID)
 unique(rarecurve.df.meta$fraction)
 unique(rarecurve.df.meta$depth_ft)
 unique(rarecurve.df.meta$retrieval_year)
 
+# Make a line plot of this data, grouping by Sample_ID so each sample will form
+# a separate line.
 rarecurve.df.meta.plot <- ggplot(rarecurve.df.meta) +
   geom_line(
     aes(
-      x = Sample,
-      y = Species,
+      x = reads,
+      y = ASVs,
       color = fraction,
-      linetype = depth_ft
+      linetype = depth_ft,
+      group = Sample_ID
     ),
     linewidth = 0.75
   ) +
-  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash"))
+  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash")) 
+rarecurve.df.meta.plot 
+
+# Add an upper limit to the x-axis (reads) to see the expected number of ASVs
+# found in each sample with read depth equal to the sample with the least
+# number of reads (which should equal the values found in asv.count.rarefied).
+rarecurve.df.meta.plot <- ggplot(rarecurve.df.meta) +
+  geom_line(
+    aes(
+      x = reads,
+      y = ASVs,
+      color = fraction,
+      linetype = depth_ft,
+      group = Sample_ID
+    ),
+    linewidth = 0.75
+  ) +
+  scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash")) +
+  scale_x_continuous(limits = c(0, raremin))
 rarecurve.df.meta.plot
+
+
+# Now lets move to some ways to look at how similar your samples are usingj
+# ordination techniques.
+# We are going to use NMDS (Non-Metric Multidimensional Scaling).
+# First we need to run a NMDS analysis on our sequence-table.
+nmds <- metaMDS(seqtab.nochim.md5, k = 2, distance = "bray")
+# Look at your stress value, it is important in telling you the "goodness of
+# fit" of your ordination. You want this value below 0.2.
+
+# You can use vegan to plot this, but like the rarefaction plot, it is limited
+# in what you can do, so I convert this to nmds scores that are plotable. A lot
+# of the plots in this section was greatly helped by these websites:
+# https://jkzorz.github.io/ and 
+# https://eddatascienceees.github.io/tutorial-rayrr13/
+nmds.scores <- as_tibble(scores(nmds)$sites, rownames = "Sample_ID")
+# Add your metadata to this new table
+nmds.scores.meta <- left_join(
+  nmds.scores,
+  meta,
+  join_by(Sample_ID)
+)
+head(nmds.scores.meta)
+
+# Plot this table, differentiating two of your variables of interest by color
+# and symbol shape.
+nmds.scores.meta.plot <- ggplot(nmds.scores.meta, aes(x = NMDS1, y = NMDS2)) +
+  geom_point(size = 4, aes(fill = depth_ft, color = depth_ft, shape = fraction))
+nmds.scores.meta.plot
+# I want 
+# define hidden vegan function that finds coordinates for drawing a covariance ellipse
+veganCovEllipse<-function (cov, center = c(0, 0), scale = 1, npoints = 100)
+{
+  theta <- (0:npoints) * 2 * pi/npoints
+  Circle <- cbind(cos(theta), sin(theta))
+  t(center + scale * t(Circle %*% chol(cov)))
+}
+
+
+# We can do some very basic statistics to see if these factors are significantly
+# different.
+# Well use a ANOSIM (Analysis of Similarities) test for two different variables.
+# First, looking at depth
+anosim.depth <- anosim(x = seqtab.nochim.md5, grouping = reads.meta$depth_ft, permutations = 9999, distance = "bray")
+anosim.depth
+# Then, looking at fraction
+anosim.fraction <- anosim(x = seqtab.nochim.md5, grouping = reads.meta$fraction, permutations = 9999, distance = "bray")
+anosim.fraction
