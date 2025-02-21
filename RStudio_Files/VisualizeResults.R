@@ -1,25 +1,25 @@
 library(vegan)
 
 # First, lets look at read counts for each sample
-reads <- rowSums(seqtab.nochim.md5)
-View(reads)
+read.count <- rowSums(seqtab.nochim.md5)
+View(read.count)
 
 # Create a dataframe of the number of reads for each sample
-reads <- enframe(rowSums(seqtab.nochim.md5))
-View(reads)
+read.count <- enframe(rowSums(seqtab.nochim.md5))
+View(read.count)
 
-reads <- enframe(rowSums(seqtab.nochim.md5)) %>%
+read.count <- enframe(rowSums(seqtab.nochim.md5)) %>%
   rename(
-    sample = name,
+    Sample_ID = name,
     reads = value
   )
-View(reads)
+View(read.count)
 # We can plot this out in a bar plot
-ggplot(reads,
-       aes(x = Sample_ID, y = reads)) +
+read.count.plot <- ggplot(read.count, aes(x = Sample_ID, y = reads)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
-  scale_x_discrete(labels = reads$Sample_ID, guide = guide_axis(angle = 90))
+  scale_x_discrete(labels = read.count$Sample_ID, guide = guide_axis(angle = 90))
+read.count.plot
 
 # We can also look at the number of ASVs for each sample, first by creating a
 # dataframe of the number of ASVs for each sample
@@ -33,27 +33,25 @@ asv.count <- enframe(apply(
     ASVs = value
   )
 # and plotting this out in a bar plot
-asv.plot <- ggplot(asv.count,
-                       aes(x = Sample_ID, y = ASVs)) +
+asv.count.plot <- ggplot(asv.count, aes(x = Sample_ID, y = ASVs)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = asv.count$Sample_ID, guide = guide_axis(angle = 90))
-asv.plot
+asv.count.plot
 
 # We can also plot number of reads for each sample versus number of ASVs for
 # each sample.
 # First, we need to join our asv count table with our read count table
-reads.asv_count <-  left_join(
-  reads,
+read.count.asv.count <-  left_join(
+  read.count,
   asv.count,
   by = join_by(Sample_ID)
 )
 # Then we can plot these two variables
-reads.asv_count.plot <- ggplot(reads.asv_count,
-                               aes(x = reads, y = ASVs)) +
+read.count.asv.count.plot <- ggplot(reads.asv.count, aes(x = reads, y = ASVs)) +
   geom_point() +
   scale_x_continuous(labels = scales::comma)
-reads.asv_count.plot
+read.count.asv.count.plot
 
 
 # We can also rarefy the data to get the expected number of ASVs for each
@@ -67,8 +65,7 @@ asv.count.rarefied <- enframe(rarefy(seqtab.nochim.md5, raremin)) %>%
     Sample_ID = name,
     expected_ASVs = value
   )
-asv.rarefied.plot <- ggplot(asv.count.rarefied,
-                   aes(x = Sample_ID, y = expected_ASVs)) +
+asv.rarefied.plot <- ggplot(asv.count.rarefied, aes(x = Sample_ID, y = expected_ASVs)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = asv.count.rarefied$Sample_ID, guide = guide_axis(angle=90))
@@ -92,26 +89,104 @@ shannon.sample <- enframe(shannon) %>%
     shannon = value
   )
 # And plot them  
-shannon.plot <- ggplot(shannon.sample,
-                     aes(x = Sample_ID, y = shannon)) +
+shannon.plot <- ggplot(shannon.sample, aes(x = Sample_ID, y = shannon)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = shannon.sample$Sample_ID, guide = guide_axis(angle=90))
 shannon.plot
-reads.plot
+
 # We can do the same for the Simpson index
 simpson.sample <- enframe(simpson) %>%
   rename(
     Sample_ID = name,
     simpson = value
   )
-simpson.plot <- ggplot(simpson.sample,
-                       aes(x = Sample_ID, y = simpson)) +
+simpson.plot <- ggplot(simpson.sample, aes(x = Sample_ID, y = simpson)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = simpson.sample$Sample_ID, guide = guide_axis(angle=90))
 simpson.plot
-reads.plot
+
+
+# We can also look at some basic variables for all these graphs. Say we want to
+# look at depth in ASV counts.
+# We need metadata, so we have to import your metadata.
+meta <- read.delim(
+  "dataset1.tsv",
+  header = TRUE,
+  sep = "\t",
+  colClasses = c(depth_ft = "character")
+)
+# However, you may have some data that looks like a continuous variable that is
+# actually a discreete variable (such as filter size or depth). Check to see how
+# read.delim interpreted your data
+str(meta)
+# If you want to change the data type of some columns, you can add the arguement
+# "colClasses" to read.delim
+meta <- read.delim(
+  "dataset1.tsv",
+  header = TRUE,
+  sep = "\t",
+  colClasses = c(depth_ft = "character")
+)
+# Your metadata may have samples that are not on this run, so you can perform
+# a left_join to add the metadata only to the samples that you are analyzing.
+read.count.meta <- left_join(
+  read.count,
+  meta,
+  by = join_by(Sample_ID)
+)
+asv.count.meta <- left_join(
+  asv.count,
+  meta,
+  by = join_by(Sample_ID)
+)
+asv.count.rarefied <- left_join(
+  asv.count.rarefied,
+  meta,
+  by = join_by(Sample_ID)
+)
+View(read.count.meta)
+# Lets go back to our original read.count and asv.count plots
+read.count.plot
+read.count.plot <- ggplot(read.count, aes(x = Sample_ID, y = reads, fill = depth_ft)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_discrete(labels = read.count$Sample_ID, guide = guide_axis(angle = 90))
+read.count.plot
+
+asv.count.plot
+asv.count.plot <- ggplot(asv.count, aes(x = Sample_ID, y = ASVs, fill = depth_ft)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_discrete(labels = asv.count$Sample_ID, guide = guide_axis(angle = 90))
+asv.count.plot
+
+asv.rarefiled.plot
+asv.rarefied.plot <- ggplot(asv.count.rarefied, aes(x = Sample_ID, y = expected_ASVs, fill = depth_ft)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_discrete(labels = asv.count.rarefied$Sample_ID, guide = guide_axis(angle=90))
+asv.rarefied.plot
+
+# We can also look at the plot of reads vs ASVs colored by a variable. First we
+# have to add the metadata using the left_join we used earlier
+read.count.asv.count.meta <-  left_join(
+  read.count.asv.count,
+  meta,
+  by = join_by(Sample_ID)
+)
+
+read.count.asv.count.meta.plot <- ggplot(read.count.asv.count.meta, aes(x = reads, y = ASVs, fill = depth_ft, color = depth_ft)) +
+  geom_point() +
+  scale_x_continuous(labels = scales::comma)
+read.count.asv.count.plot
+# Next we want to look at some rarefaction curves. vegan can give you a 
+# rarefaction curve on it's own, but your ability to  
+# We want to import our
+
+
+
 
 
 
