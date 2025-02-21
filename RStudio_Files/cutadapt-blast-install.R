@@ -104,7 +104,7 @@ if (!dir.exists(blast_bin)) {
 current_path <- Sys.getenv("PATH")
 
 # Add the current working directory to the PATH
-Sys.setenv(PATH = paste(current_path, blast_bin, sep = .Platform$path.sep))
+Sys.setenv(PATH = paste(blast_bin, current_path, sep = .Platform$path.sep))
 
 # Test that blastn is now available
 system2("blastn", args = "-version")
