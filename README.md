@@ -37,9 +37,9 @@ md PROJECTNAME/data/raw
 ### Get Raw Reads
 Raw reads are available for download from the github repository. Download the dataset you have been assigned from the following list:  
 [Dataset1a](https://xxxxxx)  
-[Dataset 1b](https://xxxxxx)  
-[Dataset 2a](https://xxxxxx)  
-[Dataset 2b](https://xxxxxx)  
+[Dataset1b](https://xxxxxx)  
+[Dataset2a](https://xxxxxx)  
+[Dataset2b](https://xxxxxx)  
 
 Move your compressed raw reads into PROJECTNAME/data/raw. We will decompress later through R.  
 The rest of this pipeline will be run in RStudio.
