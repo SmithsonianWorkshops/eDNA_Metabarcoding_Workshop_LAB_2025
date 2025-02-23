@@ -23,6 +23,7 @@ install.packages("tidyverse")
 install.packages("seqinr")
 install.packages("ape")
 install.packages("vegan")
+install.packages("patchwork")
 remotes::install_github("fkeck/refdb")
 
 ## File Housekeeping ===========================================================
