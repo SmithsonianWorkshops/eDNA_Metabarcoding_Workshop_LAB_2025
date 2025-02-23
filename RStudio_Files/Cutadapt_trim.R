@@ -2,6 +2,8 @@
 
 ## File Housekeeping ===========================================================
 
+
+
 # Make a list of all the files in your "data/raw" folder.
 reads.to.trim <- list.files("data/raw")
 head(reads.to.trim)
@@ -34,9 +36,22 @@ for (i in seq_along(sample.names)) {
       "-e 0.2 --discard-untrimmed --minimum-length 30 --cores=0",
       "-g", paste0("file:",path.to.Fprimers),
       "-G", paste0("file:",path.to.Rprimers),
-      "-o", paste0("data/working/trimmed_sequences/",sample.names[i],"_trimmed_R1.fastq.gz"),
-      "-p", paste0("data/working/trimmed_sequences/",sample.names[i],"_trimmed_R2.fastq.gz"),
-      paste0("data/raw/",reads.to.trim.F[i]), paste0("data/raw/",reads.to.trim.R[i])
+      "-o", paste0(
+        "data/working/trimmed_sequences/",
+        sample.names[i],
+        "_trimmed_R1.fastq.gz"
+      ),
+      "-p", paste0(
+        "data/working/trimmed_sequences/",
+        sample.names[i],
+        "_trimmed_R2.fastq.gz"
+      ),
+      paste0(
+        "data/raw/",
+        reads.to.trim.F[i]),
+        paste0("data/raw/",
+        reads.to.trim.R[i]
+      )
       )
     )
 }
