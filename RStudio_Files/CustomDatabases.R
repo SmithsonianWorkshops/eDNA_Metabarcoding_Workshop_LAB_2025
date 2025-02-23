@@ -12,4 +12,3 @@ refdb_import_BOLD(
   ncbi_taxo = TRUE,
   full = FALSE
 )
-
