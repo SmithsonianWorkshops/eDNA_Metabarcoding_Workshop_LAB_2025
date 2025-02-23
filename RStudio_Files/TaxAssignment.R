@@ -5,7 +5,7 @@
 
 library(dada2)
 library(digest)
-
+library(rblast)
 library(tidyverse)
 library(seqinr)
 
@@ -38,7 +38,7 @@ library(seqinr)
 taxonomy <- assignTaxonomy(
   seqtab.nochim,
   "/Users/USERNAME/Dropbox (Smithsonian)/Metabarcoding/Reference_Libraries/REFERENCE.fasta",
-  taxLevels = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "species"),
+  taxLevels = c("Kingdom", "Phylum", "Class", "Order", "Family","Subfamily", "Genus", "species"),
   tryRC = FALSE,
   minBoot = 50,
   outputBootstraps = TRUE,
@@ -112,5 +112,13 @@ write.table(
   row.names = FALSE
 )
 
-## Assign Taxonomy With BLAST+ ==================================================
+## Assign Taxonomy With BLAST+ =================================================
 
+# We can also assign taxonomy using BLAST. Here we will use the program rBLAST
+# to identify our ASVs.
+# rBLAST allows you to connect directly to the NCBI server, or use a locally
+# saved refernce database (in BLAST format)
+# One of the reasons I'm using rBLAST is that it has a command to make a
+# BLAST-formatted database from a fasta file. 
+
+# 
