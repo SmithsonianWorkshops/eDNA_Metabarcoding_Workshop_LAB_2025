@@ -48,8 +48,10 @@ for (i in seq_along(sample.names)) {
       ),
       paste0(
         "data/raw/",
-        reads.to.trim.F[i]),
-        paste0("data/raw/",
+        reads.to.trim.F[i]
+      ),
+      paste0(
+        "data/raw/",
         reads.to.trim.R[i]
       )
       )
