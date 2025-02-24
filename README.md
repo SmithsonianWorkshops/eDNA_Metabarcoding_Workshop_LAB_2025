@@ -45,7 +45,7 @@ Download this entire pipeline, including the RStudio files using this link: [Met
 Copy this next script into the Console panel (usually the entire left panel, or the bottom left panel if the Source Editor is open on the top left) of RStudio and run it. This will unzip the pipeline, organize files and directories, and remove the zipped file. This is probable the only script we will be running from the Console. We typically run all the scripts by opening each file in the Source Editor and running from there so we have a record of your analyses, including any changes made and any comments that may be needed along the way.
 
 ```
-pipeline <- "eDNA_Metabarcoding_Workshop_LAB_2025.zip"
+pipeline <- "eDNA_Metabarcoding_Workshop_LAB_2025-main.zip"
 untar(pipeline)
 file.remove(pipeline)
 ```
