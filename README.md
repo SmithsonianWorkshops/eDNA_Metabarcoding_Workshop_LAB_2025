@@ -2,18 +2,18 @@
 
 In this workshop we will learn how to analyze illumina reads from eDNA or other mixed DNA sources
 
-* [Computer Preparation](computer-preparation) </br>
-    * [Install and Update R and RStudio](#install-and-update-r-and-rstudio) </br>
-    * [Create Directories](#create-directories) </br>
-    * [Get Raw Reads](#get-raw-reads) </br>
-* [RStudio](#rstudio) </br>
-    * [Install Cutadapt and Blast](#install-cutadapt-and-blast) </br>
-    * [RStudio Preparation](#rstudio-preparation) </br>
-    * [Cutadapt](#cutadapt) </br>
-    * [DADA2](#dada2) </br>
-    * [Visualize Results](#visualize-results) </br>
-    * [Assign Taxonomy](#assign-taxonomy) </br>
-    * [phyloseq](#phyloseq) </br>
+* [Computer Preparation](#computer-preparation)
+  * [Install and Update R and RStudio](#install-and-update-r-and-rstudio)
+  * [Create Directories](#create-directories)
+  * [Get Raw Reads](#get-raw-reads)
+* [RStudio](#rstudio)
+  * [Install Cutadapt and Blast](#install-cutadapt-and-blast)
+  * [RStudio Preparation](#rstudio-preparation)
+  * [Cutadapt](#cutadapt)
+  * [DADA2](#dada2)
+  * [Visualize Results](#visualize-results)
+  * [Assign Taxonomy](#assign-taxonomy)
+  * [phyloseq](#phyloseq)
 
 This protocol is for paired-end demultiplexed miseq sequences that have sufficient overlap to merge R1 and R2, and are going to be run on your computer, not on Hydra. It is broken up into sections, each section an `.R` document that can be opened in RStudio or (VSCode with the [R extension](https://code.visualstudio.com/docs/languages/r)).
 
@@ -71,7 +71,6 @@ pipeline <- "eDNA_Metabarcoding_Workshop_LAB_2025.zip"
 untar(pipeline)
 file.remove(pipeline)
 ```
-
 
 Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. Open [RStudioPrep.R](https://xxxxxx) by on the Files tab in the lower right panel, naviagating to the list of files, and selecting the appropriate file. This will open the chosen file in the Source Editor.
 
