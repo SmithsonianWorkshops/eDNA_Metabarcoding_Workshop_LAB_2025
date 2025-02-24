@@ -18,12 +18,17 @@ BiocManager::install("rBLAST")
 
 # Install and other libraries you may need (or install through
 # "Install Packages" window). Libraries will only need to be installed once.
+# If you get a message saying some packages have more recent versions available,
+# and asking if you want to update them, chose "1: ALL".
 install.packages("digest")
 install.packages("tidyverse")
 install.packages("seqinr")
 install.packages("ape")
 install.packages("vegan")
 install.packages("patchwork")
+install.packages("remotes")
+remotes::install_github("ropensci/bold")
+remotes::install_github("ropensci/taxize")
 remotes::install_github("fkeck/refdb")
 
 ## File Housekeeping ===========================================================
@@ -42,15 +47,12 @@ sapply(dir_names, dir.create, recursive = TRUE)
 # Find all the read files you downloaded (in the download folder), save their
 # paths, and confirm. Change USERNAME to your computer username, and DATASET to
 # the name of your downloaded reads directory.
-# For Macs use this to define the path to the downloaded reads folder:
-dowloads <- "~/Users/USERNAME/downloads/DATASET"
-# For Windows us this to define the path to the downloaded reads folder:
-dowloads <- "C:/Users/USERNAME/downloads/DATASET"
+downloads <- "/Users/USERNAME/Downloads/DATASET"
 # Find all the files in the downloaded reads folder that end with .fastq.gz.
 raw.reads <- list.files(downloads, pattern = ".fastq.gz", recursive = TRUE)
 head(raw.reads)
 
 # Copy the read files to the "data/raw" directory, and confirm that they are
 # there.
-file.copy(raw.reads, "data/raw", recursive=TRUE)
+file.copy(raw.reads, "data/raw", recursive = TRUE)
 head(list.files("data/raw"))
