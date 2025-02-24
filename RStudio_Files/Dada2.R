@@ -13,15 +13,15 @@ library(seqinr)
 ## File Housekeeping ===========================================================
 
 # Set a path to the directory with the cutadapt-trimmed reads.
-path <- "data/working/trimmed_sequences"
+trimmed_reads <- "data/working/trimmed_sequences"
 
 # This lists the files inside the selected folder.
-list.files(path)
+list.files(trimmed_reads)
 
 # This creates two vectors. One contains the names for forward reads (R1, called
 # fnFs) and the other for reverse reads (R2, called fnRs).
-fnFs <- sort(list.files(path, pattern = "_R1.fastq.gz", full.names = TRUE))
-fnRs <- sort(list.files(path, pattern = "_R2.fastq.gz", full.names = TRUE))
+fnFs <- sort(list.files(trimmed_reads, pattern = "_R1.fastq.gz", full.names = TRUE))
+fnRs <- sort(list.files(trimmed_reads, pattern = "_R2.fastq.gz", full.names = TRUE))
 
 # Make sure you have the correct number of samples, and that they match the
 # number of sample names you made in the previous section (2a or 2b: Cutadapt).
@@ -115,7 +115,7 @@ ggsave(
 # This creates files for the reads that will be quality filtered with dada2
 # in the next step.
 filtFs <- file.path(
-  path,
+  trimmed_reads,
   "filtered",
   paste0(
     sample.names,
@@ -123,7 +123,7 @@ filtFs <- file.path(
   )
 )
 filtRs <- file.path(
-  path,
+  trimmed_reads,
   "filtered",
   paste0(
     sample.names,
@@ -191,7 +191,7 @@ write.table(
 
 # Save all the objects created to this point
 save(
-  path,
+  trimmed_reads,
   truncF,
   truncR,
   fnFs,
