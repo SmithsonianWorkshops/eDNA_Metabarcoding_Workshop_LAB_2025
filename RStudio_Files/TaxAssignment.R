@@ -56,7 +56,7 @@ unique(taxonomy$tax[,"Phylum"])
 unique(taxonomy$tax[,"Class"])
 unique(taxonomy$tax[,"Order"])
 unique(taxonomy$tax[,"Family"])
-
+table(taxonomy$tax[,"Phylum"])
 ### Combine taxonomy and bootstrap tables --------------------------------------
 # You can combine the $tax and $boot table, to see simultaneously the taxonomic
 # assignment and the bootstrap support for that assignment.
@@ -119,6 +119,6 @@ write.table(
 # rBLAST allows you to connect directly to the NCBI server, or use a locally
 # saved refernce database (in BLAST format)
 # One of the reasons I'm using rBLAST is that it has a command to make a
-# BLAST-formatted database from a fasta file. 
+# BLAST-formatted database from a fasta file.
 
 # 
