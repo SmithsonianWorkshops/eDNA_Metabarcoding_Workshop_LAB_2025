@@ -70,11 +70,11 @@ We use Cutadapt to remove primer sequences from our raw reads. This section ends
 ## DADA2
 Here we use DADA2 to quality-filter and quality-trim reads, estimate error rates and denoise reads, merge paired reads, and remove chimeric sequences. This section ends with a sequence-table, which is a table containing columns of ASV's (Amplicon Sequence Variants), rows of samples, and cell values equal "# of reads", a feature-table (rows of ASVs and columns of samples - same as the output of Qiime2) a fasta file containing all ASVs, and a file associating ASVs with their unique md5 hash. Open [Data2.R](https://xxxxxx) and follow the directions.
 
-## Assign Taxonomy
-Here we use DADA2s RDP identifier and blast to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get and create your own reference database. Open [TaxAssignment.R](https://xxxxxx) and follow the directions.
-
 ## Visualize Results
 Here we use several programs to visualize your results. We are going  to assign taxonomic identities to ASV's. This section requires a reference library. LAB has libraries available for both COI and 12S, but you may want to use your own. How to do so is described in the section description. Open [VisualizeResults](https://xxxxxx) and follow the directions.
+
+## Assign Taxonomy
+Here we use DADA2s RDP identifier and blast to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get and create your own reference database. Open [TaxAssignment.R](https://xxxxxx) and follow the directions.
 
 ## phyloseq
 Phyloseq is a R library that allows for manipulation, visualization, and analysis of metabarcoding data. This section describes how to set up and load your denoised results from DADA2 into phyloseq, how to perform some preliminary analyses, ana how to visualize a few basic results. Open [phyloseq](https://xxxxxx) and follow the directions.
