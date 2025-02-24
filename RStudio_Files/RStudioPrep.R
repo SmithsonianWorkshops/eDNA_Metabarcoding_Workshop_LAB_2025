@@ -38,3 +38,19 @@ dir_names <- c(
 )
 # Create the directories using sapply
 sapply(dir_names, dir.create, recursive = TRUE)
+
+# Find all the read files you downloaded (in the download folder), save their
+# paths, and confirm. Change USERNAME to your computer username, and DATASET to
+# the name of your downloaded reads directory.
+# For Macs use this to define the path to the downloaded reads folder:
+dowloads <- "~/Users/USERNAME/downloads/DATASET"
+# For Windows us this to define the path to the downloaded reads folder:
+dowloads <- "C:/Users/USERNAME/downloads/DATASET"
+# Find all the files in the downloaded reads folder that end with .fastq.gz.
+raw.reads <- list.files(downloads, pattern = ".fastq.gz", recursive = TRUE)
+head(raw.reads)
+
+# Copy the read files to the "data/raw" directory, and confirm that they are
+# there.
+file.copy(raw.reads, "data/raw", recursive=TRUE)
+head(list.files("data/raw"))
