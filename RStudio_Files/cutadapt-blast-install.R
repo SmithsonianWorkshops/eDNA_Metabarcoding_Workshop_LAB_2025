@@ -58,16 +58,11 @@ if (!file.exists(cutadapt)) {
   message(paste0("cutadapt appears to be installed already. It was found here: ", cutadapt))
 }
 
-message("Attempting to run cutdapt, you should see the cutadapt usage message...\nIf you don't STOP here and review the code.")
-
-# This should give a cutadapt help message, if not review the install.
-system2(cutadapt)
-
 
 # Download blast+ executable from NCBI
 #
 
-if (exists("os")) {
+if (!exists("os")) {
   os <- Sys.info()["sysname"]
 }
 
@@ -106,6 +101,17 @@ current_path <- Sys.getenv("PATH")
 # Add the current working directory to the PATH
 Sys.setenv(PATH = paste(blast_bin, current_path, sep = .Platform$path.sep))
 
+
+# Now lets test if cutadapt and BLAST are installed
+
+# Testing cutadapt...
+# After the next command you should see some cutadapt help
+# messages that end in:
+#   Run "cutadapt --help" to see all command-line options.
+#   See https://cutadapt.readthedocs.io/ for full documentation.
+
+# This should give a cutadapt help message, if not review the install.
+system2(cutadapt)
+
 # Test that blastn is now available
 system2("blastn", args = "-version")
-
