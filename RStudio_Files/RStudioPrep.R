@@ -54,5 +54,5 @@ head(raw.reads)
 
 # Copy the read files to the "data/raw" directory, and confirm that they are
 # there.
-file.copy(raw.reads, "data/raw", recursive = TRUE)
+file.copy(paste0(downloads, "/", raw.reads), "data/raw", recursive = TRUE)
 head(list.files("data/raw"))
