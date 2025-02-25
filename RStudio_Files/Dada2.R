@@ -78,7 +78,7 @@ head(sample.names)
 # the orange lines are the quartiles (solid for median, dashed for 25% and 75%)
 # and the red line represents the proportion of reads existing at that position.
 qualplotF <- plotQualityProfile(
-  fnFs[1:length(sample.names)],
+  fnFs[1:length(sample.names)], # nolint: seq_linter.
   aggregate = TRUE
 )
 qualplotF
@@ -99,7 +99,7 @@ ggsave(
 
 # Examine the reverse reads as you did the forward.
 qualplotR <- plotQualityProfile(
-  fnRs[1:length(sample.names)],
+  fnRs[1:length(sample.names)], # nolint: seq_linter.
   aggregate = TRUE
 )
 qualplotR
@@ -289,7 +289,7 @@ save(
   errF,
   errR,
   error.plots.F,
-  error.plots.R
+  error.plots.R,
   file = "data/results/err.Rdata"
 )
 
