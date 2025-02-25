@@ -282,6 +282,19 @@ ggsave(
   height = 9
 )
 
+# Save the objects created since out
+save(
+  filtFs,
+  filtRs,
+  errF,
+  errR,
+  error.plots.F,
+  error.plots.R
+  file = "data/results/err.Rdata"
+)
+
+
+
 # This applies the "core sample inference algorithm" (i.e. denoising) in dada2
 # to get corrected unique sequences. The two main inputs are the first, which is
 # the filtered sequences (filtFs), and "err =" which is the error file from
@@ -312,13 +325,8 @@ dadaRs <- dada(
 dadaFs[[1]]
 dadaRs[[1]]
 
-# Save all the objects created between out and here
+# Save all the objects created in the denoising step
 save(
-  exists,
-  filtFs,
-  filtRs,
-  errF,
-  errR,
   dadaFs,
   dadaRs,
   file = "data/results/denoise.RData"
@@ -406,7 +414,7 @@ write.fasta(
 
 # This shows the length of the representative sequences (ASV's). Typically,
 # there are a lot of much longer and much shorter sequences.
-table(nchar(getSequences(seqtab.nochimn)))
+seq.length.table <- table(nchar(getSequences(seqtab.nochim)))
 
 # Export this table as a .tsv
 write.table(
@@ -461,6 +469,16 @@ track
 # tracking reads. I'm working on it.
 
 
+# Export this table as a .tsv
+write.table(
+  track,
+  file="data/results/track_reads_table.tsv",
+  quote = FALSE,
+  sep = "\t",
+  row.names = TRUE,
+  col.names = NA
+)
+
 ## Export Sequence-Table =======================================================
 # This exports a sequence-table: columns of ASV's, rows of samples, and
 # values = number of reads. This is the only export you need for downstream
@@ -509,7 +527,7 @@ head(repseq.nochim)
 # Use the program digest (in a For Loop) to create a new vector containing the
 # unique md5 hashes of the representative sequences (ASV's). This results in
 # identical feature names to those assigned in Qiime2.
-repseq.md5 <- c()
+repseq.nochim.md5 <- c()
 for (i in seq_along(repseq.nochim)) {
   repseq.nochim.md5[i] <- digest(
     repseq.nochim[i],
@@ -525,6 +543,17 @@ head(repseq.nochim.md5)
 seqtab.nochim.md5 <- seqtab.nochim
 colnames(seqtab.nochim.md5) <- repseq.nochim.md5
 View(seqtab.nochim.md5)
+
+# Export this sequence table with column headings as md5 hashs instead of ASV
+# sequences
+write.table(
+  seqtab.nochim.md5,
+  file = "data/results/PROJECT_sequence-table-md5.tsv",
+  quote = FALSE,
+  sep = "\t",
+  row.names = TRUE,
+  col.names = NA
+)
 
 # Create an md5/ASV table, with each row as an ASV and it's representative md5
 # hash.
@@ -547,9 +576,8 @@ seqtab.nochim.transpose.md5 <- as_tibble(t(seqtab.nochim.md5), rownames = "ASV")
 # should be.
 colnames(seqtab.nochim.transpose.md5)
 
-# Save all the objects created between denoise and here
+# Save all the objects created since merge
 save(
-  merged,
   seqtab,
   seqtab.nochim,
   chimeras.list,
