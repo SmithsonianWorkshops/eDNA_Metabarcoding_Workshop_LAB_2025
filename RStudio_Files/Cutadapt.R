@@ -23,8 +23,8 @@ head(sample.names)
 # the name of the forward and reverse primer file, respectively.
 
 # THE PATHS SHOWN BELOW ARE EXAMPLES ONLY. PLEASE CHANGE PATH TO YOUR PRIMER FILES.
-path.to.Fprimers <- "Metabarcoding-in-RStudio-LAB-main/primers/COImlIntF.fas"
-path.to.Rprimers <- "Metabarcoding-in-RStudio-LAB-main/primers/jgCOIR.fas"
+path.to.Fprimers <- "eDNA_Metabarcoding_Workshop_LAB_2025-main/primers/COImlIntF.fas"
+path.to.Rprimers <- "eDNA_Metabarcoding_Workshop_LAB_2025-main/primers/jgCOIR.fas"
 
 ## Run Cutadapt ================================================================
 
