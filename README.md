@@ -4,7 +4,6 @@ In this workshop we will learn how to analyze illumina reads from eDNA or other 
 
 * [Computer Preparation](#computer-preparation)
   * [Install and Update R and RStudio](#install-and-update-r-and-rstudio)
-  * [Create Directories](#create-directories)
   * [Get Raw Reads](#get-raw-reads)
 * [RStudio](#rstudio)
   * [Install Cutadapt and Blast](#install-cutadapt-and-blast)
@@ -24,7 +23,6 @@ However, before running RStudio, you must make sure the necessary programs are i
 ### Install and Update R and RStudio
 
 If you do not have R and/or RStudio installed on your computer, go to [Installing R and RStudio](https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/blob/main/r-install.md) to install either or both.
-
 
 ### Get Raw Reads
 
@@ -53,15 +51,19 @@ file.remove(basename(pipeline))
 Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. Open [RStudioPrep.R](https://xxxxxx) by clicking on the Files tab in the lower right panel, naviagating to the list of files, and selecting the appropriate file. This will open the chosen file in the Source Editor. You can run commands from the Source Editor using the "Run" button or `control + return`
 
 ## Install Cutadapt and Blast
+
 Next we need to install Cutadapt and Blast. Neither are R programs, but we can install them through R. Open [Install Cutadapt and Blast](https://xxxxxx) and follow the directions.
 
 ## Cutadapt
+
 We use Cutadapt to remove primer sequences from our raw reads. This section ends with primer-trimmed sequences. Open [Cutadapt_trim.R](https://xxxxxx) and follow the directions.
 
 ## DADA2
+
 Here we use DADA2 to quality-filter and quality-trim reads, estimate error rates and denoise reads, merge paired reads, and remove chimeric sequences. This section ends with a sequence-table, which is a table containing columns of ASV's (Amplicon Sequence Variants), rows of samples, and cell values equal "# of reads", a feature-table (rows of ASVs and columns of samples - same as the output of Qiime2) a fasta file containing all ASVs, and a file associating ASVs with their unique md5 hash. Open [Data2.R](https://xxxxxx) and follow the directions.
 
 ## Visualize Results
+
 Here we use several programs to visualize your results. We will explore our results multiple ways.  . Open [VisualizeResults](https://xxxxxx) and follow the directions.
 
 ## Assign Taxonomy
