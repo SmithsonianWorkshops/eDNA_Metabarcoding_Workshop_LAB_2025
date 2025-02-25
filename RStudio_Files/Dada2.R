@@ -78,7 +78,7 @@ head(sample.names)
 # the orange lines are the quartiles (solid for median, dashed for 25% and 75%)
 # and the red line represents the proportion of reads existing at that position.
 qualplotF <- plotQualityProfile(
-  fnFs[1:N],
+  fnFs[1:length(sample.names)],
   aggregate = TRUE
 )
 qualplotF
@@ -88,7 +88,7 @@ qualplotF
 # shown.  We use "breaks=seq(a,b,c)", to indicate the first axis tick "a", last
 # tick "b", and frequency of ticks "c". The example shown results in a plot that
 # starts at 190 bp, ends at 220 bp, and has axis ticks every 2 bp.
-qualplotF + scale_x_continuous(limits = c(190, 220), breaks = seq(190, 220, 2))
+qualplotF + scale_x_continuous(limits = c(250, 290), breaks = seq(250, 290, 5))
 
 ggsave(
   "data/results/qualplotF.pdf",
@@ -99,17 +99,28 @@ ggsave(
 
 # Examine the reverse reads as you did the forward.
 qualplotR <- plotQualityProfile(
-  fnRs[1:N],
+  fnRs[1:length(sample.names)],
   aggregate = TRUE
 )
 qualplotR
-qualplotR + scale_x_continuous(limits = c(150, 200), breaks = seq(150, 200, 2))
+qualplotR + scale_x_continuous(limits = c(250, 290), breaks = seq(250, 290, 5))
 
 ggsave(
   "data/results/qualplotR.pdf",
   plot = qualplotR,
   width = 9,
   height = 9
+)
+
+# Save all the objects created to this point
+save(
+  trimmed_reads,
+  fnFs,
+  fnRs,
+  sample.names,
+  qualplotF,
+  qualplotR,
+  file = "data/results/qual.Rdata"
 )
 
 # This creates files for the reads that will be quality filtered with dada2
@@ -133,7 +144,9 @@ filtRs <- file.path(
 # This inserts sample names to these newly created files. You'll notice that in
 # the environment pane, the description of filtFs and filtRs goes from
 # "chr [1:N]" to "Named chr [1:N]"
+head(filtFs)
 names(filtFs) <- sample.names
+head(filtFs)
 names(filtRs) <- sample.names
 
 # This filters all reads depending upon the quality (as assigned by the user)
@@ -189,16 +202,8 @@ write.table(
   col.names = NA
 )
 
-# Save all the objects created to this point
+# Save all the objects created since qual
 save(
-  trimmed_reads,
-  truncF,
-  truncR,
-  fnFs,
-  fnRs,
-  sample.names,
-  qualplotF,
-  qualplotR,
   filtFs,
   filtRs,
   out,
