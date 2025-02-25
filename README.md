@@ -40,9 +40,8 @@ Open RStudio and create a new project. When you do this it will ask if you want 
 
 ### RStudio Preparation
 
-Download this entire pipeline, including the RStudio files using this link: [Metabarcoding Workshop 2025 - RStudio Documents](https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/archive/refs/heads/main.zip). Download this .zip file and move/save it in the project directory.
 
-Copy this next script into the Console panel (usually the entire left panel, or the bottom left panel if the Source Editor is open on the top left) of RStudio and run it. This will unzip the pipeline, organize files and directories, and remove the zipped file. This is probable the only script we will be running from the Console. We typically run all the scripts by opening each file in the Source Editor and running from there so we have a record of your analyses, including any changes made and any comments that may be needed along the way.
+First, we are goiong to download the entire pipeline into our project directory using the script shown below. Copy the script into the Console panel (usually the entire left panel, or the bottom left panel if the Source Editor is open on the top left) of RStudio and run it. This will download the pipeline unzip it, and remove the zipped file. This is probable the only script we will be running from the Console. We typically run all the scripts by opening each file in the Source Editor and running from there so we have a record of your analyses, including any changes made and any comments that may be needed along the way.
 
 ```
 pipeline <- "https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/archive/refs/heads/main.zip"
