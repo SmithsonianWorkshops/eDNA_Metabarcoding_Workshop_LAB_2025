@@ -2,6 +2,8 @@
 
 ## File Housekeeping ===========================================================
 
+# Load necessary libraries
+library(tidyverse)
 
 
 # Make a list of all the files in your "data/raw" folder.
