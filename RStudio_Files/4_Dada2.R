@@ -284,8 +284,6 @@ ggsave(
 
 # Save the objects created since out
 save(
-  filtFs,
-  filtRs,
   errF,
   errR,
   error.plots.F,
