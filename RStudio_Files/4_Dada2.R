@@ -120,7 +120,7 @@ save(
   sample.names,
   qualplotF,
   qualplotR,
-  file = "data/results/qual.Rdata"
+  file = "data/working/qual.Rdata"
 )
 
 # This creates files for the reads that will be quality filtered with dada2
@@ -184,7 +184,8 @@ out <- filterAndTrim(
   rm.phix = TRUE,
   truncQ = 2,
   compress = TRUE,
-  multithread = TRUE
+  multithread = TRUE,
+  verbose = TRUE
 )
 
 # Usually we don't have that many samples, so I just look at "out" in its
@@ -207,7 +208,7 @@ save(
   filtFs,
   filtRs,
   out,
-  file = "data/results/out.Rdata"
+  file = "data/working/out.Rdata"
 )
 
 # After filtering, if there are any samples that have no remaining reads
@@ -288,7 +289,7 @@ save(
   errR,
   error.plots.F,
   error.plots.R,
-  file = "data/results/err.Rdata"
+  file = "data/working/err.Rdata"
 )
 
 
@@ -327,7 +328,7 @@ dadaRs[[1]]
 save(
   dadaFs,
   dadaRs,
-  file = "data/results/denoise.RData"
+  file = "data/working/denoise.RData"
 )
 
 ## Merge Paired Sequences ======================================================
@@ -600,6 +601,15 @@ save(
 
 write.table(
   seqtab.nochim.transpose.md5,
+  file = "data/results/PROJECTNAME_feature-table_md5.tsv",
+  quote = FALSE,
+  sep = "\t",
+  row.names = TRUE,
+  col.names = NA
+)
+
+write.table(
+  seqtab.nochim.md5,
   file = "data/results/PROJECTNAME_sequence-table_md5.tsv",
   quote = FALSE,
   sep = "\t",
