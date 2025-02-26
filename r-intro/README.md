@@ -56,14 +56,12 @@ Why? We've seen issues with saving to folders that have spaces in their names an
 - Files pane will be used a lot in the workshop
   - Navigating
   - Reveal in the Finder/Windows explorer
-  - One way to move files
 
 ### Getting to work with R: navigating directories
 
 - Changes your directory in the Files Pane does not change your working directory.
 - Stay in your project directory, don't go to `/home/dcuser/R_data`
 
-## 
 
 - Try quitting R and reopening.
   - 
