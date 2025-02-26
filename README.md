@@ -38,7 +38,6 @@ Open RStudio and create a new project. When you do this it will ask if you want 
 
 ### RStudio Preparation
 
-
 First, we are goiong to download the entire pipeline into our project directory using the script shown below. Copy the script into the Console panel (usually the entire left panel, or the bottom left panel if the Source Editor is open on the top left) of RStudio and run it. This will download the pipeline unzip it, and remove the zipped file. This is probable the only script we will be running from the Console. We typically run all the scripts by opening each file in the Source Editor and running from there so we have a record of your analyses, including any changes made and any comments that may be needed along the way.
 
 ```
