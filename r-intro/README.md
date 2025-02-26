@@ -8,6 +8,18 @@ We'll be modifying the content covered so it more closely aligns with the R meth
 
 <https://datacarpentry.github.io/genomics-r-intro/00-introduction.html>
 
+### What is R
+
+- Why learn R?
+- R vs. RStudio
+- Origins of R
+- Tidyverse revolution (ggplot2, dplyr, Hadley Wickham)
+
+- Objective of this workshop
+  - prep for workshop
+  - Enough to be start using and exploring R and its tools... focus on concepts and tools.
+  - Ask better questions
+
 ### RStudio Server
 
 **We will not be using RStudio Server**. Instead, start up RStudio on your computer.
@@ -24,3 +36,34 @@ We'll be modifying the content covered so it more closely aligns with the R meth
 
 Why? We've seen issues with saving to folders that have spaces in their names and those that are sync'd to Dropbox or OneDrive.
 
+### Overview and customization of the RStudio layout
+
+- Initially you'll see three panes.
+  - Reveal the Sources pane with the multi-window icon in the "Console" pane.
+  - Or go to File>New File>R Script ()
+  - Or show the pane with View>Move Focus to Source (control+1)
+
+![Reveal Sourced Pane](../images/show-source-pane.png)
+
+- Save this new file as `intro.R`
+  - Exact name not important but:
+  - Ends in `.R` (yes, captial R), no spaces, alphanumeric &  `_` `-` only (`.` for extension).
+
+- Difference between the "Console" and the "Terminal"
+  - **"Console"** is for interacting with R.
+  - **"Terminal"** is for working with your computer (same as Mac Terminal or Windows Command Prompt)
+
+- Files pane will be used a lot in the workshop
+  - Navigating
+  - Reveal in the Finder/Windows explorer
+  - One way to move files
+
+### Getting to work with R: navigating directories
+
+- Changes your directory in the Files Pane does not change your working directory.
+- Stay in your project directory, don't go to `/home/dcuser/R_data`
+
+## 
+
+- Try quitting R and reopening.
+  - 
