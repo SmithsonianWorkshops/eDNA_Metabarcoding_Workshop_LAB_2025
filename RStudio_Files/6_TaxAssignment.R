@@ -121,4 +121,15 @@ write.table(
 # One of the reasons I'm using rBLAST is that it has a command to make a
 # BLAST-formatted database from a fasta file.
 
-# 
+library(rBLAST)
+
+
+# We need to load a blast database, here is the blast-formated version of the
+# one
+midori_COI_db <- blast(db = "ref/midori_COI_curated_genus_dada2/midori_COI_genus_dada2")
+
+sequences <- repseq.nochim.md5.asv$ASV
+names (sequences) <- repseq.nochim.md5.asv$md5
+sequences.dna <- readDNAStringSet(sequences)
+
+sequences.dna.blast.midori <- predict(midori_COI_db, sequences.dna,BLAST_args = "-perc_identity 85 -max_target_seqs 1") 
