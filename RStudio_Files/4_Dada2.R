@@ -459,9 +459,7 @@ track <- cbind(
 colnames(track) <- c("input", "filtered", "denoisedF", "denoisedR", "merged", "nonchim", "%kept")
 rownames(track) <- sample.names
 
-# Look at the results for the first 6 samples, or all, depending upon the number
-# of samples.
-head(track)
+# Look at the results 
 track
 # !!!!!!!Note, if the initial Filter and Trim step left any samples with 0
 # reads, and you had to use the file.exists command, it will cause a problem
