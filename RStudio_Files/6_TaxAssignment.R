@@ -1,5 +1,5 @@
 # 8 ASSIGN TAXONOMY ############################################################
-
+\.(?!\s|$)
 ## Load Libraries = ============================================================
 # Load all R packages you may need, if necessary
 
@@ -26,19 +26,19 @@ library(seqinr)
 # have a space, even if there is no name for that level (I've added a third
 # example to demonstrate).
 #>Level1;Level2;Level3;Level4;Level5;Level6;
-#ACCTAGAAAGTCGTAGATCGAAGTTGAAGCATCGCCCGATGATCGTCTGAAGCTGTAGCATGAGTCGATTTTCACATTCAGGGATACCATAGGATAC
+#ACCTAGAAAGTCGTAGATCGAAGTTGAAGCATCGCCCGATGATCGTCTGAAGCTGTAGCATGAGTCGATTTTCACATTC
 #>Level1;Level2;Level3;Level4;Level5;
-#CGCTAGAAAGTCGTAGAAGGCTCGGAGGTTTGAAGCATCGCCCGATGGGATCTCGTTGCTGTAGCATGAGTACGGACATTCAGGGATCATAGGATAC"
+#CGCTAGAAAGTCGTAGAAGGCTCGGAGGTTTGAAGCATCGCCCGATGGGATCTCGTTGCTGTAGCATGAGTACGGACAT
 #>Level1;Level2;;Level4;Level5;Level6
-#CGCTAGAAAGTCGTAGAAGGCTCGGAGGTTTGAAGCATCGCCCGATGGGATCTCGTTGCTGTAGCATGAGTACGGACATTCAGGGATCATAGGATAC"
+#CGCTAGAAAGTCGTAGAAGGCTCGGAGGTTTGAAGCATCGCCCGATGGGATCTCGTTGCTGTAGCATGAGTACGGACAT
 
 # taxLevels defines what taxonomic rank each of the levels shown in the above
 # example represents.
 
-taxonomy <- assignTaxonomy(
-  seqtab.nochim,
+taxonomy_rdp <- assignTaxonomy(
+  seqtab_nochim,
   "/Users/USERNAME/Dropbox (Smithsonian)/Metabarcoding/Reference_Libraries/REFERENCE.fasta",
-  taxLevels = c("Kingdom", "Phylum", "Class", "Order", "Family","Subfamily", "Genus", "species"),
+  taxLevels = c("Phylum", "Class", "Order", "Family","Subfamily", "Genus", "species"),
   tryRC = FALSE,
   minBoot = 50,
   outputBootstraps = TRUE,
@@ -48,64 +48,64 @@ taxonomy <- assignTaxonomy(
 
 ## Examine and Manipulate Taxonomy =============================================
 # Look at the taxonomic assignments
-View(taxonomy$tax)
-View(taxonomy$boot)
+View(taxonomy_rdp$tax)
+View(taxonomy_rdp$boot)
 
 # You can check to see all the uniqe values exist in each column
-unique(taxonomy$tax[,"Phylum"])
-unique(taxonomy$tax[,"Class"])
-unique(taxonomy$tax[,"Order"])
-unique(taxonomy$tax[,"Family"])
-table(taxonomy$tax[,"Phylum"])
+unique(taxonomy_rdp$tax[,"Phylum"])
+unique(taxonomy_rdp$tax[,"Class"])
+unique(taxonomy_rdp$tax[,"Order"])
+unique(taxonomy_rdp$tax[,"Family"])
+table(taxonomy_rdp$tax[,"Phylum"])
 ### Combine taxonomy and bootstrap tables --------------------------------------
 # You can combine the $tax and $boot table, to see simultaneously the taxonomic
 # assignment and the bootstrap support for that assignment.
 
 # Convert taxonomy and bootstrap tables into tibbles (with "ASV" as column 1)
-taxonomy.tax.tb <- as_tibble(
-  taxonomy$tax, 
+taxonomy_rdp_tax <- as_tibble(
+  taxonomy_rdp$tax, 
   rownames = "ASV"
-) 
-dim(taxonomy.tax.tb)
+)
+dim(taxonomy_rdp_tax)
 
-taxonomy.boot.tb <- as_tibble(
-  taxonomy$boot,
+taxonomy_rdp_boot <- as_tibble(
+  taxonomy_rdp$boot,
   rownames = "ASV"
-) 
-dim (taxonomy.boot.tb)
+)
+dim (taxonomy_rdp_boot)
 
 # Join the two tables using an inner-join with dbplyr (it shouldn't matter here
 # what kind of join you use since the two tables should have the exact same
 # number of rows and row headings (actually, now column 1)). I amend bootstrap
 # column names with "_boot" (e.g. the bootstrap column for genus would be
 # "Genus_boot")
-taxonomy.tb <- inner_join(
-  taxonomy.tax.tb,
-  taxonomy.boot.tb,
+taxonomy_rdp <- inner_join(
+  taxonomy_tax_tb,
+  taxonomy_boot_tb,
   by = "ASV",
   suffix = c("","_boot")
 )
-dim(taxonomy.tb)
-View(taxonomy.tb)
+dim(taxonomy_rdp)
+View(taxonomy_rdp)
 
 # Add md5 hash from earlier. The order of ASV's is the same as the sequence-
 # table, so there shouldn't be any problem, but you can always redo the md5
 # hash conversion here.
-taxonomy.tb.md5 <- cbind(
-  taxonomy.tb,
-  feature = repseq.md5
+taxonomy_rdp_md5 <- cbind(
+  taxonomy_rdp,
+  feature = repseq_md5
 )
-View(taxonomy.tb.md5)
+View(taxonomy_rdp_md5)
 
 # Rearrange columns so that the md5 hash comes first, then the ASV, then each
 # classfication level followed by it's respective bootstrap column.
-taxonomy.tb.md5 <- taxonomy.tb.md5[ , c(16,1,2,9,3,10,4,11,5,12,6,13,7,14,8,15)]
-View(taxonomy.tb.md5)
+taxonomy_rdp_md5 <- taxonomy_rdp_md5[ , c(16,1,2,9,3,10,4,11,5,12,6,13,7,14,8,15)]
+View(taxonomy_rdp_md5)
 
 # Export this table as a .tsv file. I name it with Project Name,
 # the reference library used, and taxonomy (vs. speciesID).
 write.table(
-  taxonomy.tb.md5, 
+  taxonomy_rdp_md5, 
   file="data/results/PROJECTNAME_REFERENCE_taxonomy.tsv",
   quote = FALSE,
   sep="\t",
@@ -123,13 +123,49 @@ write.table(
 
 library(rBLAST)
 
+# We first need a blast-formatted database. We are going to use the makeblastdb
+# function in rBLAST to make this from the dada2-formatted fasta file in our
+# ref folder; this is the same database we used above.
 
-# We need to load a blast database, here is the blast-formated version of the
-# one
+# First, add a directory in /ref to hold the database.
+dir.create("ref/midori_COI_genus")
+# Make the blast database.
+makeblastdb(
+  "ref/midori_COI_curated_genus_dada2.fasta",
+  db_name = "ref/midori_COI_genus/midori_COI_genus",
+  dbtype = "nucl"
+)
+# Next we load this database into the correct format for rBLAST
 midori_COI_db <- blast(db = "ref/midori_COI_curated_genus_dada2/midori_COI_genus_dada2")
 
-sequences <- repseq.nochim.md5.asv$ASV
-names (sequences) <- repseq.nochim.md5.asv$md5
-sequences.dna <- readDNAStringSet(sequences)
+# Now we have to reformat our representative-sequence table to be a named vector
+View(repseq_nochim_md5_asv)
+# Make a new vector from the ASV column of the dataframe
+sequences <- repseq_nochim_md5_asv$ASV
+# Add the md5 column as names
+names(sequences) <- repseq_nochim_md5_asv$md5
+# Convert vector into a DNAStringSet object
+sequences_rep_seq <- readDNAStringSet(sequences)
 
-sequences.dna.blast.midori <- predict(midori_COI_db, sequences.dna,BLAST_args = "-perc_identity 85 -max_target_seqs 1") 
+# You can also get this named vector from the fasta file we downloaded earlier.
+sequences_fasta <- readDNAStringSet("data/results/PROJECTNAME_rep-seq.fas")
+
+# They make the same thing.
+head(sequences_rep_seq)
+head(sequences_fasta)
+
+# Finally, we blast our representative sequences against the database we created
+taxonomy_blast <- predict(
+  midori_COI_db,
+  sequences_fasta,
+  BLAST_args = "-perc_identity 85 -max_target_seqs 1"
+)
+View(taxonomy_blast)
+
+# Now lets combine the two taxonomy tables to see how the the two methods
+# compare
+taxonomy_rdp_blast <- left_join(
+  taxonomy_rdp_md5,
+  taxonomy_blast,
+  join_by("ASV" = "qseqid")
+)
