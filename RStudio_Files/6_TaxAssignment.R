@@ -35,7 +35,11 @@ library(seqinr)
 # taxLevels defines what taxonomic rank each of the levels shown in the above
 # example represents.
 
+<<<<<<< Updated upstream
 taxonomy_rdp <- assignTaxonomy(
+=======
+taxonomy <- assignTaxonomy(
+>>>>>>> Stashed changes
   seqtab_nochim,
   "/Users/USERNAME/Dropbox (Smithsonian)/Metabarcoding/Reference_Libraries/REFERENCE.fasta",
   taxLevels = c("Phylum", "Class", "Order", "Family","Subfamily", "Genus", "species"),
@@ -62,6 +66,7 @@ table(taxonomy_rdp$tax[,"Phylum"])
 # assignment and the bootstrap support for that assignment.
 
 # Convert taxonomy and bootstrap tables into tibbles (with "ASV" as column 1)
+<<<<<<< Updated upstream
 taxonomy_rdp_tax <- as_tibble(
   taxonomy_rdp$tax, 
   rownames = "ASV"
@@ -73,25 +78,49 @@ taxonomy_rdp_boot <- as_tibble(
   rownames = "ASV"
 )
 dim (taxonomy_rdp_boot)
+=======
+taxonomy_tax_tb <- as_tibble(
+  taxonomy$tax, 
+  rownames = "ASV"
+) 
+dim(taxonomy_tax_tb)
+
+taxonomy_boot_tb <- as_tibble(
+  taxonomy$boot,
+  rownames = "ASV"
+) 
+dim (taxonomy_boot_tb)
+>>>>>>> Stashed changes
 
 # Join the two tables using an inner-join with dbplyr (it shouldn't matter here
 # what kind of join you use since the two tables should have the exact same
 # number of rows and row headings (actually, now column 1)). I amend bootstrap
 # column names with "_boot" (e.g. the bootstrap column for genus would be
 # "Genus_boot")
+<<<<<<< Updated upstream
 taxonomy_rdp <- inner_join(
+=======
+taxonomy_tb <- inner_join(
+>>>>>>> Stashed changes
   taxonomy_tax_tb,
   taxonomy_boot_tb,
   by = "ASV",
   suffix = c("", "_boot")
+<<<<<<< Updated upstream
   suffix = c("", "_boot")
 )
 dim(taxonomy_rdp)
 View(taxonomy_rdp)
+=======
+)
+dim(taxonomy_tb)
+View(taxonomy_tb)
+>>>>>>> Stashed changes
 
 # Add md5 hash from earlier. The order of ASV's is the same as the sequence-
 # table, so there shouldn't be any problem, but you can always redo the md5
 # hash conversion here.
+<<<<<<< Updated upstream
 taxonomy_rdp_md5 <- cbind(
   taxonomy_rdp,
   feature = repseq_md5
@@ -102,11 +131,27 @@ View(taxonomy_rdp_md5)
 # classfication level followed by it's respective bootstrap column.
 taxonomy_rdp_md5 <- taxonomy_rdp_md5[ , c(16,1,2,9,3,10,4,11,5,12,6,13,7,14,8,15)]
 View(taxonomy_rdp_md5)
+=======
+taxonomy_tb_md5 <- cbind(
+  taxonomy_tb,
+  feature = repseq_md5
+)
+View(taxonomy_tb_md5)
+
+# Rearrange columns so that the md5 hash comes first, then the ASV, then each
+# classfication level followed by it's respective bootstrap column.
+taxonomy_tb_md5 <- taxonomy_tb_md5[ , c(16,1,2,9,3,10,4,11,5,12,6,13,7,14,8,15)]
+View(taxonomy_tb_md5)
+>>>>>>> Stashed changes
 
 # Export this table as a .tsv file. I name it with Project Name,
 # the reference library used, and taxonomy (vs. speciesID).
 write.table(
+<<<<<<< Updated upstream
   taxonomy_rdp_md5, 
+=======
+  taxonomy_tb_md5, 
+>>>>>>> Stashed changes
   file="data/results/PROJECTNAME_REFERENCE_taxonomy.tsv",
   quote = FALSE,
   sep="\t",
