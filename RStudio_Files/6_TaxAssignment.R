@@ -83,7 +83,7 @@ taxonomy_rdp <- inner_join(
   taxonomy_tax_tb,
   taxonomy_boot_tb,
   by = "ASV",
-  suffix = c("","_boot")
+  suffix = c("", "_boot")
 )
 dim(taxonomy_rdp)
 View(taxonomy_rdp)

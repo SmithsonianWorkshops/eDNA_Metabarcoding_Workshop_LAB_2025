@@ -49,10 +49,10 @@ sapply(dir_names, dir.create, recursive = TRUE)
 # the name of your downloaded reads directory.
 downloads <- "/Users/USERNAME/Downloads/DATASET"
 # Find all the files in the downloaded reads folder that end with .fastq.gz.
-raw.reads <- list.files(downloads, pattern = ".fastq.gz", recursive = TRUE)
+raw_reads <- list.files(downloads, pattern = ".fastq.gz", recursive = TRUE)
 head(raw.reads)
 
 # Copy the read files to the "data/raw" directory, and confirm that they are
 # there.
-file.copy(paste0(downloads, "/", raw.reads), "data/raw", recursive = TRUE)
+file.copy(paste0(downloads, "/", raw_reads), "data/raw", recursive = TRUE)
 head(list.files("data/raw"))
