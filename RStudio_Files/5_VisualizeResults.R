@@ -162,7 +162,7 @@ meta <- read.delim(
   "dataset1.tsv",
   header = TRUE,
   sep = "\t",
-  colClasses = c(depth_ft = "character")
+  colClasses = c(depth_ft = "character", arms_num = "character")
 )
 str(meta)
 View(meta)
