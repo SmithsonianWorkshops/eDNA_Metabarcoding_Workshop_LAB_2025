@@ -4,37 +4,26 @@ library(patchwork)
 # First, lets look at read counts for each sample
 read_count <- rowSums(seqtab_nochim_md5)
 View(read_count)
-read_count <- rowSums(seqtab_nochim_md5)
-View(read_count)
 
 # Create a dataframe of the number of reads for each sample
 read_count <- enframe(rowSums(seqtab_nochim_md5))
 View(read_count)
-read_count <- enframe(rowSums(seqtab_nochim_md5))
-View(read_count)
 
-read_count <- enframe(rowSums(seqtab_nochim_md5)) %>%
 read_count <- enframe(rowSums(seqtab_nochim_md5)) %>%
   rename(
     Sample_ID = name,
     reads = value
   )
 View(read_count)
-View(read_count)
 # We can plot this out in a bar plot
-read_count_plot <- ggplot(read_count, aes(x = Sample_ID, y = reads)) +
 read_count_plot <- ggplot(read_count, aes(x = Sample_ID, y = reads)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = read_count$Sample_ID, guide = guide_axis(angle = 90))
 read_count_plot
-  scale_x_discrete(labels = read_count$Sample_ID, guide = guide_axis(angle = 90))
-read_count_plot
 
 # We can also look at the number of ASVs for each sample, first by creating a
 # dataframe of the number of ASVs for each sample
-asv_count <- enframe(apply(
-  seqtab_nochim_md5,
 asv_count <- enframe(apply(
   seqtab_nochim_md5,
   1,
@@ -46,11 +35,8 @@ asv_count <- enframe(apply(
   )
 # and plotting this out in a bar plot
 asv_count_plot <- ggplot(asv_count, aes(x = Sample_ID, y = ASVs)) +
-asv_count_plot <- ggplot(asv_count, aes(x = Sample_ID, y = ASVs)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
-  scale_x_discrete(labels = asv_count$Sample_ID, guide = guide_axis(angle = 90))
-asv_count_plot
   scale_x_discrete(labels = asv_count$Sample_ID, guide = guide_axis(angle = 90))
 asv_count_plot
 
@@ -60,17 +46,12 @@ asv_count_plot
 read_count_asv_count <-  left_join(
   read_count,
   asv_count,
-read_count_asv_count <-  left_join(
-  read_count,
-  asv_count,
   by = join_by(Sample_ID)
 )
 # Then we can plot these two variables
 read_count_asv_count_plot <- ggplot(reads_asv_count, aes(x = reads, y = ASVs)) +
-read_count_asv_count_plot <- ggplot(reads_asv_count, aes(x = reads, y = ASVs)) +
   geom_point() +
   scale_x_continuous(labels = scales::comma)
-read_count_asv_count_plot
 read_count_asv_count_plot
 
 
@@ -78,49 +59,22 @@ read_count_asv_count_plot
 # sample if they had the same number of reads as the smallest sample.
 # Firest, we need to determine which sample has the least number of reads.
 raremin <- min(rowSums(seqtab_nochim_md5))
-raremin <- min(rowSums(seqtab_nochim_md5))
 # Then we can use this value and the vegan command rarefy to calculate the
-# expected number of ASVs for each sample if all had the same number of reads
-# as the smallest sample.
+# 
 asv_count_rarefied <- enframe(rarefy(seqtab_nochim_md5, raremin)) %>%
   rename(
     Sample_ID = name,
     expected_ASVs = value
   )
 asv_rarefied_plot <- ggplot(asv_count_rarefied, aes(x = Sample_ID, y = expected_ASVs)) +
-asv_rarefied_plot <- ggplot(asv_count_rarefied, aes(x = Sample_ID, y = expected_ASVs)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = asv_count_rarefied$Sample_ID, guide = guide_axis(angle=90))
 asv_rarefied_plot
 
-# Now lets add this expected_ASV column to our table already containg both the
-# reads counts and ASV counts.
-
-read_count_asv_count_expected_asv <-  left_join(
-  read_count_asv_count,
-  asv_count_rarefied,
-  by = join_by(Sample_ID)
-)
-# Then we can plot these actual ASV vs expected ASV
-asv_count_expected_asv_plot <- ggplot(
-  reads_count_asv_count_expected_asv,
-  aes(x = reads, y = ASVs)
-) +
-  geom_point() +
-  scale_x_continuous(labels = scales::comma) +
-  geom_abline(intercept = 0, slope = 1)
-
-asv_count_expected_asv_plot
-
-
-
-
 
 # We can look at some basic diversity measures by sample. We first create both
 # Simpson  and Shannon-Weaver diversity indices.
-simpson <- diversity(seqtab_nochim_md5, index = "simpson")
-shannon <- diversity(seqtab_nochim_md5, index = "shannon")
 simpson <- diversity(seqtab_nochim_md5, index = "simpson")
 shannon <- diversity(seqtab_nochim_md5, index = "shannon")
 # par allows you to put two (or more) graphs side-by-side 
@@ -131,34 +85,26 @@ hist(shannon)
 
 # We can make a dataframe of Shannon-Weaver index measures per sample
 shannon_sample <- enframe(shannon) %>%
-shannon_sample <- enframe(shannon) %>%
   rename(
     Sample_ID = name,
     shannon = value
   )
 # And plot them  
 shannon_plot <- ggplot(shannon_sample, aes(x = Sample_ID, y = shannon)) +
-shannon_plot <- ggplot(shannon_sample, aes(x = Sample_ID, y = shannon)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = shannon_sample$Sample_ID, guide = guide_axis(angle=90))
 shannon_plot
-  scale_x_discrete(labels = shannon_sample$Sample_ID, guide = guide_axis(angle=90))
-shannon_plot
 
 # We can do the same for the Simpson index
-simpson_sample <- enframe(simpson) %>%
 simpson_sample <- enframe(simpson) %>%
   rename(
     Sample_ID = name,
     simpson = value
   )
 simpson_plot <- ggplot(simpson_sample, aes(x = Sample_ID, y = simpson)) +
-simpson_plot <- ggplot(simpson_sample, aes(x = Sample_ID, y = simpson)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
-  scale_x_discrete(labels = simpson_sample$Sample_ID, guide = guide_axis(angle=90))
-simpson_plot
   scale_x_discrete(labels = simpson_sample$Sample_ID, guide = guide_axis(angle=90))
 simpson_plot
 
@@ -188,55 +134,39 @@ meta <- read.delim(
 # a left_join to add the metadata only to the samples that you are analyzing.
 read_count_meta <- left_join(
   read_count,
-read_count_meta <- left_join(
-  read_count,
   meta,
   by = join_by(Sample_ID)
 )
 asv_count_meta <- left_join(
   asv_count,
-asv_count_meta <- left_join(
-  asv_count,
   meta,
   by = join_by(Sample_ID)
 )
-asv_count_rarefied <- left_join(
-  asv_count_rarefied,
 asv_count_rarefied <- left_join(
   asv_count_rarefied,
   meta,
   by = join_by(Sample_ID)
 )
 View(read_count_meta)
-# Lets go back to our original read.count and asv.count plots
+# Lets go back to our original read_count and asv_count plots
 read_count_plot
 read_count_plot <- ggplot(read_count, aes(x = Sample_ID, y = reads, fill = depth_ft)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = read_count$Sample_ID, guide = guide_axis(angle = 90))
 read_count_plot
-  scale_x_discrete(labels = read_count$Sample_ID, guide = guide_axis(angle = 90))
-read_count_plot
 
-asv_count_plot
-asv_count_plot <- ggplot(asv_count, aes(x = Sample_ID, y = ASVs, fill = depth_ft)) +
 asv_count_plot
 asv_count_plot <- ggplot(asv_count, aes(x = Sample_ID, y = ASVs, fill = depth_ft)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = asv_count$Sample_ID, guide = guide_axis(angle = 90))
 asv_count_plot
-  scale_x_discrete(labels = asv_count$Sample_ID, guide = guide_axis(angle = 90))
-asv_count_plot
 
-asv_rarefiled_plot
-asv_rarefied_plot <- ggplot(asv_count_rarefied, aes(x = Sample_ID, y = expected_ASVs, fill = depth_ft)) +
 asv_rarefiled_plot
 asv_rarefied_plot <- ggplot(asv_count_rarefied, aes(x = Sample_ID, y = expected_ASVs, fill = depth_ft)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
-  scale_x_discrete(labels = asv_count_rarefied$Sample_ID, guide = guide_axis(angle=90))
-asv_rarefied_plot
   scale_x_discrete(labels = asv_count_rarefied$Sample_ID, guide = guide_axis(angle=90))
 asv_rarefied_plot
 
@@ -244,28 +174,21 @@ asv_rarefied_plot
 # have to add the metadata using the left_join we used earlier
 read_count_asv_count_meta <-  left_join(
   read_count_asv_count,
-read_count_asv_count_meta <-  left_join(
-  read_count_asv_count,
   meta,
   by = join_by(Sample_ID)
 )
 
 read_count_asv_count_meta_plot <- ggplot(read_count_asv_count_meta, aes(x = reads, y = ASVs)) +
-read_count_asv_count_meta_plot <- ggplot(read_count_asv_count_meta, aes(x = reads, y = ASVs)) +
   geom_point(size = 4, aes(fill = depth_ft, color = depth_ft, shape = fraction)) +
   scale_x_continuous(labels = scales::comma)
-read_count_asv_count_meta_plot
 read_count_asv_count_meta_plot
 
 # Next we want to look at some rarefaction curves. vegan can give you a
 # rarefaction curve on it's own, but your ability to modify it is limited
 rarecurve(seqtab_nochim_md5, step = 1000)
-rarecurve(seqtab_nochim_md5, step = 1000)
 
 # Instead we use the arguement "tidy = TRUE", and rarecurve gives you the
 # rarefied curvews in tabular form, so you can make your own figure.
-rarecurve_df <- rarecurve(
-  seqtab_nochim_md5,
 rarecurve_df <- rarecurve(
   seqtab_nochim_md5,
   step = 500,
@@ -277,17 +200,13 @@ rarecurve_df <- rarecurve(
     reads = Sample
   )
 head(rarecurve_df)
-head(rarecurve_df)
 
 # Lets add the metadata to this, so we can look at treatment affects
-rarecurve_df_meta <- left_join(
-  rarecurve_df,
 rarecurve_df_meta <- left_join(
   rarecurve_df,
   meta,
   join_by(Sample_ID)
 )
-head(rarecurve_df_meta)
 head(rarecurve_df_meta)
 
 # You can look at the different variables and see how many different values
@@ -296,14 +215,9 @@ unique(rarecurve_df_meta$Sample_ID)
 unique(rarecurve_df_meta$fraction)
 unique(rarecurve_df_meta$depth_ft)
 unique(rarecurve_df_meta$retrieval_year)
-unique(rarecurve_df_meta$Sample_ID)
-unique(rarecurve_df_meta$fraction)
-unique(rarecurve_df_meta$depth_ft)
-unique(rarecurve_df_meta$retrieval_year)
 
 # Make a line plot of this data, grouping by Sample_ID so each sample will form
 # a separate line.
-rarecurve_df_meta_plot <- ggplot(rarecurve_df_meta) +
 rarecurve_df_meta_plot <- ggplot(rarecurve_df_meta) +
   geom_line(
     aes(
@@ -317,12 +231,10 @@ rarecurve_df_meta_plot <- ggplot(rarecurve_df_meta) +
   ) +
   scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash")) 
 rarecurve_df_meta_plot 
-rarecurve_df_meta_plot 
 
 # Add an upper limit to the x-axis (reads) to see the expected number of ASVs
 # found in each sample with read depth equal to the sample with the least
 # number of reads (which should equal the values found in asv.count.rarefied).
-rarecurve_df_meta_plot <- ggplot(rarecurve_df_meta) +
 rarecurve_df_meta_plot <- ggplot(rarecurve_df_meta) +
   geom_line(
     aes(
@@ -337,14 +249,12 @@ rarecurve_df_meta_plot <- ggplot(rarecurve_df_meta) +
   scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash")) +
   scale_x_continuous(limits = c(0, raremin))
 rarecurve_df_meta_plot
-rarecurve_df_meta_plot
 
 
 # Now lets move to some ways to look at how similar your samples are usingj
 # ordination techniques.
 # We are going to use NMDS (Non-Metric Multidimensional Scaling).
 # First we need to run a NMDS analysis on our sequence-table.
-nmds <- metaMDS(seqtab_nochim_md5, k = 2, distance = "bray")
 nmds <- metaMDS(seqtab_nochim_md5, k = 2, distance = "bray")
 # Look at your stress value, it is important in telling you the "goodness of
 # fit" of your ordination. You want this value below 0.2.
@@ -355,24 +265,18 @@ nmds <- metaMDS(seqtab_nochim_md5, k = 2, distance = "bray")
 # https://jkzorz.github.io/ and 
 # https://eddatascienceees.github.io/tutorial-rayrr13/
 nmds_scores <- as_tibble(scores(nmds)$sites, rownames = "Sample_ID")
-nmds_scores <- as_tibble(scores(nmds)$sites, rownames = "Sample_ID")
 # Add your metadata to this new table
-nmds_scores_meta <- left_join(
-  nmds_scores,
 nmds_scores_meta <- left_join(
   nmds_scores,
   meta,
   join_by(Sample_ID)
 )
 head(nmds_scores_meta)
-head(nmds_scores_meta)
 
 # Plot this table, differentiating two of your variables of interest by color
 # and symbol shape.
 nmds_scores_meta_plot <- ggplot(nmds_scores_meta, aes(x = NMDS1, y = NMDS2)) +
-nmds_scores_meta_plot <- ggplot(nmds_scores_meta, aes(x = NMDS1, y = NMDS2)) +
   geom_point(size = 4, aes(fill = depth_ft, color = depth_ft, shape = fraction))
-nmds_scores_meta_plot
 nmds_scores_meta_plot
 # I want 
 # define hidden vegan function that finds coordinates for drawing a covariance ellipse
@@ -390,10 +294,6 @@ veganCovEllipse<-function (cov, center = c(0, 0), scale = 1, npoints = 100)
 # First, looking at depth
 anosim_depth <- anosim(x = seqtab_nochim_md5, grouping = reads_meta$depth_ft, permutations = 9999, distance = "bray")
 anosim_depth
-anosim_depth <- anosim(x = seqtab_nochim_md5, grouping = reads_meta$depth_ft, permutations = 9999, distance = "bray")
-anosim_depth
 # Then, looking at fraction
-anosim_fraction <- anosim(x = seqtab_nochim_md5, grouping = reads_meta$fraction, permutations = 9999, distance = "bray")
-anosim_fraction
 anosim_fraction <- anosim(x = seqtab_nochim_md5, grouping = reads_meta$fraction, permutations = 9999, distance = "bray")
 anosim_fraction
