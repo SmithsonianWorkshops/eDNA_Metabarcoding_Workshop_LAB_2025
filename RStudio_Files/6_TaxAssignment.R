@@ -1,12 +1,11 @@
 
 # 8 ASSIGN TAXONOMY ############################################################
-\.(?!\s|$)
 ## Load Libraries = ============================================================
 # Load all R packages you may need, if necessary
 
 library(dada2)
 library(digest)
-library(rblast)
+library(rBLAST)
 library(tidyverse)
 library(seqinr)
 
@@ -137,7 +136,7 @@ makeblastdb(
   dbtype = "nucl"
 )
 # Next we load this database into the correct format for rBLAST
-midori_COI_db <- blast(db = "ref/midori_COI_curated_genus_dada2/midori_COI_genus_dada2")
+midori_COI_db <- blast(db = "ref/midori_COI_genus/midori_COI_genus")
 
 # Now we have to reformat our representative-sequence table to be a named vector
 View(repseq_nochim_md5_asv)
@@ -168,5 +167,5 @@ View(taxonomy_blast)
 taxonomy_rdp_blast <- left_join(
   taxonomy_rdp_md5,
   taxonomy_blast,
-  join_by("ASV" = "qseqid")
+  join_by(ASV == qseqid)
 )
