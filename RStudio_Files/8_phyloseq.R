@@ -21,7 +21,7 @@ library(DECIPHER)
 # Make phyloseq otu_table from the sequence-table (columns of ASV/OTUs, rows of
 # samples). If you want to use a feature-table (columns of samples, rows of
 # ASV/OTUs) instead, use "taxa_are_rows = TRUE"
-OTU.md5 <- otu_table(seqtab.nochim.md5, taxa_are_rows = FALSE)
+OTU_md5 <- otu_table(seqtab_nochim_md5, taxa_are_rows = FALSE)
 
 ### tax_table ------------------------------------------------------------------
 # Row headings for the tax_table should match the column headings in the
@@ -31,12 +31,12 @@ OTU.md5 <- otu_table(seqtab.nochim.md5, taxa_are_rows = FALSE)
 
 # Make a new taxonomy-only table, and replace the current rownames (ASVs) with
 # md5 hashes.
-taxonomy.tax.md5 <- taxonomy$tax
-row.names(taxonomy.tax.md5) <- repseq.md5
-View(taxonomy.tax.md5)
+taxonomy_tax_md5 <- taxonomy$tax
+row.names(taxonomy_tax_md5) <- repseq_md5
+View(taxonomy_tax_md5)
 
 # Make phyloseq tax-table from our taxonomy-only table.
-TAX.md5 <- tax_table(taxonomy.tax.md5)
+TAX_md5 <- tax_table(taxonomy_tax_md5)
 
 ### sample_data ----------------------------------------------------------------
 # Import metadata (here as a tab-delimited text file, see examples for
@@ -49,7 +49,7 @@ TAX.md5 <- tax_table(taxonomy.tax.md5)
 # looking at "seqtab.nochim", since this is where the phyloseq otu_table gets
 # its sample names from. Rename sample names in your metadata file you plan
 # to import to match those in "seqtab.nochim".
-rownames(seqtab.nochim)
+rownames(seqtab_nochim)
 
 # Import your metadata file. I usually use a tab-delimited file (sep = "\t"),
 # but you can also use a comma delimited metadata file (sep = ","). You need to
@@ -103,11 +103,11 @@ SAMPLE <- sample_data(metadata)
 # Make a new list of ASVs from the representative sequences, and add md5 hashes
 # as names.
 sequences <- repseq
-names (sequences) <- repseq.md5
+names(sequences) <- repseq_md5
 
 # Convert these sequences into a DNAString, which is the format of sequences
 # used by DECIPHER, and many other phylogenetic programs in R.
-sequences.dna <- DNAStringSet(sequences)
+sequences_dna <- DNAStringSet(sequences)
 
 # Align using DECIPHER. DECIPHER "Performs profile-to-profile alignment of
 # multiple unaligned sequences following a guide tree" (from the manual). We do
@@ -123,8 +123,8 @@ sequences.dna <- DNAStringSet(sequences)
 # "better" alignment, but increasing these will take more computing time.
 
 # Make an alignment from your DNA data.
-alignment.decipher <- AlignSeqs(
-  sequences.dna,
+alignment_decipher <- AlignSeqs(
+  sequences_dna,
   guideTree = NULL,
   anchor = NA,
   gapOpening = c(-15, -10),
@@ -137,23 +137,23 @@ alignment.decipher <- AlignSeqs(
 )
 # Look at a brief "summary" of the alignment. This shows the alignment length,
 # the first 5 and last 5 ASVs and the first 50 and last 50 bps of the alignment.
-alignment.decipher
+alignment_decipher
 
 # You can also look at the entire alignment in your browser.
-BrowseSeqs(alignment.decipher)
+BrowseSeqs(alignment_decipher)
 
 # Create a reference sequence (refseq) object from the alignment. This contains
 # the ASV sequences, using the md5 hashes as names.
-REFSEQ.md5 <- DNAStringSet(alignment.decipher, use.names = TRUE)
+REFSEQ_md5 <- DNAStringSet(alignment_decipher, use.names = TRUE)
 # Look at the refseq object, just to make sure it worked
-head(REFSEQ.md5)
+head(REFSEQ_md5)
 
 # Align using msa. msa aligns DNA or AA sequences using three possible alignment
 # algorithms (ClustalW, ClustalOega, and MUSCLE). The input format can be a
 # DNAStringSet or direct reading of a fasta file.
 
-alignment.msa <- msa(
-  sequences.dna,
+alignment_msa <- msa(
+  sequences_dna,
   method = "ClustalW",
   gapOpening = 15,
   gapExtension = 0.2,
@@ -171,14 +171,14 @@ alignment.msa <- msa(
 
 # For ape, the aligned sequences must be in binary format (DNAbin, which reduces
 # the size of large datasets), so we first convert the DNAstring alignment.
-alignment.dnabin <- as.DNAbin(alignment.dna)
+alignment_dnabin <- as_DNAbin(alignment_dna)
 
 # Create pairwise distance matrix in ape. There are many different models to use.
 # Here we are using the Tamura Nei 93 distance measure. Turning the resulting
 # distances into a matrix (using as.matrix = TRUE) results in a table of
 # pairwise distances.
-pairwise.tn93 <- dist.dna(
-  alignment.dnabin,
+pairwise_tn93 <- dist.dna(
+  alignment_dnabin,
   model = "tn93",
   as.matrix = TRUE
 )
