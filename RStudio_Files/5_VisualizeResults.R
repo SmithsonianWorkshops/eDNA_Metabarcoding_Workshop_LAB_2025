@@ -60,7 +60,8 @@ read_count_asv_count_plot
 # Firest, we need to determine which sample has the least number of reads.
 raremin <- min(rowSums(seqtab_nochim_md5))
 # Then we can use this value and the vegan command rarefy to calculate the
-# 
+# expected number of ASVs for each sample if all had the same number of reads
+# as the smallest sample.
 asv_count_rarefied <- enframe(rarefy(seqtab_nochim_md5, raremin)) %>%
   rename(
     Sample_ID = name,
@@ -71,6 +72,28 @@ asv_rarefied_plot <- ggplot(asv_count_rarefied, aes(x = Sample_ID, y = expected_
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = asv_count_rarefied$Sample_ID, guide = guide_axis(angle=90))
 asv_rarefied_plot
+
+# Now lets add this expected_ASV column to our table already containg both the
+# reads counts and ASV counts.
+
+read_count_asv_count_expected_asv <-  left_join(
+  read_count_asv_count,
+  asv_count_rarefied,
+  by = join_by(Sample_ID)
+)
+# Then we can plot these actual ASV vs expected ASV
+asv_count_expected_asv_plot <- ggplot(
+  reads_count_asv_count_expected_asv,
+  aes(x = reads, y = ASVs)
+) +
+  geom_point() +
+  scale_x_continuous(labels = scales::comma) +
+  geom_abline(intercept = 0, slope = 1)
+
+asv_count_expected_asv_plot
+
+
+
 
 
 # We can look at some basic diversity measures by sample. We first create both
