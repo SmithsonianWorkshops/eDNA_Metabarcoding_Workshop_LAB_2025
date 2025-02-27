@@ -30,6 +30,7 @@ install.packages("remotes")
 remotes::install_github("ropensci/bold")
 remotes::install_github("ropensci/taxize")
 remotes::install_github("fkeck/refdb")
+remotes::install_github("tobiasgf/lulu")
 
 ## File Housekeeping ===========================================================
 
