@@ -248,3 +248,120 @@ colnames(alt_a_pos)
 
 # TODO: Output using write.table() and write.csv()?
 
+# Section: Data Wrangling and Analyses with Tidyverse
+
+# This is our first time installing packages :)
+install.packages("dplyr") ## installs dplyr package
+install.packages("tidyr") ## installs tidyr package
+install.packages("ggplot2") ## installs ggplot2 package
+install.packages("readr") ## install readr package
+
+# And loading them.
+# The warning messages are fine... masked functions
+# ...this needs to be redone every time you restart R, even if the objects
+# are loaded from an .RData file.
+library("dplyr")          ## loads in dplyr package to use
+library("tidyr")          ## loads in tidyr package to use
+library("ggplot2")          ## loads in ggplot2 package to use
+library("readr")          ## load in readr package to use
+
+# Let's clear the objects in our environment. Use the Broom in Environment or:
+rm(list=ls())
+
+variants <- read_csv("data/combined_tidy_vcf.csv")
+variants
+# Note "tibble"
+
+# Viewing variants
+head(variants)
+tail(variants)
+glimpse(variants)
+str(variants)
+
+# select() choose columns
+select(variants, sample_id, REF, ALT, DP)
+select(variants, -CHROM)
+select(variants, ends_with("B"))
+
+# EXERCISE HERE?
+
+# filter() to select rows
+filter(variants, sample_id == "SRR2584863")
+
+# rows for which the reference genome has T or G
+filter(variants, REF %in% c("T", "G"))
+filter(variants, INDEL)
+filter(variants, !is.na(IDV))
+filter(variants, QUAL >= 100)
+filter(variants, sample_id == "SRR2584863", QUAL >= 100)
+filter(variants, sample_id == "SRR2584863", (MQ >= 50 | QUAL >= 100))
+
+# EXERCISE HERE?
+
+# Pipes!!
+# Output from one function is the input of the next one
+# So much cleaner than nested functions
+# %>% ctrl+shift+m
+# m for Magritte https://www.google.com/search?q=magritte+tidyverse
+
+variants %>%
+  filter(sample_id == "SRR2584863") %>%
+  select(REF, ALT, DP)
+
+# You can also add in %>% View()
+SRR2584863_variants <- variants %>%
+  filter(sample_id == "SRR2584863") %>%
+  select(REF, ALT, DP)
+
+SRR2584863_variants %>% slice(1:6)
+
+# EXERCISE: PIPE AND FILTER
+
+# Mutate: add new columns based on existing columns
+variants %>% 
+  mutate(POLPROB = 1- (10 ^ -(QUAL / 10))) %>% 
+  View()
+
+# EXERCISE: 
+
+# group_by() and summarize()
+# 
+
+variants %>%
+  group_by(sample_id)
+
+variants %>%
+  group_by(sample_id) %>% 
+  summarize()
+
+variants %>%
+  group_by(sample_id) %>% 
+  summarize(n())
+
+variants %>%
+  group_by(sample_id) %>% 
+  summarize(count = n())
+
+variants %>%
+  group_by(sample_id) %>% 
+  tally()
+
+variants %>%
+  count(sample_id)
+
+# EXERCISE: How many mutations are INDELs?
+
+# Other summary stats using summarize()
+variants %>%
+  group_by(sample_id) %>%
+  summarize(
+    mean_DP = mean(DP),
+    median_DP = median(DP),
+    min_DP = min(DP),
+    max_DP = max(DP))
+
+# Reshaping data frames
+
+# Joins?
+
+# Writing data
