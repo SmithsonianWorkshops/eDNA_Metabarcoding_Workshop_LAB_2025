@@ -102,8 +102,8 @@ SAMPLE <- sample_data(metadata)
 
 # Make a new list of ASVs from the representative sequences, and add md5 hashes
 # as names.
-sequences <- repseq
-names(sequences) <- repseq_md5
+sequences <- repseq_nochim
+names(sequences) <- repseq_nochim_md5
 
 # Convert these sequences into a DNAString, which is the format of sequences
 # used by DECIPHER, and many other phylogenetic programs in R.
