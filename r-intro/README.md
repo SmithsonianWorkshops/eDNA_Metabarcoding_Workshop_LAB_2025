@@ -62,6 +62,18 @@ Why? We've seen issues with saving to folders that have spaces in their names an
 - Changes your directory in the Files Pane does not change your working directory.
 - Stay in your project directory, don't go to `/home/dcuser/R_data`
 
+## R Basics continued - factors and data frames
 
-- Try quitting R and reopening.
-  - 
+- Use `read.csv()` to read in the snp data
+- Use `$` notation to subset a column as a vector
+- Use `[]` notation to subset a specific value
+- Subsetting data.frames using base R will only be covered briefly.
+  - subset() function
+- We will NOT be covering base R plotting and factors.
+
+## Using packages from Bioconductor
+
+- We'll only briefly touch on this
+- Several important packages used in the eDNA analysis week are from bioconductor
+  - dada2, msa, DECIPHER, rBLAST
+
