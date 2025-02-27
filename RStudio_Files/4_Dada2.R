@@ -566,7 +566,10 @@ head(repseq_nochim_md5_asv)
 # we create a Feature-Table
 
 # Transpose the sequence-table, and convert the result into a tibble.
-seqtab_nochim_transpose_md5 <- as_tibble(t(seqtab_nochim_md5), rownames = "ASV")
+seqtab_nochim_transpose_md5 <- as_tibble(
+  t(seqtab_nochim_md5),
+  rownames = "ASV"
+)
 
 # Check to make sure the table is transposed. The easiest way is just to look at
 # the column headings and see if they are now samples (plus "ASV"), as they
@@ -599,7 +602,7 @@ save(
 
 write.table(
   seqtab_nochim_transpose_md5,
-  file = "data/results/PROJECTNAME_sequence-table_md5.tsv",
+  file = "data/results/PROJECTNAME_feature-table_md5.tsv",
   quote = FALSE,
   sep = "\t",
   row.names = TRUE,
