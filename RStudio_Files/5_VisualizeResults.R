@@ -66,7 +66,8 @@ read_count_asv_count_plot
 # Firest, we need to determine which sample has the least number of reads.
 raremin <- min(rowSums(seqtab_nochim_md5))
 # Then we can use this value and the vegan command rarefy to calculate the
-#
+# expected number of ASVs for each sample if all had the same number of reads
+# as the smallest sample.
 asv_count_rarefied <- enframe(rarefy(seqtab_nochim_md5, raremin)) %>%
   rename(
     Sample_ID = name,
@@ -108,9 +109,10 @@ asv_count_expected_asv_plot
 simpson <- diversity(seqtab_nochim_md5, index = "simpson")
 shannon <- diversity(seqtab_nochim_md5, index = "shannon")
 
-# Make a quick histogram of each, and put it on the same page
+# Make a quick histogram of each
 hist(simpson)
 hist(shannon)
+
 
 # We can make a dataframe of Shannon-Weaver index measures per sample
 shannon_sample <- enframe(shannon) %>%
@@ -143,8 +145,8 @@ simpson_plot <- ggplot(simpson_sample, aes(x = Sample_ID, y = simpson)) +
   )
 simpson_plot
 
-## Adding Metadata =============================================================
-# We can also look at some basic factors for all these graphs. Say we want to
+
+# We can also look at some basic variables for all these graphs. Say we want to
 # look at depth in ASV counts.
 # We need metadata, so we have to import your metadata.
 meta <- read.delim(
@@ -311,7 +313,7 @@ rarecurve_df_meta_plot <- ggplot(rarecurve_df_meta) +
     linewidth = 0.75
   ) +
   scale_linetype_manual(values = c("solid", "dashed", "dotted", "dotdash")) 
-rarecurve_df_meta_plot
+rarecurve_df_meta_plot 
 
 # Add an upper limit to the x-axis (reads) to see the expected number of ASVs
 # found in each sample with read depth equal to the sample with the least
