@@ -43,7 +43,6 @@ dir()
 sessionInfo()
 date()
 Sys.time()
-date()
 
 # Playing with the round() function
 
@@ -75,9 +74,7 @@ first_value
 # EXERCISE: CREATE SOME OBJECTS IN R
 
 # Create an object that has the value of number of pairs of human chromosomes
-# Create an object that has a value of your favorite gene name
-# Create an object that has this URL as its value: “ftp://ftp.ensemblgenomes.org/pub/bacteria/release-39/fasta/bacteria_5_collection/escherichia_coli_b_str_rel606/”
-# Create an object that has the value of the number of chromosomes in a diploid human cell
+# Create an object (favorite_gene) that has a value of your favorite gene name
 
 human_chromosomes <- 23
 favorite_gene <- "ef1a"
@@ -139,9 +136,9 @@ mode(snp_genes)
 snp_genes <- c("OXTR", "ACTN3", "AR", "OPRM1", 1)
 snp_genes
 
+
 # Return to our original vector
 snp_genes <- c("OXTR", "ACTN3", "AR", "OPRM1")
-
 
 # length() is the number of values in a vector
 length(snp_genes)
@@ -149,12 +146,30 @@ length(snp_genes)
 # str() gives a brief summary of the vector (same as what's in "Env." pane)
 str(snp_genes)
 
+# Section: Creating and subsetting vectors
+
 # create some vectors
 snps <- c("rs53576", "rs1815739", "rs6152", "rs1799971")
 snp_chromosomes <- c("3", "11", "X", "6")
 snp_positions <- c(8762685, 66560624, 67545785, 154039662)
 
-# TODO: cover NA here, as.numeric and as.charater... also is.na()
+# Coercian: from https://datacarpentry.github.io/genomics-r-intro/03-basics-factors-dataframes.html#coercing-values-in-data-frames
+# Coercian is where we force R to convert from one data type to another.
+# NA is a special value used to represent missing or undefined data.
+
+# As numeric
+snp_chromosomes
+# This gives a warning
+snp_chromosomes_num <- as.numeric(snp_chromosomes)
+snp_chromosomes_num
+
+# As character
+snp_positions
+round(snp_positions / 1000000)
+snp_positions_char <- as.character(snp_positions)
+snp_positions_char
+# This will give an error
+round(snp_positions_char / 1000000)
 
 # [] notation to specify a value # in the vector
 snps[3]
@@ -178,6 +193,27 @@ snp_genes
 snp_genes[6] <- "APOA5"
 snp_genes
 
+# EXCERISE: Using indexing, create a new vector named combined that contains:
+# 
+# The the 1st value in snp_genes
+# The 1st value in snps
+# The 1st value in snp_chromosomes
+# The 1st value in snp_positions
+# 
+# What type of data is combined?
+
+# EXERCISE: EXAMINING AND SUBSETTING VECTORS
+# 
+# Answer the following questions to test your knowledge of vectors
+# 
+# Which of the following are true of vectors in R?
+#   A) All vectors have a mode or a length
+# B) All vectors have a mode and a length
+# C) Vectors may have different lengths
+# D) Items within a vector may be of different modes
+# E) You can use the c() to add one or more items to an existing vector
+# F) You can use the c() to add a vector to an existing vecto
+
 # Section: Logical subsetting
 snp_positions
 snp_positions[snp_positions > 100000000]
@@ -187,6 +223,23 @@ snp_positions[snp_positions < 100000000]
 # A logical vector is being produced
 snp_positions > 100000000
 snp_positions[c(FALSE, FALSE, FALSE, TRUE)]
+
+# Operator   Description
+# ----------------------
+# <          less than
+# <=         less than or equal to
+# >          greater than
+# >=         greater than or equal to
+# ==         exactly equal to
+# !=         not equal to
+# !x         not x
+# a | b      a or b
+# a & b      a and b
+
+# EXERCISE: Use logical subsetting on snp_positions to create a logical vector
+# of values that are larger than 60000000, and less than 100000000
+
+# Note: dplyr, part of tidyverse, has a between() function, but not base R
 
 # %in% is a special operator you can use with vector
 "APOA5" %in% snp_genes
@@ -201,6 +254,9 @@ names(snp_positions)
 names(snp_positions) <- snps
 snp_positions
 snp_positions["rs1815739"]
+
+# There are a suite of is.… logical functions: is.na(), is.logical(), is.character(), is.numeric(), y mas!
+is.na(snp_chromosomes_num)
 
 # Section: data frames
 variants <- read.csv("data/combined_tidy_vcf.csv")

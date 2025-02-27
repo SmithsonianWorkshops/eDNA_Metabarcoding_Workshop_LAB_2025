@@ -2,6 +2,22 @@
 
 For this workshop we'll be be using material from Data Carpentry's Intro to R and RStudio for Genomics <https://datacarpentry.github.io/genomics-r-intro/>
 
+Approximate schedule for the day:
+
+- AM (9am-12pm)
+  - R and RStudio introductions
+  - R Basics (I)
+  - Break!
+  - Intro to VCF files (short)
+  - R Basics (II)
+  - Bioconductor (short)
+- LUNCH! (12pm-1pm)
+- PM (1pm-4pm)
+  - Intro to Tidyverse (short)
+  - Data Wrangling and Analyses with Tidyverse (dplyr)
+  - Break!
+  - Data Visualization with ggplot2
+
 We'll be modifying the content covered so it more closely aligns with the R methods used in the eDNA/Metabarcoding analysis that we'll be doing in the main part of the workshop.
 
 ## Introducing R and RStudio IDE
@@ -61,6 +77,19 @@ Why? We've seen issues with saving to folders that have spaces in their names an
 
 - Changes your directory in the Files Pane does not change your working directory.
 - Stay in your project directory, don't go to `/home/dcuser/R_data`
+
+## R Basics
+
+### Vectors
+
+- Coercion: <https://datacarpentry.github.io/genomics-r-intro/03-basics-factors-dataframes.html#coercing-values-in-data-frames>
+  - as.character()
+  - as.numeric()
+- NA after Coercion
+
+### Named vectors
+
+- New content, this will be used in the analysis week
 
 ## R Basics continued - factors and data frames
 
