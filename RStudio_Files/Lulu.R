@@ -1,36 +1,17 @@
-library(lulu)
-
+## Make Lulu matchlist =========================================================
 dir.create("ref/rep_seq")
-# Sarah code
-makeblastdb \
--in ../data/results/EXAMPLE_rep-seqs-dada2.fasta \
--parse_seqids \
--dbtype nucl \
--out ../data/results/lulu/matchlist/EXAMPLE_matchlist
 
-# Tripp Code
 makeblastdb(
   "data/results/PROJECTNAME_rep-seq.fas",
   db_name = "ref/rep_seqs/matchlist",
   dbtype = "nucl"
 )
 
-# Sarah Code
-blastn \
--task blastn \
--db ../data/results/lulu/matchlist/EXAMPLE_matchlist \
--outfmt '6 qseqid sseqid pident' \
--out ../data/results/lulu/EXAMPLE_matchlist.txt \
--qcov_hsp_perc 80 \
--perc_identity 85 \
--query ../data/results/EXAMPLE_rep-seqs-dada2.fasta
-# Tripp Code
 matchlist_ref <- blast(db = "ref/rep_seqs/matchlist")
-
 
 lulu_blast <- predict(
   matchlist_ref,
-  sequences_fasta,
+  sequences.dna,
   outfmt = "6 qseqid sseqid pident",
   BLAST_args = "-perc_identity 85 -qcov_hsp_perc 80"
 )
@@ -38,5 +19,61 @@ lulu_blast <- predict(
 lulu_matchlist <- lulu_blast %>%
   select(qseqid, sseqid, pident)
 
-ASVtab <- read.csv("your_table-dada2.tsv",
-                   skip = 1, sep = '\t', header = TRUE, as.is = TRUE, row.names = 1
+
+## Run Lulu Analysis ===========================================================
+
+seqtab_nochim_transpose_md5_lulu <- seqtab.nochim.transpose.md5 %>%
+  column_to_rownames(var = "ASV")
+
+
+curated_asv <- lulu(
+  seqtab_nochim_transpose_md5_lulu,
+  lulu_matchlist,
+  minimum_match = 84,
+  minimum_relative_cooccurence = 0.95,
+  minimum_ratio_type = "min",
+  minimum_ratio = 1
+)
+
+# Get the feature table out of this object.
+feattab_lulu <- curated_asv$curated_table
+
+# How long did this take to run? We can check that:
+
+print(curated_asv$runtime)
+
+# Check how many ASVs/OTUs lulu has counted as "valid"
+
+valids <- curated_asv$curated_count
+print(valids)
+
+# Check how many ASVs/OTUs lulu regarded as errors and discarded:
+
+errors <- curated_asv$discarded_count
+print(errors)
+
+# Of course, the number of valid ASVs plus error ASVs should equal the total number
+# of ASVs you started with:
+
+total <- sum(valids, errors)
+print(total)
+
+
+# So you can do some simple math to figure out proportion of ASVs lulu has marked as
+# erroneous and/or valid:
+
+prop_error <- errors / total
+print(prop_error)
+
+prop_valid <- valids / total
+print(prop_valid)
+
+save(
+  matchlist_ref,
+  lulu_blast,
+  lulu_matchlist,
+  seqtab_nochim_transpose_md5_lulu,
+  curated_asv,
+  feattab_lulu,
+  file = "data/working/lulu.RData"
+)
