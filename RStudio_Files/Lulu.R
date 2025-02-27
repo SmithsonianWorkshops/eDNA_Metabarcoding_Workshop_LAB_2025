@@ -1,3 +1,5 @@
+library(lulu)
+
 dir.create("ref/rep_seq")
 # Sarah code
 makeblastdb \
@@ -23,12 +25,18 @@ blastn \
 -perc_identity 85 \
 -query ../data/results/EXAMPLE_rep-seqs-dada2.fasta
 # Tripp Code
-matchlist <- blast(db = "ref/rep_seqs/matchlist")
+matchlist_ref <- blast(db = "ref/rep_seqs/matchlist")
 
 
 lulu_blast <- predict(
-  matchlist,
+  matchlist_ref,
   sequences_fasta,
   outfmt = "6 qseqid sseqid pident",
   BLAST_args = "-perc_identity 85 -qcov_hsp_perc 80"
 )
+
+lulu_matchlist <- lulu_blast %>%
+  select(qseqid, sseqid, pident)
+
+ASVtab <- read.csv("your_table-dada2.tsv",
+                   skip = 1, sep = '\t', header = TRUE, as.is = TRUE, row.names = 1
