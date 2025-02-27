@@ -74,6 +74,23 @@ Why? We've seen issues with saving to folders that have spaces in their names an
 ## Using packages from Bioconductor
 
 - We'll only briefly touch on this
+- <https://bioconductor.org>
 - Several important packages used in the eDNA analysis week are from bioconductor
   - dada2, msa, DECIPHER, rBLAST
+
+## Data Wrangling and Analyses with Tidyverse
+
+- <https://www.tidyverse.org>
+- Concept of "tidy" data
+- Improvements on how base R handles data etc.
+- Suite of packages, install them all or individual ones.
+  - readr: reading/writing data files
+  - dplyr: subsetting, manipulating data in data.frames
+  - ggplot2: data visualization
+  - tidyr: manipulating 'shape' of data.frames
+
+### group_by() and summarize() functions
+
+- Start with group_by() then add summarize() and then summarrize(n())
+  - Now show simplified tally() and count()
 
