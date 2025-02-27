@@ -35,7 +35,7 @@ remotes::install_github("tobiasgf/lulu")
 ## File Housekeeping ===========================================================
 
 # Create all the subdirectories we will use
-# Define the directory names
+# Define the directory names 
 dir_names <- c(
   "data/raw",
   "data/working/trimmed_sequences",
