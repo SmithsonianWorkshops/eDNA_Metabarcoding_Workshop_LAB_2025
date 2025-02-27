@@ -94,3 +94,12 @@ Why? We've seen issues with saving to folders that have spaces in their names an
 - Start with group_by() then add summarize() and then summarrize(n())
   - Now show simplified tally() and count()
 
+## Data Visualization with ggplot2
+
+- Grammar of Graphics!
+
+### Loading the dataset
+
+- Use read_csv(), use local copy of csv
+- Add a figure for the Grammar
+- 

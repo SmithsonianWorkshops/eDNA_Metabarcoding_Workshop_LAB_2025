@@ -322,10 +322,9 @@ variants %>%
   mutate(POLPROB = 1- (10 ^ -(QUAL / 10))) %>% 
   View()
 
-# EXERCISE: 
+# EXERCISE: TBD
 
 # group_by() and summarize()
-# 
 
 variants %>%
   group_by(sample_id)
@@ -349,6 +348,11 @@ variants %>%
 variants %>%
   count(sample_id)
 
+# TODO: Group by two columns
+variants %>%
+  group_by(sample_id, CHROM) %>%
+  summarize(mean_DP = mean(DP))
+
 # EXERCISE: How many mutations are INDELs?
 
 # Other summary stats using summarize()
@@ -361,7 +365,41 @@ variants %>%
     max_DP = max(DP))
 
 # Reshaping data frames
+# group_by() and summarize() has the columns as the summary values, how can
+# you "rotate" the table so the rows the summary values? ...pivot_wider()
 
-# Joins?
+variants %>%
+  group_by(sample_id, CHROM) %>%
+  summarize(mean_DP = mean(DP))
 
-# Writing data
+variants %>%
+  group_by(sample_id, CHROM) %>%
+  summarize(mean_DP = mean(DP)) %>% 
+  pivot_wider(names_from = sample_id, values_from = mean_DP)
+
+variants %>%
+  group_by(sample_id, INDEL) %>%
+  summarize(mean_DP = mean(DP)) %>% 
+  pivot_wider(names_from = sample_id, values_from = mean_DP)
+
+
+# TODO: Joins?
+
+# TODO: outputting data?
+
+# Section: Data Visualization with ggplot2
+# working iteratively...
+
+# Start with the data (data frame to plot)
+ggplot(variants)
+
+# Add the mapping (columns to plot)
+ggplot(variants, aes(x = POS, y = DP))
+
+# Add the geoms (graphical representations)
+# Introducing how ggplot uses the + operator
+ggplot(variants, aes(x = POS, y = DP)) +
+  geom_point()
+
+coverage_plot <- ggplot(variants, aes(x = POS, y = DP))
+coverage_plot + geom_point()
