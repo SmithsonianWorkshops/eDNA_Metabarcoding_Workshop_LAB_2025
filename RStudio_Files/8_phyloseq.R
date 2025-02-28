@@ -66,8 +66,7 @@ rownames(seqtab_nochim)
 # "colClasses = c()" argument, which defines any column (or multiple columns)
 # as a particular data type. This is important when looking at plots downstream.
 # To check data type for a all columns in your table, use "str(metadata)".
-metadata <- sample_data(read.delim(  "data/working/PROJECTNAME_metadata.tsv",  sep = "\t",header = TRUE,
-  colClasses = c(water_replicate = "character", filter_size = "character"),
+metadata <- sample_data(read.delim(  "data/working/PROJECTNAME_metadata.tsv",  sep = "\t",header = TRUE,  colClasses = c(water_replicate = "character", filter_size = "character"),
   row.names = "sample_name"
   )
 )
