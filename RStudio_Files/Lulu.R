@@ -1,16 +1,30 @@
 ## Make Lulu matchlist =========================================================
-dir.create("ref/rep_seq")
+dir.create("ref/repseq_db")
 
 makeblastdb(
   "data/results/PROJECTNAME_rep-seq.fas",
-  db_name = "ref/rep_seqs/matchlist",
+  db_name = "ref/repseq_db/repseq_db",
   dbtype = "nucl"
 )
 
-matchlist_ref <- blast(db = "ref/rep_seqs/matchlist")
+refseqdb <- blast(db = "ref/rep_seqs/refseqdb")
+
+# Make a DNAStringSet object from our representative sequences
+sequences_dna <- DNAStringSet(setNames(
+  repseq_nochim_md5_asv$ASV,
+  repseq_nochim_md5_asv$md5)
+)
+
+# You can also get this from the fasta file we downloaded earlier.
+sequences_fasta <- readDNAStringSet("data/results/PROJECTNAME_rep-seq.fas")
+
+# They make the same thing.
+head(sequences_rep_seq)
+head(sequences_fasta)
+
 
 lulu_blast <- predict(
-  matchlist_ref,
+  refseqdb,
   sequences.dna,
   outfmt = "6 qseqid sseqid pident",
   BLAST_args = "-perc_identity 85 -qcov_hsp_perc 80"
@@ -21,6 +35,9 @@ lulu_matchlist <- lulu_blast %>%
 
 
 ## Run Lulu Analysis ===========================================================
+# We need to have our representative sequences (the sequences we are going to
+# blast, Now we have to reformat our representative-sequence table to be a named vector
+View(repseq_nochim_md5_asv)
 
 seqtab_nochim_transpose_md5_lulu <- seqtab.nochim.transpose.md5 %>%
   column_to_rownames(var = "ASV")
@@ -69,7 +86,7 @@ prop_valid <- valids / total
 print(prop_valid)
 
 save(
-  matchlist_ref,
+  repseq_db,
   lulu_blast,
   lulu_matchlist,
   seqtab_nochim_transpose_md5_lulu,
