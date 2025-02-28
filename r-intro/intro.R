@@ -1,9 +1,8 @@
 # This is my script from the R intro
 # Comments start with a #
+# This project is: dc_genomics_r
 
 # For best practice and style comments shouldn't extend past 80 characters, the vertical gray line...
-#
-# Don't reflow this
 
 # Get the current working directory
 getwd()
@@ -98,9 +97,9 @@ mode(favorite_gene)
 # EXERCISE: CREATE OBJECTS AND CHECK THEIR MODES
 
 # They use single quotes here, the style guide is to use double quotes ::shrug::
-chromosome_name <- 'chr02'
+chromosome_name <- "chr02"
 od_600_value <- 0.47
-chr_position <- '1001701'
+chr_position <- "1001701"
 spock <- TRUE
 # pilot <- Earhart
 
@@ -337,7 +336,10 @@ select(variants, sample_id, REF, ALT, DP)
 select(variants, -CHROM)
 select(variants, ends_with("B"))
 
-# EXERCISE HERE?
+# EXERCISE: Create a table that contains all the columns with the letter “i” and column “POS”,
+# without columns “Indiv” and “FILTER”. Hint: look at for a function called contains(), which
+# can be found in the help documentation for ends with we just covered (?ends_with). Note that
+# contains() is not case sensistive.
 
 # filter() to select rows
 filter(variants, sample_id == "SRR2584863")
@@ -350,7 +352,9 @@ filter(variants, QUAL >= 100)
 filter(variants, sample_id == "SRR2584863", QUAL >= 100)
 filter(variants, sample_id == "SRR2584863", (MQ >= 50 | QUAL >= 100))
 
-# EXERCISE HERE?
+# EXERCISE: Select all the mutations that occurred between the positions
+# 1e6 (one million) and 2e6 (inclusive) that have a QUAL greater than 200,
+# and exclude INDEL mutations.
 
 # Pipes!!
 # Output from one function is the input of the next one
@@ -402,7 +406,7 @@ variants %>%
 variants %>%
   count(sample_id)
 
-# TODO: Group by two columns
+# Group by two columns
 variants %>%
   group_by(sample_id, CHROM) %>%
   summarize(mean_DP = mean(DP))
@@ -499,5 +503,5 @@ ggplot(data = variants, aes(x = DP)) +
   geom_density()
 
 # Other tidyverse topics
-# dplyr: Joins
 # readr and base R: outputting data
+# dplyr: Joins
