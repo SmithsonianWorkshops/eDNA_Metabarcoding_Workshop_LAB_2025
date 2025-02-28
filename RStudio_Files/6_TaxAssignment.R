@@ -153,14 +153,15 @@ midori_coi_db <- blast(db = "ref/midori_COI_genus/midori_COI_genus")
 # We need to have our representative sequences (the sequences we are going to
 # blast, Now we have to reformat our representative-sequence table to be a named vector
 View(repseq_nochim_md5_asv)
-# Make a new vector from the ASV column of the dataframe
-sequences <- repseq_nochim_md5_asv$ASV
-# Add the md5 column as names
-names(sequences) <- repseq_nochim_md5_asv$md5
-# Convert vector into a DNAStringSet object
-sequences_rep_seq <- readDNAStringSet(sequences)
 
-# You can also get this named vector from the fasta file we downloaded earlier.
+# Make a DNAStringSet object from our representative sequences
+sequences_dna <- DNAStringSet(setNames(
+  repseq_nochim_md5_asv$ASV,
+  repseq_nochim_md5_asv$md5)
+)
+View(sequences_dna)
+
+# You can also get this from the fasta file we downloaded earlier.
 sequences_fasta <- readDNAStringSet("data/results/PROJECTNAME_rep-seq.fas")
 
 # They make the same thing.
