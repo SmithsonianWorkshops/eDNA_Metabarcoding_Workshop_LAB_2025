@@ -31,8 +31,8 @@ OTU_md5 <- otu_table(seqtab_nochim_md5, taxa_are_rows = FALSE)
 
 # Make a new taxonomy-only table, and replace the current rownames (ASVs) with
 # md5 hashes.
-taxonomy_tax_md5 <- taxonomy$tax
-row.names(taxonomy_tax_md5) <- repseq_md5
+taxonomy_tax_md5 <- taxonomy_rdp$tax
+row.names(taxonomy_tax_md5) <- repseq_nochim_md5
 View(taxonomy_tax_md5)
 
 # Make phyloseq tax-table from our taxonomy-only table.
@@ -66,14 +66,14 @@ rownames(seqtab_nochim)
 # "colClasses = c()" argument, which defines any column (or multiple columns)
 # as a particular data type. This is important when looking at plots downstream.
 # To check data type for a all columns in your table, use "str(metadata)".
-metadata <- sample_data(read.delim(
-  "data/working/PROJECTNAME_metadata.tsv",
-  sep = "\t",
-  header = TRUE,
-  colClasses = c(water_replicate = "character", filter_size = "character"),
+metadata <- sample_data(read.delim(  "data/working/PROJECTNAME_metadata.tsv",  sep = "\t",header = TRUE,  colClasses = c(water_replicate = "character", filter_size = "character"),
   row.names = "sample_name"
   )
 )
+
+# Filter yuur metadata to only include the samples from your dataset.
+metadata_dataset1 <- metadata %>%
+  
 
 # Look at the metadata file, make sure everything looks okay. You'll notice that
 # any dashes in your column names will be converted into periods (e.g.
