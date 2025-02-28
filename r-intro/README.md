@@ -126,9 +126,9 @@ Why? We've seen issues with saving to folders that have spaces in their names an
 ## Data Visualization with ggplot2
 
 - Grammar of Graphics!
+- <https://ggplot2.tidyverse.org/articles/ggplot2.html>
 
 ### Loading the dataset
 
 - Use read_csv(), use local copy of csv
-- Add a figure for the Grammar
 - 

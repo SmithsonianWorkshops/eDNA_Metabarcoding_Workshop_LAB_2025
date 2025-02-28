@@ -272,6 +272,15 @@ str(variants)
 mode(variants)
 class(variants)
 
+# [row, column]: notation for data from data frame
+# [, column] or [column]: full column
+# [row,]: full row
+
+# Examples
+variants[801, 29]
+variants[2, ]
+variants[1:4, 1]
+
 # Use $ notation to refer to a specific column in the data frame
 alt_alleles <- variants$ALT
 alt_alleles
@@ -283,26 +292,15 @@ specific_alt_allele
 alt_alleles == "A"
 
 # Subset a data.frame (choosing rows)
-alt_a <- subset(variants, ALT == "A" )
+alt_a <- variants[variants$ALT == "A",]
 
-# Using or, |
-alt_a_c_g_t <- subset(variants, ALT == "A" | ALT == "T" | ALT == "G" | ALT == "C")
-
-# Using and, &
-alt_ca_indel <- subset(variants, ALT == "CA" & INDEL == TRUE )
-
-# TODO: good spot for an exercise
-
-# Subset a data.frame, rows and columns
-alt_a_pos <- subset(variants, ALT == "A", select = c(CHROM, POS))
-View(alt_a_pos)
+# All rows where the ALT is A, C, G, or T.
+alt_a_c_g_t <- variants[variants$ALT %in% c("A", "C", "G", "T"), ]
 
 # Column names can be viewed and edited
 colnames(alt_a_pos)
 colnames(alt_a_pos)[1] <- "CONTIG"
 colnames(alt_a_pos)
-
-# TODO: Output using write.table() and write.csv()?
 
 # Section: Data Wrangling and Analyses with Tidyverse
 
@@ -439,10 +437,6 @@ variants %>%
   pivot_wider(names_from = sample_id, values_from = mean_DP)
 
 
-# TODO: Joins?
-
-# TODO: outputting data?
-
 # Section: Data Visualization with ggplot2
 # working iteratively...
 
@@ -459,3 +453,51 @@ ggplot(variants, aes(x = POS, y = DP)) +
 
 coverage_plot <- ggplot(variants, aes(x = POS, y = DP))
 coverage_plot + geom_point()
+
+ggplot(data = variants, aes(x = POS, y = DP)) +
+  geom_point(alpha = 0.5)
+
+ggplot(data = variants, aes(x = POS, y = DP)) +
+  geom_point(alpha = 0.5, color = "blue")
+
+ggplot(data = variants, aes(x = POS, y = DP, color = sample_id)) +
+  geom_point(alpha = 0.5)
+
+ggplot(data = variants, aes(x = POS, y = DP, color = sample_id)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Base Pair Position",
+       y = "Read Depth (DP)")
+
+ggplot(data = variants, aes(x = POS, y = DP, color = sample_id)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Base Pair Position",
+       y = "Read Depth (DP)",
+       title = "Read Depth vs. Position")
+
+ggsave ("depth.pdf", width = 6, height = 4)
+
+# EXERCISE
+# Use what you just learned to create a scatter plot of mapping quality (MQ)
+# over position (POS) with the samples showing in different colors. Make sure to
+# give your plot relevant axis labels.
+
+# Faceting
+# facet_grid(~ sample_id)
+# facet_grid(sample_id ~ .)
+
+# Theme
+# theme_bw() +
+#  theme(panel.grid = element_blank())
+
+# Barplot
+ggplot(data = variants, aes(x = INDEL, fill = sample_id)) +
+  geom_bar() +
+  facet_grid(sample_id ~ .)
+
+# Density
+ggplot(data = variants, aes(x = DP)) +
+  geom_density()
+
+# Other tidyverse topics
+# dplyr: Joins
+# readr and base R: outputting data
