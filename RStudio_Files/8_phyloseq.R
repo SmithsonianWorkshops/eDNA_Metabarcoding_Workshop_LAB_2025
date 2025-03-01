@@ -13,7 +13,7 @@ library(phyloseq)
 library(ape)
 library(msa)
 library(DECIPHER)
-
+library(tidyverse)
 ## Prepare Components to be Imported Into Phyloseq =============================
 
 ### sequence-table -------------------------------------------------------------
@@ -22,92 +22,70 @@ library(DECIPHER)
 # samples). If you want to use a feature-table (columns of samples, rows of
 # ASV/OTUs) instead, use "taxa_are_rows = TRUE"
 OTU_md5 <- otu_table(seqtab_nochim_md5, taxa_are_rows = FALSE)
-
+View(OTU_md5)
 ### tax_table ------------------------------------------------------------------
 # Row headings for the tax_table should match the column headings in the
 # otu_table (which in this case are md5 hashes of the ASV's). Also, our current
 # "taxonomy" has a taxonomy table and a bootstrap table, but for the tax_table
 # we need need a taxonomy-only table.
-
+repseq_nochim_md5 <- repseq.nochim.md5
 # Make a new taxonomy-only table, and replace the current rownames (ASVs) with
-# md5 hashes.
-taxonomy_tax_md5 <- taxonomy_rdp$tax
-row.names(taxonomy_tax_md5) <- repseq_nochim_md5
-View(taxonomy_tax_md5)
+# md5 hashes, and convert to a matrix (which is the type of table needed by
+# phyloseq.
+taxonomy_md5 <- taxonomy_rdp_tax %>%
+  mutate(RowNames = repseq_nochim_md5) %>%
+  column_to_rownames(var = "RowNames") %>%
+  select(-ASV) %>%
+  as.matrix()
+View(taxonomy_md5)
 
 # Make phyloseq tax-table from our taxonomy-only table.
-TAX_md5 <- tax_table(taxonomy_tax_md5)
+TAX_md5 <- tax_table(taxonomy_md5)
+View(TAX_md5)
 
 ### sample_data ----------------------------------------------------------------
-# Import metadata (here as a tab-delimited text file, see examples for
-# formatting) and convert to a sample_data object. Make sure that your .tsv file
-#  has the same samples (and sample names) as your otu_table. This
-# may not be the same as your original input samples, since some samples may
-# have ended up with zero reads and been removed.
-
-# Check sample names that have been used to this point. I usally do it by
-# looking at "seqtab.nochim", since this is where the phyloseq otu_table gets
-# its sample names from. Rename sample names in your metadata file you plan
-# to import to match those in "seqtab.nochim".
-rownames(seqtab_nochim)
-
-# Import your metadata file. I usually use a tab-delimited file (sep = "\t"),
-# but you can also use a comma delimited metadata file (sep = ","). You need to
-# use your sample names (that should now be matching those in "seqtab.nochim")
-# as rownames in the imported table. In this case, the column "sample_name" in
-# my metadata.tsv file has samples names, so "row.names = 'sample_name'".
-
-# Also, you may have some variables that are numbers but you want to keep as
-# characters. They contain discreet variables, but because they are numbers,
-# R reads them as continuous. For example, we may have two filter sizes,
-# 22 and 45. While these are numbers, "filter_size" is not a continuous
-# variable, we only have two discreet sizes. To ensure that R recognizes these
-# appropriately (as characters and not numbers), I have added an optional
-# "colClasses = c()" argument, which defines any column (or multiple columns)
-# as a particular data type. This is important when looking at plots downstream.
-# To check data type for a all columns in your table, use "str(metadata)".
-metadata <- sample_data(read.delim(  "data/working/PROJECTNAME_metadata.tsv",  sep = "\t",header = TRUE,  colClasses = c(water_replicate = "character", filter_size = "character"),
-  row.names = "sample_name"
-  )
+# You should have already imported your metadata in VisualizeResults, but if you
+# don't have it, here is the code again.
+meta <- read.delim(
+  "dataset1.tsv",
+  header = TRUE,
+  sep = "\t",
+  colClasses = c(depth_ft = "character")
 )
 
 # Filter yuur metadata to only include the samples from your dataset.
-metadata_dataset1 <- metadata %>%
-  
+meta_dataset1 <- meta %>%
+  filter(Sample_ID %in% rownames(seqtab_nochim))
 
-# Look at the metadata file, make sure everything looks okay. You'll notice that
-# any dashes in your column names will be converted into periods (e.g.
-# "filter-size" would be now "filter.size"), but underscores are not changed.
-View(metadata)
+# Like tax_table and otu_table, sample_data needs rownames as Sample_ID instead
+# of a column. However, unlike the previous commands, sample_data needs a
+# dataframe (unlike otu_table and tax_table, which require a matrix), so we need
+# to convert our first column to a rowname, but that's it.
+meta_matrix <- meta_dataset1 %>%
+  column_to_rownames(var = "Sample_ID")
+
+# Look at the metadata file, make sure everything looks okay.
+View(meta_matrix)
 
 # Look at data type of all the columns of the table.
-str(metadata)
+str(meta_matrix)
 # Make a phyloseq sample_data file from "metadata"
-SAMPLE <- sample_data(metadata)
+SAMPLE <- sample_data(meta_matrix)
 
 ### refseq ---------------------------------------------------------------------
 # The refseq phyloseq-class item must contain sequences of equal length, which
 # in most cases means it needs to be aligned first. We will align using
 # DECIPHER.
-# We already have a list of ASVs in "repseq", which we obtained using a DADA2
-# command called getSequences. getSequences extracts sequences from a DADA2
-# object, which in the case of "repseq" was "seqtab.nochim". However, the
-# ASVs in "repseq" are not named. Since we have been using md5 hashes as ASV
-# names up to this point, we should do the same here, using the list we already
-# made called "repseq.md5".
 
-# If you have not made "repseq" or "repseq.md5" go to
-# "4 Metabarcoding_R_Pipeline_RStudio_FormatandExportFiles.txt", section "Create
-# And USE md5 Hash".
-
-# Make a new list of ASVs from the representative sequences, and add md5 hashes
-# as names.
-sequences <- repseq_nochim
-names(sequences) <- repseq_nochim_md5
-
-# Convert these sequences into a DNAString, which is the format of sequences
-# used by DECIPHER, and many other phylogenetic programs in R.
-sequences_dna <- DNAStringSet(sequences)
+# Create a DNAString from our representative sequences and md5 hashs (like we
+# did in the TaxAssignment section). If you have not made "repseq_nochim_md5"
+# go to the DADA2 section. This is the format for DECIPHER and many other
+# phylogenetic programs in R.
+sequences_dna <- DNAStringSet(setNames(
+  repseq_nochim_md5_asv$ASV,
+  repseq_nochim_md5_asv$md5
+))
+View(sequences_dna)
 
 # Align using DECIPHER. DECIPHER "Performs profile-to-profile alignment of
 # multiple unaligned sequences following a guide tree" (from the manual). We do
@@ -196,7 +174,7 @@ pairwise_tn93 <- dist.dna(
 # don't know how many NaNs are too many, but if there are more than a few, I
 # would prefer to be safe and use ml distances.
 length(is.nan(pairwise.tn93))
-length(pairwise.tn93)/length(is.nan(pairwise.tn93))
+length(pairwise.tn93) / length(is.nan(pairwise.tn93))
 
 # Make an improved neighbor-joining tree out of our pairwise distance matrix.
 # ape has other tree-building phenetic methods to use as well, such as nj or
@@ -211,7 +189,7 @@ tree.tn93.bionj <- bionj(pairwise.tn93)
 plot(tree.tn93.bionj)
 
 # Create a phyloseq tree object from our neihbor-joining tree.
-TREE.md5 <-  phy_tree(tree.tn93.bionj)
+TREE.md5 <- phy_tree(tree.tn93.bionj)
 
 ### phyloseq object ------------------------------------------------------------
 # We use the components created above to create a phyloseq object. For the
@@ -237,8 +215,8 @@ ntaxa(physeq)
 nsamples(physeq)
 sample_names(physeq)
 sample_variables(physeq)
-otu_table(physeq)[1:5,1:5]
-tax_table(physeq)[1:5,1:5]
+otu_table(physeq)[1:5, 1:5]
+tax_table(physeq)[1:5, 1:5]
 phy_tree(physeq)
 taxa_names(physeq)[1:20]
 
@@ -259,8 +237,12 @@ plot_tree(
 )
 
 
-
-plot_richness(physeq, x="filter_size", measures=c("Shannon", "Fisher"), color = "filter_size") 
+plot_richness(
+  physeq,
+  x = "filter_size",
+  measures = c("Shannon", "Fisher"),
+  color = "filter_size"
+)
 ord.euclidean <- ordinate(physeq, "MDS", "euclidean")
 plot_ordination(physeq, ord.euclidean, type = "samples", color = "tank")
 plot_ordination(physeq, ord.euclidean, type = "samples", color = "filter_size")
