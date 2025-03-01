@@ -4,7 +4,7 @@
 # used for each persons particular project, but it does not hurt to have them
 # all installed, loaded, and ready to be used when needed.
 # Install  BiocManager
-if (!requireNamespace("BiocManager", quietly = TRUE)){
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager")
 }
 # Install Dada2. You may get an error telling you to install a different version
@@ -12,7 +12,6 @@ if (!requireNamespace("BiocManager", quietly = TRUE)){
 BiocManager::install("dada2", version = "3.19")
 # Install the rest of the libraries needed through BiocManager.
 BiocManager::install("phyloseq")
-BiocManager::install("msa")
 BiocManager::install("DECIPHER")
 BiocManager::install("rBLAST")
 
@@ -35,7 +34,7 @@ remotes::install_github("tobiasgf/lulu")
 ## File Housekeeping ===========================================================
 
 # Create all the subdirectories we will use
-# Define the directory names 
+# Define the directory names
 dir_names <- c(
   "data/raw",
   "data/working/trimmed_sequences",
