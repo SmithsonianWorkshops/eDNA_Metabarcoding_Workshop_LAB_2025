@@ -12,8 +12,8 @@ refseqdb <- blast(db = "ref/rep_seqs/refseqdb")
 # Make a DNAStringSet object from our representative sequences
 sequences_dna <- DNAStringSet(setNames(
   repseq_nochim_md5_asv$ASV,
-  repseq_nochim_md5_asv$md5)
-)
+  repseq_nochim_md5_asv$md5
+))
 
 # You can also get this from the fasta file we downloaded earlier.
 sequences_fasta <- readDNAStringSet("data/results/PROJECTNAME_rep-seq.fas")
@@ -54,6 +54,20 @@ curated_asv <- lulu(
 
 # Get the feature table out of this object.
 feattab_lulu <- curated_asv$curated_table
+
+# Get the representative sequences from the feature table and add md5 hash
+# (which) we have to make anew.
+repseq_lulu <- safs
+
+repseq_lulu_md5 <- c()
+for (i in seq_along(repseq_lulu)) {
+  repseq_lulu_md5[i] <- digest(
+    repseq.nochim[i],
+    serialize = FALSE,
+    algo = "md5"
+  )
+}
+
 
 # How long did this take to run? We can check that:
 
