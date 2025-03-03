@@ -14,6 +14,7 @@ BiocManager::install("dada2", version = "3.19")
 BiocManager::install("phyloseq")
 BiocManager::install("DECIPHER")
 BiocManager::install("rBLAST")
+BiocManager::install("ShortRead")
 
 # Install and other libraries you may need (or install through
 # "Install Packages" window). Libraries will only need to be installed once.
