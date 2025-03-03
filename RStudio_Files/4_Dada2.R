@@ -568,9 +568,9 @@ write.table(
 # To create a Sequence list with md5 hash instead of ASVs, we first need to
 # create a list of md5 hash's of all ASV's.
 
-# This makes a new vector containing all the non-chimeric ASV's (unique sequences)
-# returned by dada2. We are going to use this list to create md5 hashes. Use
-# whatever table you will later use for your analyses (e.g. seqtab.nochim)
+# This makes a new vector containing all the non-chimeric ASVs
+# returned by dada2. We are going to use this list to create md5 hashes to
+# add to your sequence-table and to create a fasta file to export.
 repseq_nochim <- getSequences(seqtab_nochim)
 # We want to look at this list, to make sure you are getting the right thing
 head(repseq_nochim)
