@@ -57,12 +57,12 @@ feattab_lulu <- curated_asv$curated_table
 
 # Get the representative sequences from the feature table and add md5 hash
 # (which) we have to make anew.
-repseq_lulu <- safs
+repseq_lulu <- feattab_lulu$ASV
 
 repseq_lulu_md5 <- c()
 for (i in seq_along(repseq_lulu)) {
   repseq_lulu_md5[i] <- digest(
-    repseq.nochim[i],
+    repseq_lulu[i],
     serialize = FALSE,
     algo = "md5"
   )
