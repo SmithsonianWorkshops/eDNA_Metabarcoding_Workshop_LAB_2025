@@ -13,8 +13,9 @@ In this workshop we will learn how to analyze illumina reads from eDNA or other 
   * [DADA2](#dada2)
   * [Visualize Results](#visualize-results)
   * [Assign Taxonomy](#assign-taxonomy)
+  * [Lulu](#Lulu)
   * [phyloseq](#phyloseq)
-  * [Other formats](#other-formats)
+  * [Other Formats](#other-formats)
   * [Convert and Combine Files](#convert-and-combine-files)
   * [Create a custom database](#create-a-custom-database)
 
@@ -43,7 +44,7 @@ The rest of this workshop will be run in RStudio
 * When you do this it will ask if you want to create it from an "Existing Directory" or a "New Directory". Choose **"New Directory"**.
   * For Mac users the default location is `/Users/username`; this is where you want to create this new project.
   * For Windows users, the default is in your documents folder. For many, this is backed up to OneDrive automatically, which may cause problems down the road with RStudio, so you want to browse to `/Users/username` and made a new project there.
-* Name the project **eDNA_workshop_dataset_X**, replace `X` with the dataset nubmer that you'll be working on.
+* Name the project **eDNA_workshop_dataset_X**, replace `X` with the dataset number that you've been assigned.
   * Making a new project from a new directory in RStudio will automatically create a project folder and a project file (.Rproject) in that folder.
 
 ### RStudio Preparation
@@ -86,25 +87,24 @@ Here we use several programs to visualize your results. We will explore our resu
 
 Here we use DADA2s RDP identifier and BLAST to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get and create your own reference database later. Open [6_TaxAssignment.R](RStudio_Files/6_TaxAssignment.R) and follow the directions.
 
-## Other Formats
-
-Here we learn how to output our Sequence-Table data and representative sequence information into several different formats that may be useful. We will specifically learn how to create and output a sequence-list-table (a tall tidy table), and a feature-to-fasta file (a fasta file of each sample/ASV combination, with each sequence named with sample name, md5 has, and read count for that ASV in that sample). The sequence-list-table is very good for concatenating read count information in a text editor or excel, and the feature-to-fasta file can be a good way to look phylegenetically at ASV distributions among samples, as well as a really good way to see evidence of contamination an pseudogenes.
-
-## Convert and Combine Files
-
-Here we learn how to import and convert read count data from various formats to a Sequence-Table, which can then be combined with other Sequence-Tables for further analyses.  This section converts two comman Qiime2 formats (Feature-Tables and .biom files), and sequence-list-tables into the Sequence-Table format that is used by Dada2 and many diversity programs. 
-
 ## Lulu
 
-[Lulu](https://github.com/tobiasgf/lulu) is a R library that
+[Lulu](https://github.com/tobiasgf/lulu) is a R library that curates post denoised or clustered metabarcoding data "...to reduce the number of erroneous OTUs in OTU tables to achieve more realistic biodiversity metrics." It uses ASV or OTU co-occurance and abundance to merge probable "erroneous" sequences with their more-likely-correct parent. To use Lulu, open [7_Lulu.R](RStudio_Files/7_Lulu.R) and follow the directions.
 
 ## phyloseq
 
 [phyloseq](https://github.com/joey711/phyloseq) is a R library that allows for manipulation, visualization, and analysis of metabarcoding data. This section describes how to set up and load your denoised results from DADA2 into phyloseq, how to perform some preliminary analyses, ana how to visualize a few basic results. Open [8_phyloseq.R](RStudio_Files/8_phyloseq.R) and follow the directions.
 
+## Other Formats
+
+Here we learn how to output our Sequence-Table data and representative sequence information into several different formats that may be useful. We will specifically learn how to create and output a sequence-list-table (a tall tidy table), and a feature-to-fasta file (a fasta file of each sample/ASV combination, with each sequence named with sample name, md5 has, and read count for that ASV in that sample). The sequence-list-table is very good for concatenating read count information in a text editor or excel, and the feature-to-fasta file can be a good way to look phylegenetically at ASV distributions among samples, as well as a really good way to see evidence of contamination an pseudogenes. If you want or need other formats, open [Other_formats.R](RStudio_Files/Other_formats.R) and follow the directions.
+
+## Convert and Combine Files
+
+Here we learn how to import and convert read count data from various formats to a Sequence-Table, which can then be combined with other Sequence-Tables for further analyses.  This section converts two comman Qiime2 formats (Feature-Tables and .biom files), and sequence-list-tables into the Sequence-Table format that is used by Dada2 and many diversity programs. To import, convert, and/or combione datasets, open [ConvertcombineFiles.R](RStudio_Files/ConvertCombineFiles.R) and follow the directions.
 
 ## Create a custom database
 
-In this section we will use the [refdb R package](https://github.com/fkeck/refdb) and other R tools to create a custom reference database. Open [9_CustomDatabases.R](RStudio_Files/7_CustomDatabases.R) and follow the directions.
+In this section we will use the [refdb R package](https://github.com/fkeck/refdb) and other R tools to create a custom reference database. Open [9_CustomDatabases.R](RStudio_Files/9_CustomDatabases.R) and follow the directions.
 
 
