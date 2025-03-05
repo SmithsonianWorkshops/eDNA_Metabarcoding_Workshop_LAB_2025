@@ -58,7 +58,7 @@ pipeline <- "https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop
 download.file(pipeline, basename(pipeline))
 untar(basename(pipeline))
 file.remove(basename(pipeline))
-dir.create(ref)
+dir.create("ref")
 ref <- "https://www.dropbox.com/s/rrzo8ijod0swnb0/midori_COI_genus_dada2.fasta.gz?dl=1"
 download.file(ref, ref/basename(ref))
 unzip(basename(ref))
