@@ -13,9 +13,11 @@ In this workshop we will learn how to analyze illumina reads from eDNA or other 
   * [DADA2](#dada2)
   * [Visualize Results](#visualize-results)
   * [Assign Taxonomy](#assign-taxonomy)
-  * [Other formats](#other-formats)  
-  * [Create a custom database](#create-a-custom-database)
   * [phyloseq](#phyloseq)
+  * [Other formats](#other-formats)
+  * [Convert and Combine Files](#convert-and-combine-files)
+  * [Create a custom database](#create-a-custom-database)
+
 
 This protocol is for paired-end demultiplexed miseq sequences that have sufficient overlap to merge R1 and R2, and are going to be run on your computer, not on Hydra. It is broken up into sections, each section has an `.R` document that can be opened in RStudio (or VSCode with the [R extension](https://code.visualstudio.com/docs/languages/r)).
 
@@ -74,7 +76,7 @@ We use Cutadapt to remove primer sequences from our raw reads. This section ends
 
 ## DADA2
 
-Here we use DADA2 to quality-filter and quality-trim reads, estimate error rates and denoise reads, merge paired reads, and remove chimeric sequences. This section ends with a sequence-table, which is a table containing columns of ASV's (Amplicon Sequence Variants), rows of samples, and cell values equal "# of reads", a feature-table (rows of ASVs and columns of samples - same as the output of Qiime2) a fasta file containing all ASVs, and a file associating ASVs with their unique md5 hash. Open [4_Data2.R](Rstudio_files/4_Dada2.R) and follow the directions.
+[DADA2](https://github.com/benjjneb/dada2) is a program outputs sample-specific sequence (ASV) count data from Illumina amplicon raw reads. We use Dada2 to quality-filter and quality-trim reads, estimate error rates and denoise reads, merge paired reads, and remove chimeric sequences. This section ends with a sequence-table, which is a table containing columns of ASV's (Amplicon Sequence Variants), rows of samples, and cell values equal "# of reads", a feature-table (rows of ASVs and columns of samples - same as the output of Qiime2) a fasta file containing all ASVs, and a file associating ASVs with their unique md5 hash. Open [4_Data2.R](Rstudio_files/4_Dada2.R) and follow the directions.
 
 ## Visualize Results
 
@@ -84,10 +86,25 @@ Here we use several programs to visualize your results. We will explore our resu
 
 Here we use DADA2s RDP identifier and BLAST to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get and create your own reference database later. Open [6_TaxAssignment.R](RStudio_Files/6_TaxAssignment.R) and follow the directions.
 
-## Create a custom database
+## Other Formats
 
-In this section we will use the [refdb R package](https://github.com/fkeck/refdb) and other R tools to create a custom reference database. Open [7_CustomDatabases.R](RStudio_Files/7_CustomDatabases.R) and follow the directions.
+Here we learn how to output our Sequence-Table data and representative sequence information into several different formats that may be useful. We will specifically learn how to create and output a sequence-list-table (a tall tidy table), and a feature-to-fasta file (a fasta file of each sample/ASV combination, with each sequence named with sample name, md5 has, and read count for that ASV in that sample). The sequence-list-table is very good for concatenating read count information in a text editor or excel, and the feature-to-fasta file can be a good way to look phylegenetically at ASV distributions among samples, as well as a really good way to see evidence of contamination an pseudogenes.
+
+## Convert and Combine Files
+
+Here we learn how to import and convert read count data from various formats to a Sequence-Table, which can then be combined with other Sequence-Tables for further analyses.  This section converts two comman Qiime2 formats (Feature-Tables and .biom files), and sequence-list-tables into the Sequence-Table format that is used by Dada2 and many diversity programs. 
+
+## Lulu
+
+[Lulu](https://github.com/tobiasgf/lulu) is a R library that
 
 ## phyloseq
 
-Phyloseq is a R library that allows for manipulation, visualization, and analysis of metabarcoding data. This section describes how to set up and load your denoised results from DADA2 into phyloseq, how to perform some preliminary analyses, ana how to visualize a few basic results. Open [8_phyloseq.R](RStudio_Files/8_phyloseq.R) and follow the directions.
+[phyloseq](https://github.com/joey711/phyloseq) is a R library that allows for manipulation, visualization, and analysis of metabarcoding data. This section describes how to set up and load your denoised results from DADA2 into phyloseq, how to perform some preliminary analyses, ana how to visualize a few basic results. Open [8_phyloseq.R](RStudio_Files/8_phyloseq.R) and follow the directions.
+
+
+## Create a custom database
+
+In this section we will use the [refdb R package](https://github.com/fkeck/refdb) and other R tools to create a custom reference database. Open [9_CustomDatabases.R](RStudio_Files/7_CustomDatabases.R) and follow the directions.
+
+
