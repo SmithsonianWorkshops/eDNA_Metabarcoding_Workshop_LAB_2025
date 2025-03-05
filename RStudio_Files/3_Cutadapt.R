@@ -4,7 +4,7 @@
 
 # Load necessary libraries
 library(tidyverse)
-
+library(ShortRead)
 
 # Make a list of all the files in your "data/raw" folder.
 reads_to_trim <- list.files("data/raw")
@@ -12,13 +12,14 @@ head(reads_to_trim)
 # Separate files by read direction (R1,R2), and save each list as an object
 reads_to_trim_F <- reads_to_trim[str_detect(reads_to_trim, "R1_001.fastq.gz")]
 reads_to_trim_R <- reads_to_trim[str_detect(reads_to_trim, "R2_001.fastq.gz")]
-
+length(reads_to_trim_F)
+length(reads_to_trim_R)
 # Separate the elements of "reads.to.trim.F" by underscore, and save the first
 # element as "sample.names".
-sample_names_raw <- sapply(strsplit(basename(reads.to_trim_F), "_"), `[`, 1)
+sample_names_raw <- sapply(strsplit(basename(reads_to_trim_F), "_"), `[`, 1)
 head(sample_names_raw)
 
-# Count the number of reads in each sample
+# Count the number of reads in each sample.
 sequence_counts_raw <- sapply(
   paste0("data/raw/", reads_to_trim_F),
   function(file) {
@@ -37,27 +38,27 @@ head(sequence_counts_raw)
 
 # THE PATHS SHOWN BELOW ARE EXAMPLES ONLY. PLEASE CHANGE PATH TO YOUR PRIMER
 # FILES.
-path_to_Fprimers <- "eDNA_Metabarcoding_Workshop_LAB_2025-main/primers/COImlIntF.fas" # nolint: line_length_linter, object_name_linter.
-path_to_Rprimers <- "eDNA_Metabarcoding_Workshop_LAB_2025-main/primers/jgCOIR.fas" # nolint: line_length_linter, object_name_linter.
+path_to_Fprimers <- "eDNA_Metabarcoding_Workshop_LAB_2025-main/primers/COImlIntF.fas"
+path_to_Rprimers <- "eDNA_Metabarcoding_Workshop_LAB_2025-main/primers/jgCOIR.fas"
 
 ## Run Cutadapt ================================================================
 
 # The following for loop runs cutadapt on paired samples, one pair at a time.
 # fmt: skip
-for (i in seq_along(sample_names)) {
+for (i in seq_along(sample_names_raw)) {
   system2(
-    cutadapt_binary,
+    cutadapt,
     args = c(
       "-e 0.2 --discard-untrimmed --minimum-length 30 --cores=0",
       "-g", paste0("file:", path_to_Fprimers),
       "-G", paste0("file:", path_to_Rprimers),
       "-o", paste0(
         "data/working/trimmed_sequences/",
-        sample.names[i],
+        sample_names_raw[i],
         "_trimmed_R1.fastq.gz"
       ), "-p", paste0(
         "data/working/trimmed_sequences/",
-        sample.names[i],
+        sample_names_raw[i],
         "_trimmed_R2.fastq.gz"
       ),
       paste0("data/raw/", reads_to_trim_F[i]),
