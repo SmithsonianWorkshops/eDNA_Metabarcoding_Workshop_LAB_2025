@@ -9,7 +9,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) {
 }
 # Install Dada2. You may get an error telling you to install a different version
 # of Dada2. Change "3.17" to whatever version RStudio tells you.
-BiocManager::install("dada2", version = "3.19")
+BiocManager::install("dada2")
 # Install the rest of the libraries needed through BiocManager.
 BiocManager::install("phyloseq")
 BiocManager::install("DECIPHER")
@@ -51,7 +51,7 @@ sapply(dir_names, dir.create, recursive = TRUE)
 downloads <- "/Users/USERNAME/Downloads/DATASET"
 # Find all the files in the downloaded reads folder that end with .fastq.gz.
 raw_reads <- list.files(downloads, pattern = ".fastq.gz", recursive = TRUE)
-head(raw.reads)
+head(raw_reads)
 
 # Copy the read files to the "data/raw" directory, and confirm that they are
 # there.
