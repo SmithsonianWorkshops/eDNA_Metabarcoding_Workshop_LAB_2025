@@ -9,6 +9,7 @@ library(dada2)
 library(digest)
 library(tidyverse)
 library(seqinr)
+library(ShortRead)
 
 ## File Housekeeping ===========================================================
 
@@ -16,18 +17,16 @@ library(seqinr)
 path_to_trimmed <- "data/working/trimmed_sequences"
 
 # This lists the files inside the selected folder.
-list.files(path)
+list.files(path_to_trimmed)
 
 # This creates two vectors. One contains the names for forward reads (R1, called
 # trimmed_F) and the other for reverse reads (R2, called trimmed_R).
 trimmed_F <- sort(list.files(
-  # nolint: object_name_linter.
   path_to_trimmed,
   pattern = "_R1.fastq.gz",
   full.names = TRUE
 ))
 trimmed_R <- sort(list.files(
-  # nolint: object_name_linter.
   path_to_trimmed,
   pattern = "_R2.fastq.gz",
   full.names = TRUE
@@ -106,7 +105,7 @@ head(sample_names_trimmed)
 # the orange lines are the quartiles (solid for median, dashed for 25% and 75%)
 # and the red line represents the proportion of reads existing at that position.
 quality_plot_F <- plotQualityProfile(
-  trimmed_F[1:length(sample_names)], # nolint: seq_linter.
+  trimmed_F[1:length(sample_names_trimmed)],
   aggregate = TRUE
 )
 quality_plot_F
@@ -128,7 +127,7 @@ ggsave(
 
 # Examine the reverse reads as you did the forward.
 quality_plot_R <- plotQualityProfile(
-  trimmed_R[1:length(sample_names)], # nolint: seq_linter.
+  trimmed_R[1:length(sample_names_trimmed)],
   aggregate = TRUE
 )
 quality_plot_R
@@ -145,7 +144,6 @@ ggsave(
 # Save all the objects created to this point
 save(
   path_to_trimmed,
-  trimmed_reads,
   trimmed_F,
   trimmed_R,
   sequence_counts_trimmed,
@@ -159,7 +157,7 @@ save(
 # in the next step.
 filtered_F <- file.path(
   # nolint: object_name_linter.
-  trimmed_reads,
+  path_to_trimmed,
   "filtered",
   paste0(
     sample_names_trimmed,
@@ -168,7 +166,7 @@ filtered_F <- file.path(
 )
 filtered_R <- file.path(
   # nolint: object_name_linter.
-  trimmed_reads,
+  path_to_trimmed,
   "filtered",
   paste0(
     sample_names_trimmed,
@@ -275,6 +273,7 @@ errors_F <- learnErrors(
   verbose = FALSE
 )
 
+start <- Sys.time()
 errors_R <- learnErrors(
   filtered_R,
   nbases = 1e+08,
@@ -286,7 +285,8 @@ errors_R <- learnErrors(
   qualityType = "Auto",
   verbose = FALSE
 )
-
+end <- Sys.time()
+end - start
 # We can visualize the estimated error rates to make sure they don't look too
 # crazy. The red lines are error rates expected under the "...nominal defintion
 # of the Q-score." The black dots are "...observed error rates for each
@@ -318,7 +318,7 @@ save(
   errors_R,
   error_plots_F,
   error_plots_R,
-  file = "data/results/errors.Rdata"
+  file = "data/working/errors.Rdata"
 )
 
 
@@ -418,7 +418,6 @@ dim(seqtab_nochim)
 # at them later
 chimeras_list <- isBimeraDenovoTable(
   seqtab,
-  method = "consensus",
   multithread = TRUE,
   verbose = TRUE
 )
@@ -442,7 +441,7 @@ write.fasta(
 # This shows the length of the representative sequences (ASV's). Typically,
 # there are a lot of much longer and much shorter sequences.
 seq_length_table <- table(nchar(getSequences(seqtab_nochim)))
-
+seq_length_table
 # Export this table as a .tsv
 write.table(
   seq_length_table,
@@ -474,10 +473,13 @@ table(nchar(getSequences(seqtab_nochim_313)))
 # the stats table that we look at in Qiime2.This is a good quick way to see if
 # something is wrong (i.e. only a small proportion make it through).
 
+# First let remind ourselves what the other sequence count objects look like
 sequence_counts_raw
 sequence_counts_trimmed
 sequence_counts_filtered
 
+# Now lets make a table for the post-filtered samples, including denoised,
+# merged, and non-chimeric read counts
 getN <- function(x) sum(getUniques(x))
 sequence_counts_postfiltered <- as_tibble(cbind(
   sapply(denoised_F, getN),
@@ -485,14 +487,19 @@ sequence_counts_postfiltered <- as_tibble(cbind(
   sapply(merged_reads, getN),
   rowSums(seqtab_nochim)
 )) %>%
+  mutate(Sample_ID = sample_names_filtered) %>%
   select(
+    Sample_ID,
     Denoised_Reads_F = V1,
     Denoised_Reads_R = V2,
     Merged_Reads = V3,
     Non_Chimeras = V4
-  ) %>%
-  mutate(Sample_ID = sample_names_filtered)
+  )
+# Lets look at these to make sure it makes sense
+head(sequence_counts_postfiltered)
 
+# Finally, we are going to put all this read count information together in one
+# large table
 track_reads <- tibble(
   sequence_counts_raw,
   Sample_ID = names(sequence_counts_raw)
@@ -512,8 +519,16 @@ track_reads <- tibble(
     sequence_counts_postfiltered,
     join_by(Sample_ID)
   ) %>%
-  mutate(Proportion_Reads_Kept = 100 * Non_Chimeras / sequence_counts_raw) %>%
-  select(Sample_ID, everything())
+  mutate(Proportion_Kept = Non_Chimeras / sequence_counts_raw) %>%
+  select(Sample_ID, everything()) %>%
+  select(
+    Sample_ID,
+    Raw_Reads = sequence_counts_raw,
+    Trimmed_Reads = sequence_counts_trimmed,
+    Filtered_Reads = sequence_counts_filtered,
+    everything()
+  )
+
 
 # Look at the results for the first 6 samples, or all, depending upon the number
 # of samples.
@@ -599,7 +614,7 @@ View(seqtab_nochim_md5)
 # sequences
 write.table(
   seqtab_nochim_md5,
-  file = "data/results/PROJECT_sequence-table-md5.tsv",
+  file = "data/results/PROJECTNAME_sequence-table-md5.tsv",
   quote = FALSE,
   sep = "\t",
   row.names = TRUE,
@@ -638,7 +653,7 @@ save(
   repseq_all,
   repseq_chimera,
   getN,
-  track,
+  track_reads,
   seq_length_table,
   repseq_nochim,
   repseq_nochim_md5,
