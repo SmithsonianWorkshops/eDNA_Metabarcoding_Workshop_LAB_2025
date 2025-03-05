@@ -45,6 +45,9 @@ pipeline <- "https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop
 download.file(pipeline, basename(pipeline))
 untar(basename(pipeline))
 file.remove(basename(pipeline))
+dir.create(ref)
+ref <- "https://www.dropbox.com/s/uznq6hyfoa2nbeb/midori_COI_curated_genus_dada2.fasta?dl=1"
+download.file(ref, ref/basename(ref))
 ```
 
 Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. Open [RStudioPrep.R](https://xxxxxx) by clicking on the Files tab in the lower right panel, naviagating to the list of files, and selecting the appropriate file. This will open the chosen file in the Source Editor. You can run commands from the Source Editor using the "Run" button or `control + return`
