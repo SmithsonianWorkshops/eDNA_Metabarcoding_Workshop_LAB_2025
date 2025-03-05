@@ -54,15 +54,16 @@ First, we are goiong to download the entire pipeline into our project directory 
 This is probably the only R code we will be running from the Console. We typically run all the scripts by opening each file in the Source Editor and running from there so we have a record of your analyses, including any changes made and any comments that may be needed along the way.
 
 ```{R}
+library(R.utils)
 pipeline <- "https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/archive/refs/heads/main.zip"
 download.file(pipeline, basename(pipeline))
 untar(basename(pipeline))
 file.remove(basename(pipeline))
 dir.create("ref")
-ref <- "https://www.dropbox.com/s/rrzo8ijod0swnb0/midori_COI_genus_dada2.fasta.gz?dl=1"
-download.file(ref, ref/basename(ref))
-unzip(basename(ref))
-file.remove(basename(ref))
+reference <- "https://www.dropbox.com/s/rrzo8ijod0swnb0/midori_COI_genus_dada2.fasta.gz?dl=1"
+download.file(reference, paste0("ref/",basename(reference)))
+zipped_reference <- list.files("ref/")
+gunzip(paste0("ref/", zipped_reference), remove = TRUE)
 ```
 
 Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. In RStudio open [1_RStudioPrep.R](RStudio_Files/1_RStudioPrep.R) by clicking on the Files tab in the lower right panel, naviagating to the list of files, and selecting the appropriate file. This will open the chosen file in the Source Editor. You can run commands from the Source Editor using the "Run" button or `control + return`
