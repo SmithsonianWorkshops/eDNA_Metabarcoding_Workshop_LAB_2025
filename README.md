@@ -24,7 +24,7 @@ However, before running RStudio, you must make sure the necessary programs are i
 
 ### Install and Update R and RStudio
 
-If you do not have R and/or RStudio installed on your computer, go to [Installing R and RStudio](https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/blob/main/r-install.md) to install either or both.
+If you do not have R and/or RStudio installed on your computer, go to [Installing R and RStudio](r-install.md) to install either or both.
 
 ### Get Raw Reads
 
@@ -40,7 +40,7 @@ The rest of this workshop will be run in RStudio
 * When you do this it will ask if you want to create it from an "Existing Directory" or a "New Directory". Choose **"New Directory"**.
   * For Mac users the default location is `/Users/username`; this is where you want to create this new project.
   * For Windows users, the default is in your documents folder. For many, this is backed up to OneDrive automatically, which may cause problems down the road with RStudio, so you want to browse to `/Users/username` and made a new project there.
-* Name the project **XXXX**
+* Name the project **eDNA_workshop_dataset_X**, replace `X` with the dataset nubmer that you'll be working on.
   * Making a new project from a new directory in RStudio will automatically create a project folder and a project file (.Rproject) in that folder.
 
 ### RStudio Preparation
@@ -56,15 +56,15 @@ untar(basename(pipeline))
 file.remove(basename(pipeline))
 ```
 
-Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. In RStudio open [1_RStudioPrep.R](RStudio_files/1_RStudioPrep.R) by clicking on the Files tab in the lower right panel, naviagating to the list of files, and selecting the appropriate file. This will open the chosen file in the Source Editor. You can run commands from the Source Editor using the "Run" button or `control + return`
+Next we install and load all the R libraries needed for this pipeline. We also set up our directory structure and find, load, and copy the raw Illumina read files to the directory from which they will be analyzed. In RStudio open [1_RStudioPrep.R](RStudio_Files/1_RStudioPrep.R) by clicking on the Files tab in the lower right panel, naviagating to the list of files, and selecting the appropriate file. This will open the chosen file in the Source Editor. You can run commands from the Source Editor using the "Run" button or `control + return`
 
 ## Install Cutadapt and Blast
 
-Next we need to install Cutadapt and BLAST. Neither are R programs, but we can install them through R. Open [2_Install_Cutadapt_BLAST.R](RStudio_files/2_Install_Cutadapt_BLAST.R) and follow the directions. The programs will be downlaoded and installed within your project folder.
+Next we need to install Cutadapt and BLAST. Neither are R programs, but we can install them through R. Open [2_Install_Cutadapt_BLAST.R](RStudio_Files/2_Install_Cutadapt_BLAST.R) and follow the directions. The programs will be downlaoded and installed within your project folder.
 
 ## Cutadapt
 
-We use Cutadapt to remove primer sequences from our raw reads. This section ends with primer-trimmed sequences. Open [3_Cutadapt.R](RStudio_files/3_Cutadapt.R) and follow the directions.
+We use Cutadapt to remove primer sequences from our raw reads. This section ends with primer-trimmed sequences. Open [3_Cutadapt.R](RStudio_Files/3_Cutadapt.R) and follow the directions.
 
 ## DADA2
 
@@ -72,16 +72,16 @@ Here we use DADA2 to quality-filter and quality-trim reads, estimate error rates
 
 ## Visualize Results
 
-Here we use several programs to visualize your results. We will explore our results multiple ways. Open [5_VisualizeResults.R](RStudio_files/5_VisualizeResults.R) and follow the directions.
+Here we use several programs to visualize your results. We will explore our results multiple ways. Open [5_VisualizeResults.R](RStudio_Files/5_VisualizeResults.R) and follow the directions.
 
 ## Assign Taxonomy
 
-Here we use DADA2s RDP identifier and BLAST to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get and create your own reference database later. Open [6_TaxAssignment.R](RStudio_files/6_TaxAssignment.R) and follow the directions.
+Here we use DADA2s RDP identifier and BLAST to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get and create your own reference database later. Open [6_TaxAssignment.R](RStudio_Files/6_TaxAssignment.R) and follow the directions.
 
 ## Create a custom database
 
-In this section we will use the [refdb R package](https://github.com/fkeck/refdb) and other R tools to create a custom reference database. Open [7_CustomDatabases.R](RStudio_files/7_CustomDatabases.R) and follow the directions.
+In this section we will use the [refdb R package](https://github.com/fkeck/refdb) and other R tools to create a custom reference database. Open [7_CustomDatabases.R](RStudio_Files/7_CustomDatabases.R) and follow the directions.
 
 ## phyloseq
 
-Phyloseq is a R library that allows for manipulation, visualization, and analysis of metabarcoding data. This section describes how to set up and load your denoised results from DADA2 into phyloseq, how to perform some preliminary analyses, ana how to visualize a few basic results. Open [8_phyloseq.R](RStudio_files/8_phyloseq.R) and follow the directions.
+Phyloseq is a R library that allows for manipulation, visualization, and analysis of metabarcoding data. This section describes how to set up and load your denoised results from DADA2 into phyloseq, how to perform some preliminary analyses, ana how to visualize a few basic results. Open [8_phyloseq.R](RStudio_Files/8_phyloseq.R) and follow the directions.
