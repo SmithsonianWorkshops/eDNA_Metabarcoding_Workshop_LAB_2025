@@ -14,6 +14,7 @@ BiocManager::install("phyloseq", ask = FALSE)
 BiocManager::install("DECIPHER", ask = FALSE)
 BiocManager::install("rBLAST", ask = FALSE)
 BiocManager::install("ShortRead", ask = FALSE)
+BiocManager::install("seqLogo", ask = FALSE)
 
 # Install and other libraries you may need (or install through
 # "Install Packages" window). Libraries will only need to be installed once.
@@ -30,6 +31,7 @@ remotes::install_github("ropensci/bold", upgrade = TRUE)
 remotes::install_github("ropensci/taxize", upgrade = TRUE)
 remotes::install_github("fkeck/refdb", upgrade = TRUE)
 remotes::install_github("tobiasgf/lulu", upgrade = TRUE)
+install.packages("rMSA", repos = "https://mhahsler.r-universe.dev")
 
 ## File Housekeeping ===========================================================
 
