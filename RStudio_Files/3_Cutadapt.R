@@ -75,7 +75,7 @@ save(
   sequence_counts_raw,
   path_to_Fprimers,
   path_to_Rprimers,
-  file = "data/working/trim.Rdata"
+  file = "data/working/1_trim.RData"
 )
 # We are including our default parameters for cutadapt. You can change these
 # parameters if you have prefer others.
