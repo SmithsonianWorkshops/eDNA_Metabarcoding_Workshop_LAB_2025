@@ -151,7 +151,7 @@ save(
   sample_names_trimmed,
   quality_plot_F,
   quality_plot_R,
-  file = "data/working/qual.Rdata"
+  file = "data/working/2_qual.Rdata"
 )
 
 # This creates files for the reads that will be quality filtered with dada2
@@ -175,10 +175,10 @@ filtered_R <- file.path(
   )
 )
 
-# This filters all reads depending upon the quality (as assigned by the user)
-# and trims the ends off the reads for all samples as determined by the quality
-# plots. It also saves into "out" the number of reads in each sample that were
-# filtered, and how many remain after filtering
+# filterAndTrim filters all reads depending upon the quality (as assigned by the
+# user) and trims the ends off the reads for all samples as determined by the
+# quality plots. It also saves into "out" the number of reads in each sample
+# that were filtered, and how many remain after filtering
 
 # On Windows set multithread=FALSE. If you get errors while running this, change
 # to multithread = FALSE, because "error messages and tracking are not handled
@@ -221,16 +221,6 @@ filtered_summary <- filterAndTrim(
 filtered_summary
 #head(filtered_summary)
 
-# Export out as a tsv
-write.table(
-  filtered_summary,
-  file = "data/results/filtered_read_count.tsv",
-  quote = FALSE,
-  sep = "\t",
-  row.names = TRUE,
-  col.names = NA
-)
-
 # Set a path to the directory with the dada2-filtered reads.
 path_to_filtered <- "data/working/trimmed_sequences/filtered"
 
@@ -246,6 +236,17 @@ sequence_counts_filtered <- sapply(filtered_F, function(file) {
 names(sequence_counts_filtered) <- sample_names_filtered
 sequence_counts_filtered
 
+
+# Export out as a tsv
+write.table(
+  filtered_summary,
+  file = "data/results/filtered_read_count.tsv",
+  quote = FALSE,
+  sep = "\t",
+  row.names = TRUE,
+  col.names = NA
+)
+
 # Save all the objects created since qual
 save(
   filtered_F,
@@ -254,7 +255,7 @@ save(
   path_to_filtered,
   sample_names_filtered,
   sequence_counts_filtered,
-  file = "data/working/filtered_summary.Rdata"
+  file = "data/working/3_filtered_summary.Rdata"
 )
 
 ## Estimating Error Rates and Denoising ========================================
@@ -319,7 +320,7 @@ save(
   errors_R,
   error_plots_F,
   error_plots_R,
-  file = "data/working/errors.Rdata"
+  file = "data/working/4_errors.Rdata"
 )
 
 
@@ -357,7 +358,7 @@ denoised_R[[1]]
 save(
   denoised_F,
   denoised_R,
-  file = "data/working/denoise.RData"
+  file = "data/working/5_denoise.RData"
 )
 
 ## Merge Paired Sequences ======================================================
@@ -482,20 +483,24 @@ sequence_counts_filtered
 # Now lets make a table for the post-filtered samples, including denoised,
 # merged, and non-chimeric read counts
 getN <- function(x) sum(getUniques(x))
-sequence_counts_postfiltered <- as_tibble(cbind(
-  sapply(denoised_F, getN),
-  sapply(denoised_R, getN),
-  sapply(merged_reads, getN),
-  rowSums(seqtab_nochim)
-)) %>%
+sequence_counts_postfiltered <- as_tibble(
+  cbind(
+    sapply(denoised_F, getN),
+    sapply(denoised_R, getN),
+    sapply(merged_reads, getN),
+    rowSums(seqtab_nochim)
+  ),
+  .name_repair = "unique"
+) %>%
   mutate(Sample_ID = sample_names_filtered) %>%
   select(
     Sample_ID,
-    Denoised_Reads_F = V1,
-    Denoised_Reads_R = V2,
-    Merged_Reads = V3,
-    Non_Chimeras = V4
+    Denoised_Reads_F = ...1,
+    Denoised_Reads_R = ...2,
+    Merged_Reads = ...3,
+    Non_Chimeras = ...4
   )
+
 # Lets look at these to make sure it makes sense
 head(sequence_counts_postfiltered)
 
@@ -661,7 +666,7 @@ save(
   seqtab_nochim_md5,
   repseq_nochim_md5_asv,
   seqtab_nochim_transpose_md5,
-  file = "data/results/feattab.RData"
+  file = "data/working/6_feattab.RData"
 )
 
 ## Export Feature-Table with md5 Hash =========================================
