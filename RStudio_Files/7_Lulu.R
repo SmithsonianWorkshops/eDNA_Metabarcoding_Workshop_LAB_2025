@@ -1,4 +1,9 @@
 ## Make Lulu matchlist =========================================================
+# Lulu filters ASVs or OTUs to remove sequences that are likely to be errors.
+# This script was lightly edited from that written by Sarah Tweedt
+# tweedts@si.edu
+library(lulu)
+
 dir.create("ref/repseq_db")
 
 makeblastdb(
@@ -7,25 +12,18 @@ makeblastdb(
   dbtype = "nucl"
 )
 
-refseqdb <- blast(db = "ref/rep_seqs/refseqdb")
+refseqdb <- blast(db = "ref/repseq_db/repseq_db")
 
-# Make a DNAStringSet object from our representative sequences
+# Make a DNAStringSet object from our representative sequences. If we've
+# finished the taxonomy section, we should already have this
 sequences_dna <- DNAStringSet(setNames(
   repseq_nochim_md5_asv$ASV,
   repseq_nochim_md5_asv$md5
 ))
 
-# You can also get this from the fasta file we downloaded earlier.
-sequences_fasta <- readDNAStringSet("data/results/PROJECTNAME_rep-seq.fas")
-
-# They make the same thing.
-head(sequences_rep_seq)
-head(sequences_fasta)
-
-
 lulu_blast <- predict(
   refseqdb,
-  sequences.dna,
+  sequences_dna,
   outfmt = "6 qseqid sseqid pident",
   BLAST_args = "-perc_identity 85 -qcov_hsp_perc 80"
 )
@@ -39,7 +37,7 @@ lulu_matchlist <- lulu_blast %>%
 # blast, Now we have to reformat our representative-sequence table to be a named vector
 View(repseq_nochim_md5_asv)
 
-seqtab_nochim_transpose_md5_lulu <- seqtab.nochim.transpose.md5 %>%
+seqtab_nochim_transpose_md5_lulu <- seqtab_nochim_transpose_md5 %>%
   column_to_rownames(var = "ASV")
 
 
@@ -54,7 +52,7 @@ curated_asv <- lulu(
 
 # Get the feature table out of this object.
 feattab_lulu <- curated_asv$curated_table
-
+View(feattab_lulu)
 # Get the representative sequences from the feature table and add md5 hash
 # (which) we have to make anew.
 repseq_lulu <- feattab_lulu$ASV
@@ -100,7 +98,7 @@ prop_valid <- valids / total
 print(prop_valid)
 
 save(
-  repseq_db,
+  refseqdb,
   lulu_blast,
   lulu_matchlist,
   seqtab_nochim_transpose_md5_lulu,
