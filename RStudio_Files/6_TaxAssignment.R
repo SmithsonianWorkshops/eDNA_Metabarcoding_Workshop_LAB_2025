@@ -34,7 +34,7 @@ library(seqinr)
 # taxLevels defines what taxonomic rank each of the levels shown in the above
 # example represents.
 
-taxonomy_rdp <- assignTaxonomy(
+taxoomy <- assignTaxonomy(
   seqtab_nochim,
   "ref/midori_COI_genus_dada2.fasta",
   taxLevels = c(
@@ -52,18 +52,18 @@ taxonomy_rdp <- assignTaxonomy(
   verbose = TRUE
 )
 
-save(taxonomy_rdp, file = "data/working/tax_rdp.Rdata")
+save(taxonomy, file = "data/working/tax_rdp.Rdata")
 ## Examine and Manipulate Taxonomy =============================================
 # Look at the taxonomic assignments
-View(taxonomy_rdp$tax)
-View(taxonomy_rdp$boot)
+View(taxonomy$tax)
+View(taxonomy$boot)
 
 # You can check to see all the uniqe values exist in each column
-unique(taxonomy_rdp$tax[, "Phylum"])
-unique(taxonomy_rdp$tax[, "Class"])
-unique(taxonomy_rdp$tax[, "Order"])
-unique(taxonomy_rdp$tax[, "Family"])
-table(taxonomy_rdp$tax[, "Phylum"])
+unique(taxonomy$tax[, "Phylum"])
+unique(taxonomy$tax[, "Class"])
+unique(taxonomy$tax[, "Order"])
+unique(taxonomy$tax[, "Family"])
+table(taxonomy$tax[, "Phylum"])
 ### Combine taxonomy and bootstrap tables --------------------------------------
 # You can combine the $tax and $boot table, to see simultaneously the taxonomic
 # assignment and the bootstrap support for that assignment.
@@ -73,9 +73,9 @@ table(taxonomy_rdp$tax[, "Phylum"])
 # number of rows and row headings (actually, now column 1)). I amend bootstrap
 # column names with "_boot" (e.g. the bootstrap column for genus would be
 # "Genus_boot"). I also add the md5 hash, and rearrange the columnns
-taxonomy <- inner_join(
-  as_tibble(taxonomy_rdp$tax, rownames = "ASV"),
-  as_tibble(taxonomy_rdp$boot, rownames = "ASV"),
+taxonomy_rdp <- inner_join(
+  as_tibble(taxonomy$tax, rownames = "ASV"),
+  as_tibble(taxonomy$boot, rownames = "ASV"),
   by = "ASV",
   suffix = c("", "_boot")
 ) %>%
@@ -170,7 +170,7 @@ View(taxonomy_blast)
 # Now lets combine the two taxonomy tables to see how the the two methods
 # compare
 taxonomy_rdp_blast <- left_join(
-  taxonomy_rdp_md5,
+  taxonomy_rdp,
   taxonomy_blast,
   join_by(ASV == qseqid)
 )
