@@ -1,4 +1,3 @@
-
 # 8 ASSIGN TAXONOMY ############################################################
 ## Load Libraries = ============================================================
 # Load all R packages you may need, if necessary
@@ -69,45 +68,18 @@ table(taxonomy_rdp$tax[, "Phylum"])
 # You can combine the $tax and $boot table, to see simultaneously the taxonomic
 # assignment and the bootstrap support for that assignment.
 
-# Convert taxonomy and bootstrap tables into tibbles (with "ASV" as column 1)
-taxonomy_rdp_tax <- as_tibble(
-  taxonomy_rdp$tax,
-  rownames = "ASV"
-)
-dim(taxonomy_rdp_tax)
-
-taxonomy_rdp_boot <- as_tibble(
-  taxonomy_rdp$boot,
-  rownames = "ASV"
-)
-dim(taxonomy_rdp_boot)
-
-# Join the two tables using an inner-join with dbplyr (it shouldn't matter here
+# Join the two tables using an inner-join with dplyr (it shouldn't matter here
 # what kind of join you use since the two tables should have the exact same
 # number of rows and row headings (actually, now column 1)). I amend bootstrap
 # column names with "_boot" (e.g. the bootstrap column for genus would be
-# "Genus_boot")
+# "Genus_boot"). I also add the md5 hash, and rearrange the columnns
 taxonomy <- inner_join(
-  taxonomy_rdp_tax,
-  taxonomy_rdp_boot,
+  as_tibble(taxonomy_rdp$tax, rownames = "ASV"),
+  as_tibble(taxonomy_rdp$boot, rownames = "ASV"),
   by = "ASV",
   suffix = c("", "_boot")
-)
-dim(taxonomy)
-View(taxonomy)
-
-# Add md5 hash from earlier. The order of ASV's is the same as the sequence-
-# table, so there shouldn't be any problem, but you can always redo the md5
-# hash conversion here.
-taxonomy_md5 <- cbind(
-  taxonomy,
-  md5 = repseq_nochim_md5_asv$md5
-)
-View(taxonomy_md5)
-
-# Rearrange columns so that the md5 hash comes first, then the ASV, then each
-# classfication level followed by it's respective bootstrap column.
-taxonomy_md5 %>%
+) %>%
+  mutate(md5 = repseq_nochim_md5_asv$md5) %>%
   select(
     md5,
     ASV,
@@ -121,10 +93,12 @@ taxonomy_md5 %>%
     Family_boot,
     Genus,
     Genus_boot,
-    Species,
-    Species_boot
+    species,
+    species_boot
   )
-View(taxonomy_md5)
+dim(taxonomy)
+View(taxonomy)
+
 
 ## Assign Taxonomy With BLAST+ =================================================
 
@@ -134,7 +108,24 @@ View(taxonomy_md5)
 # One of the reasons I'm using rBLAST is that it has a command to make a
 # BLAST-formatted database from a fasta file.
 
-# We first need a blast-formatted database. We are going to use the makeblastdb
+# We first need to relaad the path to the BLAST+ that we installed the first day
+
+# Run this command
+system2("blastn", args = "-version")
+# Did you get:
+# blastn: 2.16.0+
+# Package: blast 2.16.0, build Jun 25 2024 08:57:24
+# If not, run this:
+blast_ver <- "2.16.0"
+blast_dir <- paste0("ncbi-blast-", blast_ver, "+")
+blast_bin <- paste0(getwd(), "/", blast_dir, "/bin")
+current_path <- Sys.getenv("PATH")
+Sys.setenv(PATH = paste(blast_bin, current_path, sep = .Platform$path.sep))
+# Now try running blast with system2 again:
+system2("blastn", args = "-version")
+
+
+# We also need a blast-formatted database. We are going to use the makeblastdb
 # function in rBLAST to make this from the dada2-formatted fasta file in our
 # ref folder; this is the same database we used above.
 
@@ -157,8 +148,8 @@ View(repseq_nochim_md5_asv)
 # Make a DNAStringSet object from our representative sequences
 sequences_dna <- DNAStringSet(setNames(
   repseq_nochim_md5_asv$ASV,
-  repseq_nochim_md5_asv$md5)
-)
+  repseq_nochim_md5_asv$md5
+))
 View(sequences_dna)
 
 # You can also get this from the fasta file we downloaded earlier.
@@ -189,7 +180,7 @@ taxonomy_rdp_blast <- left_join(
 # Export this table as a .tsv file. I name it with Project Name,
 # the reference library used, and taxonomy (vs. speciesID).
 write.table(
-  taxonomy_md5,
+  taxonomy,
   file = "data/results/PROJECTNAME_REFERENCE_taxonomy.tsv",
   quote = FALSE,
   sep = "\t",
