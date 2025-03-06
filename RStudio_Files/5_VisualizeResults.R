@@ -90,7 +90,7 @@ asv_rarefied_plot <- ggplot(
   )
 asv_rarefied_plot
 
-# Now lets add this expected_ASV column to our table already containg both the
+# Now lets add this expected_ASV column to our table already containing both the
 # reads counts and ASV counts.
 
 read_count_asv_count_expected_asv <- left_join(
@@ -100,8 +100,8 @@ read_count_asv_count_expected_asv <- left_join(
 )
 # Then we can plot these actual ASV vs expected ASV
 asv_count_expected_asv_plot <- ggplot(
-  reads_count_asv_count_expected_asv,
-  aes(x = reads, y = ASVs)
+  read_count_asv_count_expected_asv,
+  aes(x = ASVs, y = expected_ASVs)
 ) +
   geom_point() +
   scale_x_continuous(labels = scales::comma) +
@@ -155,7 +155,7 @@ simpson_plot
 # look at depth in ASV counts.
 # We need metadata, so we have to import your metadata.
 meta <- read.delim(
-  "dataset1.tsv",
+  "data/working/DATASET.tsv",
   header = TRUE,
   sep = "\t"
 )
@@ -166,7 +166,7 @@ str(meta)
 # If you want to change the data type of some columns, you can add the arguement
 # "colClasses" to read.delim
 meta <- read.delim(
-  "dataset1.tsv",
+  "data/working/DATASET.tsv",
   header = TRUE,
   sep = "\t",
   colClasses = c(depth_ft = "character", arms_num = "character")
@@ -215,7 +215,7 @@ asv_count_plot <- ggplot(
   )
 asv_count_plot
 
-asv_rarefiled_plot
+asv_rarefied_plot
 asv_rarefied_plot <- ggplot(
   read_count_asv_count_expected_asv_meta,
   aes(x = Sample_ID, y = expected_ASVs, fill = depth_ft)
