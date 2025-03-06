@@ -31,7 +31,7 @@ View(OTU)
 # Make a new taxonomy-only table, and replace the current rownames (ASVs) with
 # md5 hashes, and convert to a matrix (which is the type of table needed by
 # phyloseq.
-taxonomy_phyloseq <- taxonomy_rdp_tax %>%
+taxonomy_phyloseq <- as_tibble(taxonomy$tax, rownames = "ASV") %>%
   mutate(RowNames = repseq_nochim_md5) %>%
   column_to_rownames(var = "RowNames") %>%
   select(-ASV) %>%
@@ -74,12 +74,12 @@ SAMPLE <- sample_data(meta_dataset)
 ### refseq ---------------------------------------------------------------------
 # The refseq phyloseq-class item must contain sequences of equal length, which
 # in most cases means it needs to be aligned first. We will align using
-# DECIPHER.
+# DECIPHER and rMSA
 
 # We need a DNAString from our representative sequences and md5 hashs. This is
-# the format for DECIPHER and many other phylogenetic programs in R. We should
-# have already made this in the TaxAssignment section. A quick check to see is
-# just to look at it.
+# the format for DECIPHER, rMSA and many other phylogenetic programs in R.
+# We should have already made this in the TaxAssignment section. A quick check
+# to see is just to look at it.
 sequences_dna
 # If you don't have it (you get an error), here is the script again.
 sequences_dna <- DNAStringSet(setNames(
@@ -127,13 +127,22 @@ REFSEQ <- DNAStringSet(alignment_decipher, use.names = TRUE)
 # Look at the refseq object, just to make sure it worked
 head(REFSEQ)
 
+# Alignm using the mattf program in rMSA. This is much faster than DECIPHER,
+# although the alignments don't look quite as good.
+alignment_mafft <- mafft(sequences_dna)
+# Create a reference sequence (refseq) object from the alignment. This contains
+# the ASV sequences, using the md5 hashes as names.
+REFSEQ <- DNAStringSet(alignment_mafft, use.names = TRUE)
+# Look at the refseq object, just to make sure it worked
+head(REFSEQ)
+
 ### phy_tree -------------------------------------------------------------------
 # We can create a phylogenetic (or at least, a phenetic) tree using the
 # alignment we just created using the program ape.
 
 # For ape, the aligned sequences must be in binary format (DNAbin, which reduces
 # the size of large datasets), so we first convert the DNAstring alignment.
-alignment_dnabin <- as_DNAbin(alignment_decipher)
+alignment_dnabin <- as.DNAbin(alignment_decipher)
 
 # Create pairwise distance matrix in ape. There are many different models to use.
 # Here we are using the Tamura Nei 93 distance measure. Turning the resulting
