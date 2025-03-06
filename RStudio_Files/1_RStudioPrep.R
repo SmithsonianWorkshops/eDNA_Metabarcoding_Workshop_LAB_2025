@@ -7,14 +7,13 @@
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager")
 }
-# Install Dada2. You may get an error telling you to install a different version
-# of Dada2. Change "3.17" to whatever version RStudio tells you.
-BiocManager::install("dada2")
-# Install the rest of the libraries needed through BiocManager.
-BiocManager::install("phyloseq")
-BiocManager::install("DECIPHER")
-BiocManager::install("rBLAST")
-BiocManager::install("ShortRead")
+
+# Install all the packages needed through BiocManager
+BiocManager::install("dada2", ask = FALSE)
+BiocManager::install("phyloseq", ask = FALSE)
+BiocManager::install("DECIPHER", ask = FALSE)
+BiocManager::install("rBLAST", ask = FALSE)
+BiocManager::install("ShortRead", ask = FALSE)
 
 # Install and other libraries you may need (or install through
 # "Install Packages" window). Libraries will only need to be installed once.
@@ -27,10 +26,10 @@ install.packages("ape")
 install.packages("vegan")
 install.packages("patchwork")
 install.packages("remotes")
-remotes::install_github("ropensci/bold")
-remotes::install_github("ropensci/taxize")
-remotes::install_github("fkeck/refdb")
-remotes::install_github("tobiasgf/lulu")
+remotes::install_github("ropensci/bold", upgrade = TRUE)
+remotes::install_github("ropensci/taxize", upgrade = TRUE)
+remotes::install_github("fkeck/refdb", upgrade = TRUE)
+remotes::install_github("tobiasgf/lulu", upgrade = TRUE)
 
 ## File Housekeeping ===========================================================
 
