@@ -54,7 +54,7 @@ sequence_counts_trimmed <- sapply(trimmed_F, function(file) {
 names(sequence_counts_trimmed) <- sample_names_trimmed
 print(sequence_counts_trimmed)
 
-
+# !!!!!!! You should not have to do this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ### Remove empty sample files --------------------------------------------------
 # Some older versions of cutadapt did not remove the file even if it removed all
 # reads from that file, and this caused downstream problems. If any of the
@@ -88,6 +88,8 @@ file.size(trimmed_F)
 sample_names_trimmed <- sapply(strsplit(basename(trimmed_F), "_"), `[`, 1)
 length(sample_names_trimmed)
 head(sample_names_trimmed)
+# !!!!!!! You should not have to do this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 ## Filter and Trim =============================================================
 
@@ -200,7 +202,7 @@ filtered_R <- file.path(
 # very low quality reads. However, increasing maxEE does increase computational
 # time.
 
-filtered_out <- filterAndTrim(
+filtered_summary <- filterAndTrim(
   trimmed_F,
   filtered_F,
   trimmed_R,
@@ -217,12 +219,12 @@ filtered_out <- filterAndTrim(
 
 # Usually we don't have that many samples, so I just look at "out" in its
 # entirety, but if there are lots of samples, just look at the first 6.
-filtered_out
-#head(filtered_out)
+filtered_summary
+#head(filtered_summary)
 
 # Export out as a tsv
 write.table(
-  filtered_out,
+  filtered_summary,
   file = "data/results/filtered_read_count.tsv",
   quote = FALSE,
   sep = "\t",
@@ -249,11 +251,11 @@ sequence_counts_filtered
 save(
   filtered_F,
   filtered_R,
-  filtered_out,
+  filtered_summary,
   path_to_filtered,
   sample_names_filtered,
   sequence_counts_filtered,
-  file = "data/working/filtered_out.Rdata"
+  file = "data/working/filtered_summary.Rdata"
 )
 
 ## Estimating Error Rates and Denoising ========================================
