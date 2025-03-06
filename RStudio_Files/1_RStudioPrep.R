@@ -39,8 +39,7 @@ remotes::install_github("tobiasgf/lulu")
 dir_names <- c(
   "data/raw",
   "data/working/trimmed_sequences",
-  "data/results",
-  "ref"
+  "data/results"
 )
 # Create the directories using sapply
 sapply(dir_names, dir.create, recursive = TRUE)
