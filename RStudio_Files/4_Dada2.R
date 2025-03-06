@@ -90,7 +90,6 @@ length(sample_names_trimmed)
 head(sample_names_trimmed)
 # !!!!!!! You should not have to do this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
 ## Filter and Trim =============================================================
 
 # This visualizes the quality plots. If you want to look at quality plots for
