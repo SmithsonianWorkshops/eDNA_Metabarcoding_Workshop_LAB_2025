@@ -150,10 +150,17 @@ simpson_plot <- ggplot(simpson_sample, aes(x = Sample_ID, y = simpson)) +
   )
 simpson_plot
 
-
 # We can also look at some basic variables for all these graphs. Say we want to
 # look at depth in ASV counts.
 # We need metadata, so we have to import your metadata.
+# First we have to download it. Replace "LINK_TO_DATASET_METADATA" with the link
+# assigned to you in the spreadsheet.
+meta_download <- "LINK_TO_DATASET_METADATA"
+download.file(meta_download, paste0("data/working/", basename(meta_download)))
+cleaned_file <- sub("\\?dl=1$", "", meta_download)
+file.rename(meta_downlaod, cleaned_file)
+
+# Now load that .tsv. First replace "DATASET.tsv" with the assigned dataset name
 meta <- read.delim(
   "data/working/DATASET.tsv",
   header = TRUE,
