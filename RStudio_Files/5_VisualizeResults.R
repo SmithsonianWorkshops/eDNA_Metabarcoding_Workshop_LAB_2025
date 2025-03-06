@@ -1,16 +1,19 @@
 library(vegan)
 library(patchwork)
+library(tidyverse)
 
 # First, lets look at read counts for each sample
 read_count <- rowSums(seqtab_nochim_md5)
 View(read_count)
 read_count
 
-# Create a dataframe of the number of reads for each sample
+# Create a dataframe of the number of reads for each sample instead of a named
+# vector
 read_count <- enframe(rowSums(seqtab_nochim_md5))
 View(read_count)
 read_count
 
+# Now do again while changing column names
 read_count <- enframe(rowSums(seqtab_nochim_md5)) %>%
   rename(
     Sample_ID = name,
