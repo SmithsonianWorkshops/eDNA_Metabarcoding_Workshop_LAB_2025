@@ -76,19 +76,21 @@ Next we need to install Cutadapt and BLAST. Neither are R programs, but we can i
 
 ## Cutadapt
 
-We use Cutadapt to remove primer sequences from our raw reads. This section ends with primer-trimmed sequences. Open [3_Cutadapt.R](RStudio_Files/3_Cutadapt.R) and follow the directions.
+We use [Cutadapt](https://cutadapt.readthedocs.io/en/stable/index.html) to remove primer sequences from our raw reads. This section ends with primer-trimmed sequences. Open [3_Cutadapt.R](RStudio_Files/3_Cutadapt.R) and follow the directions.
 
 ## DADA2
 
-[DADA2](https://github.com/benjjneb/dada2) is a program outputs sample-specific sequence (ASV) count data from Illumina amplicon raw reads. We use Dada2 to quality-filter and quality-trim reads, estimate error rates and denoise reads, merge paired reads, and remove chimeric sequences. This section ends with a sequence-table, which is a table containing columns of ASV's (Amplicon Sequence Variants), rows of samples, and cell values equal "# of reads", a feature-table (rows of ASVs and columns of samples - same as the output of Qiime2) a fasta file containing all ASVs, and a file associating ASVs with their unique md5 hash. Open [4_Data2.R](Rstudio_files/4_Dada2.R) and follow the directions.
+[DADA2](https://github.com/benjjneb/dada2) is a program outputs sample-specific sequence (ASV) count data from Illumina amplicon raw reads. We use Dada2 to quality-filter and quality-trim reads, estimate error rates and denoise reads, merge paired reads, and remove chimeric sequences. This section ends with a sequence-table, which is a table containing columns of ASV's (Amplicon Sequence Variants), rows of samples, and cell values equal "# of reads", a feature-table (rows of ASVs and columns of samples - same as the output of Qiime2) a fasta file containing all ASVs, and a file associating ASVs with their unique md5 hash. Open [4_Data2.R](Rstudio_files/4_Dada2.R) and follow the directions. 
+
+[DADA2_tutorial](https://benjjneb.github.io/dada2/tutorial.html) takes you to the tutorial that was the genesis of this entire pipeline, and [DADA2.pdf](https://bioconductor.org/packages/devel/bioc/manuals/dada2/man/dada2.pdf) takes you to a pdf with all the available DADA2 commands. I find these .pdf package manuals are very useful to figure out what specific arguments mean, or to see if there is some argument that can help you do what you want to do.
 
 ## Visualize Results
 
-Here we use several programs to visualize your results. We will explore our results multiple ways. Open [5_VisualizeResults.R](RStudio_Files/5_VisualizeResults.R) and follow the directions.
+Here we use priarily [vegan](https://github.com/vegandevs/vegan) programs to visualize your results. We will explore our results multiple ways. Open [5_VisualizeResults.R](RStudio_Files/5_VisualizeResults.R) and follow the directions. vegan is a very expansive diversity tool and what we do here is only a fraction of it's capabilities. [vegan vignetes](https://vegandevs.r-universe.dev/vegan) is one place to go to find lots of links other aspects of the program, although it gets a little into the weeds. Most of the visualization for this pipeline is from an unaffiliated website [Vegan tutorial](https://peat-clark.github.io/BIO381/veganTutorial.html).
 
 ## Assign Taxonomy
 
-Here we use DADA2s RDP identifier and BLAST to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get and create your own reference database later. Open [6_TaxAssignment.R](RStudio_Files/6_TaxAssignment.R) and follow the directions.
+Here we use an [RDP identifier](https://benjjneb.github.io/dada2/assign.html) through DADA2 and BLAST+ through [rBLAST](https://github.com/mhahsler/rBLAST) to assign taxonomic identities to ASV's. This section requires a reference library. We will supply you with a reference library for your identifications here, but later we will also show you how to get and create your own reference database later. Open [6_TaxAssignment.R](RStudio_Files/6_TaxAssignment.R) and follow the directions.
 
 ## Lulu
 
