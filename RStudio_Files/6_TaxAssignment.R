@@ -109,7 +109,6 @@ View(taxonomy)
 # BLAST-formatted database from a fasta file.
 
 # We first need to relaad the path to the BLAST+ that we installed the first day
-
 # Run this command
 system2("blastn", args = "-version")
 # Did you get:
@@ -133,7 +132,7 @@ system2("blastn", args = "-version")
 dir.create("ref/midori_COI_genus")
 # Make the blast database.
 makeblastdb(
-  "ref/midori_COI_curated_genus_dada2.fasta",
+  "ref/midori_COI_genus_dada2.fasta",
   db_name = "ref/midori_COI_genus/midori_COI_genus",
   dbtype = "nucl"
 )
@@ -156,13 +155,13 @@ View(sequences_dna)
 sequences_fasta <- readDNAStringSet("data/results/PROJECTNAME_rep-seq.fas")
 
 # They make the same thing.
-head(sequences_rep_seq)
+head(sequences_dna)
 head(sequences_fasta)
 
 # Finally, we blast our representative sequences against the database we created
 taxonomy_blast <- predict(
   midori_coi_db,
-  sequences_fasta,
+  sequences_dna,
   outfmt = "6 qseqid sseqid pident",
   BLAST_args = "-perc_identity 85 -max_target_seqs 1 -qcov_hsp_perc 80"
 )
