@@ -7,6 +7,17 @@ library(digest)
 library(rBLAST)
 library(tidyverse)
 library(seqinr)
+library(R.utils)
+
+## Download Reference Database =================================================
+
+# Download the reference database we will use later
+reference <- "https://www.dropbox.com/s/rrzo8ijod0swnb0/midori_COI_genus_dada2.fasta.gz?dl=1"
+download.file(reference, paste0("ref/", basename(reference)))
+zipped_reference <- list.files("ref/")
+cleaned_file <- sub("\\?dl=1$", "", zipped_reference)
+file.rename(zipped_reference, cleaned_file)
+gunzip(paste0("ref/", zipped_reference), remove = TRUE)
 
 ## Assign Taxonomy With DADA2 ==================================================
 # Assign taxonomy using the RDP naive Bayesian classifier. tryRC determines
