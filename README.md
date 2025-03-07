@@ -54,11 +54,14 @@ First, we are goiong to download the entire pipeline into our project directory 
 This is probably the only R code we will be running from the Console. We typically run all the scripts by opening each file in the Source Editor and running from there so we have a record of your analyses, including any changes made and any comments that may be needed along the way.
 
 ```{R}
-library(R.utils)
 pipeline <- "https://github.com/SmithsonianWorkshops/eDNA_Metabarcoding_Workshop_LAB_2025/archive/refs/heads/main.zip"
 download.file(pipeline, basename(pipeline))
-untar(basename(pipeline))
+unzip(basename(pipeline))
 file.remove(basename(pipeline))
+```
+
+```{R}
+library(R.utils)
 dir.create("ref")
 reference <- "https://www.dropbox.com/s/rrzo8ijod0swnb0/midori_COI_genus_dada2.fasta.gz?dl=1"
 download.file(reference, paste0("ref/",basename(reference)))

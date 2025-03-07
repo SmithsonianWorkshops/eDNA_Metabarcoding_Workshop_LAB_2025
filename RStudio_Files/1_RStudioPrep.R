@@ -1,8 +1,9 @@
 ## Open RStudio ================================================================
-### Istall and Load R Libraries ------------------------------------------------
+### Install and Load R Libraries ------------------------------------------------
 # These are the libraries that will be used for this pipeline. Not all will be
-# used for each persons particular project, but it does not hurt to have them
-# all installed, loaded, and ready to be used when needed.
+# used for each person's particular project, but it does not hurt to have them
+# all installed, and ready to be used when needed.
+#
 # Install  BiocManager
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager")
@@ -27,6 +28,7 @@ install.packages("ape")
 install.packages("vegan")
 install.packages("patchwork")
 install.packages("remotes")
+install.packages("R.utils")
 remotes::install_github("ropensci/bold", upgrade = TRUE)
 remotes::install_github("ropensci/taxize", upgrade = TRUE)
 remotes::install_github("fkeck/refdb", upgrade = TRUE)

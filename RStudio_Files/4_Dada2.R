@@ -290,7 +290,7 @@ errors_R <- learnErrors(
 end <- Sys.time()
 end - start
 # We can visualize the estimated error rates to make sure they don't look too
-# crazy. The red lines are error rates expected under the "...nominal defintion
+# crazy. The red lines are error rates expected under the "...nominal definition
 # of the Q-score." The black dots are "...observed error rates for each
 # consensus quality score." The black line shows the "...estimated error rates
 # after convergence of the machine-learning algorithm." I think the main things
