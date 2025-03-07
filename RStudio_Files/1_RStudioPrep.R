@@ -42,7 +42,8 @@ install.packages("rMSA", repos = "https://mhahsler.r-universe.dev")
 dir_names <- c(
   "data/raw",
   "data/working/trimmed_sequences",
-  "data/results"
+  "data/results",
+  "ref"
 )
 # Create the directories using sapply
 sapply(dir_names, dir.create, recursive = TRUE)
