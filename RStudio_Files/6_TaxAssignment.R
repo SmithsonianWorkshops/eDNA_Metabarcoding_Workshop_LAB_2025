@@ -99,6 +99,11 @@ taxonomy_rdp <- inner_join(
 dim(taxonomy)
 View(taxonomy)
 
+save(
+  taxonomy,
+  taxonomy_rdp,
+  file = "data/working/tax_rdp.RData"
+)
 
 ## Assign Taxonomy With BLAST+ =================================================
 
@@ -184,4 +189,12 @@ write.table(
   quote = FALSE,
   sep = "\t",
   row.names = FALSE
+)
+
+save(
+  midori_coi_db,
+  sequences_dna,
+  taxonomy_blast,
+  taxonomy_rdp_blast,
+  file = "tax_rdp_blast.RData"
 )
