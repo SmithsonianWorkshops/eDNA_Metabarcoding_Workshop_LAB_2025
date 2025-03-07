@@ -152,7 +152,7 @@ save(
 # rBLAST that runs several different Multiple Sequence Alignment programs, such
 # as ClustalW, MAFFT, MUSCLE, and Kalign. I align using MAFFT, which is known to
 # efficiently align large datasets, and is much faster than DECIPHER,
-# although the alignments may not look quite as good.
+# although the alignments may not "look" quite as good.
 alignment_mafft <- mafft(sequences_dna)
 # Create a reference sequence (refseq) object from the alignment. This contains
 # the ASV sequences, using the md5 hashes as names.
