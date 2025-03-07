@@ -1,17 +1,51 @@
-# Installing command line tools for Mac or Windows
-# cutadapt
-# NCBI blast
+# Installing command line tools for Mac or Windows:
+#   cutadapt:     https://cutadapt.readthedocs.io/
+#   NCBI BLAST+:  https://www.ncbi.nlm.nih.gov/books/NBK279690/
 
-# Download and install paths will vary by OS
+#######
+# Cutadapt is a python-based program. We'll be using pixi (https://pixi.sh/) to
+# install cutadapt. pixi uses conda recopies to install packages without require
+# a full conda install. We'll first install pixi, then have it install python
+# and finally use the python system PyPi to install cutadapt. This method works
+# for Windows, Macs, and Linux.
+
+# Name of the pixi download file depends on the OS of the system
 os <- Sys.info()["sysname"]
+pixi_archive <- switch (os,
+                        "Windows" = "pixi-x86_64-pc-windows-msvc.zip",
+                        "Darwin" = "pixi-x86_64-apple-darwin.tar.gz",
+                        "Linux" = "pixi-x86_64-unknown-linux-musl.tar.gz",
+                        stop(paste0("Unkown sysname: ", os)))
 
-# Using pixi to install cutadapt in R
-#
+# Download and extract the pixi executable
+pixi_url <-
+  paste0("https://github.com/prefix-dev/pixi/releases/latest/download/",
+         pixi_archive)
+download.file(pixi_url, pixi_archive)
 
-# First, is cutadapt already installed via pixi?
-# If it is, we won't reinstall.
+# Decompress the file
+if (grepl("zip", pixi_archive)){
+  unzip(pixi_archive)
+} else if (grepl("tar.gz", pixi_archive)){
+  untar(pixi_archive)
+} else{
+  stop(paste0("unknown pixi archive extension:", pixi_archive))
+}
+file.remove(pixi_archive)
 
-# Expected location of cutadapt in the pixi install dir, this is determined
+# The pixi executable is named pixi in the current directory
+
+# Install cutadapt from bioconda using pixi:
+# A file name pixi.toml is created with the channels and packages
+# The cutadapt executable and dependencies are installed
+# in a hidden .pixi/ directory
+if (!file.exists("pixi.toml")) {
+  system2("./pixi", args = "init")
+}
+system2("./pixi", args = "add python")
+system2("./pixi", args = "add --pypi cutadapt")
+
+# The location of cutadapt in the pixi install dir, this is determined
 # by the OS you're using
 cutadapt_loc_path <- switch(os,
                             "Windows" = "Scripts",
@@ -25,33 +59,6 @@ cutadapt <-
          "/.pixi/envs/default/",
          cutadapt_loc_path,
          "/cutadapt")
-
-# Name of the pixi download
-pixi_archive <- switch (os,
-                        "Windows" = "pixi-x86_64-pc-windows-msvc.zip",
-                        "Darwin" = "pixi-x86_64-apple-darwin.tar.gz",
-                        "Linux" = "pixi-x86_64-unknown-linux-musl.tar.gz",
-                        stop(paste0("Unkown sysname: ", os)))
-
-# Download and extract the pixi executable
-pixi_url <-
-  paste0("https://github.com/prefix-dev/pixi/releases/latest/download/",
-         pixi_archive)
-download.file(pixi_url, pixi_archive)
-
-# Decompress the tar.bz2 file and then remove it
-untar(pixi_archive)
-file.remove(pixi_archive)
-
-# The pixi executable is named pixi in the current directory
-
-# Install cutadapt from bioconda using pixi:
-# A file name pixi.toml is created with the channels and packages
-# The cutadapt executable and dependencies are installed
-# in a hidden .pixi/ directory
-
-system2("./pixi", args = "add python")
-system2("./pixi", args = "add --pypi cutadapt")
 
 
 # Download blast+ executable from NCBI
