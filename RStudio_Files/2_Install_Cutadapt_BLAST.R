@@ -45,6 +45,10 @@ if (!file.exists("pixi.toml")) {
 system2("./pixi", args = "add python")
 system2("./pixi", args = "add --pypi cutadapt")
 
+# Clean up un-needed pixi-related files
+pixi_cruff <- list.files(pattern = "pixi")
+file.remove(pixi_cruff)
+
 # The location of cutadapt in the pixi install dir, this is determined
 # by the OS you're using
 cutadapt_loc_path <- switch(os,
@@ -67,6 +71,10 @@ cutadapt <-
 blast_ver <- "2.16.0"
 blast_dir <- paste0("ncbi-blast-", blast_ver, "+")
 blast_bin <- paste0(getwd(), "/", blast_dir, "/bin")
+
+# Set the object os again, just in case you're starting the script
+# from this point to only install BLAST
+os <- Sys.info()["sysname"]
 
 # This sets the right file to download for the current OS
 blast_archive_extension <- switch(os,
@@ -93,10 +101,12 @@ file.remove(blast_archive)
 
 # Update the system environment's PATH to include the BLAST bin directory
 # Get the current PATH
-current_path <- Sys.getenv("PATH")
+path_with_blast <-
+  paste(blast_bin, Sys.getenv("PATH"), sep = .Platform$path.sep)
 
-# Add the current working directory to the PATH
-Sys.setenv(PATH = paste(blast_bin, current_path, sep = .Platform$path.sep))
+# Update the system's PATH variable to include BLAST
+# NOTE: this only lasts for the current R session and will need to reset
+Sys.setenv(PATH = path_with_blast)
 
 
 # Now lets test if cutadapt and BLAST are installed
@@ -113,7 +123,7 @@ system2(cutadapt)
 # Test that blastn is now available
 system2("blastn", args = "-version")
 
-
-# Clean up un-needed pixi-related files
-pixi_cruff <- list.files(pattern = "pixi")
-file.remove(pixi_cruff)
+# Save cutadapt and path_with_blast objects
+save(cutadapt,
+     path_with_blast,
+     file = "data/working/0_cutadapt_blast.RData")

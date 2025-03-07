@@ -113,21 +113,23 @@ save(
 # One of the reasons I'm using rBLAST is that it has a command to make a
 # BLAST-formatted database from a fasta file.
 
-# We first need to relaad the path to the BLAST+ that we installed the first day
-# Run this command
+# Back on the first day we downloaded BLAST+ executables into your project
+# directory. We need to make sure that's still available.
+
+# Load path_with_blast object saved on day 1
+load("data/working/0_cutadapt_blast.RData")
+
+# Update the system's PATH variable to include BLAST
+# NOTE: this only lasts for the current R session and will need to reset
+Sys.setenv(PATH = path_with_blast)
+
+# Test that BLAST is installed
 system2("blastn", args = "-version")
-# Did you get:
+# You should get:
 # blastn: 2.16.0+
 # Package: blast 2.16.0, build Jun 25 2024 08:57:24
-# If not, run this:
-blast_ver <- "2.16.0"
-blast_dir <- paste0("ncbi-blast-", blast_ver, "+")
-blast_bin <- paste0(getwd(), "/", blast_dir, "/bin")
-current_path <- Sys.getenv("PATH")
-Sys.setenv(PATH = paste(blast_bin, current_path, sep = .Platform$path.sep))
-# Now try running blast with system2 again:
-system2("blastn", args = "-version")
-
+#
+# If not, re-run the section to install BLAST from 2_Install_Cutadapt_BLAST.R
 
 # We also need a blast-formatted database. We are going to use the makeblastdb
 # function in rBLAST to make this from the dada2-formatted fasta file in our
