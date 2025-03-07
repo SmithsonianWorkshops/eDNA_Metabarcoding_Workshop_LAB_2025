@@ -13,6 +13,8 @@ library(phyloseq)
 library(ape)
 library(DECIPHER)
 library(tidyverse)
+library(phangorn)
+library(rMSA)
 ## Prepare Components to be Imported Into Phyloseq =============================
 
 ### sequence-table -------------------------------------------------------------
@@ -71,15 +73,27 @@ str(meta_dataset)
 # Make a phyloseq sample_data file from "metadata"
 SAMPLE <- sample_data(meta_dataset)
 
+save(
+  OTU,
+  taxonomy_phyloseq,
+  TAX,
+  meta,
+  meta_dataset,
+  SAMPLE,
+  file = "OTU_TAX_SAMPLE.RData"
+)
+
 ### refseq ---------------------------------------------------------------------
 # The refseq phyloseq-class item must contain sequences of equal length, which
-# in most cases means it needs to be aligned first. We will align using
-# DECIPHER and rMSA
+# in most cases means it needs to be aligned first. We will align using one of
+# two programs: DECIPHER and rMSA. DECIPHER seems to give better alignments,
+# but rMSA outputs alignments significantly faster using the same mafft
+# alignment algorithem we often use in Geneious.
 
 # We need a DNAString from our representative sequences and md5 hashs. This is
 # the format for DECIPHER, rMSA and many other phylogenetic programs in R.
 # We should have already made this in the TaxAssignment section. A quick check
-# to see is just to look at it.
+# to see if it exists is to just look at it.
 sequences_dna
 # If you don't have it (you get an error), here is the script again.
 sequences_dna <- DNAStringSet(setNames(
@@ -127,14 +141,26 @@ REFSEQ <- DNAStringSet(alignment_decipher, use.names = TRUE)
 # Look at the refseq object, just to make sure it worked
 head(REFSEQ)
 
-# Alignm using the mattf program in rMSA. This is much faster than DECIPHER,
-# although the alignments don't look quite as good.
+save(
+  sequences_dna,
+  alignment_decipher,
+  REFSEQ,
+  file = "decipher.RData"
+)
+
+# Alignment using rMSA. rMSA is a program written by the same developer as
+# rBLAST that runs several different Multiple Sequence Alignment programs, such
+# as ClustalW, MAFFT, MUSCLE, and Kalign. I align using MAFFT, which is known to
+# efficiently align large datasets, and is much faster than DECIPHER,
+# although the alignments may not look quite as good.
 alignment_mafft <- mafft(sequences_dna)
 # Create a reference sequence (refseq) object from the alignment. This contains
 # the ASV sequences, using the md5 hashes as names.
 REFSEQ <- DNAStringSet(alignment_mafft, use.names = TRUE)
 # Look at the refseq object, just to make sure it worked
 head(REFSEQ)
+
+save(alignment_maft, file = "mafft.RData")
 
 ### phy_tree -------------------------------------------------------------------
 # We can create a phylogenetic (or at least, a phenetic) tree using the
@@ -160,13 +186,22 @@ pairwise_tn93 <- dist.dna(
 # method that is meant to deal with a some NaNs. However, if there are too many
 # NaNs, tree-building will not work well. In this case, we can obtain
 # maximum-likelihood distances using the program phangorn, which seems to be
-# able to obtain distances even from highly divergent sequences.
+# able to obtain distances even from highly divergent sequences. See below.
 
 # Check the number of NaNs in dist.dna, and the proportion of all distance. I
 # don't know how many NaNs are too many, but if there are more than a few, I
-# would prefer to be safe and use ml distances.
+# would prefer to be safe and use phangorn.
 length(is.nan(pairwise_tn93))
 length(pairwise_tn93) / length(is.nan(pairwise_tn93))
+
+# Create pairwise distance matrix in phangorn. phangorn creates pairwise
+# distance matricies using one of two substitution models (F81 or JC69) or one
+# 17 aa models.
+# You first need to convert into a phyDat object (the format for phangorn).
+alignment_mafft_phyDat <- as.phyDat(alignment_mafft, type = "DNA")
+
+# Next we create a distance matrix, here using the F81 model.
+alignment_mafft_mldist <- dist.ml(alignment_mafft_phyDat, model = "F81")
 
 # Make an improved neighbor-joining tree out of our pairwise distance matrix.
 # ape has other tree-building phenetic methods to use as well, such as nj or
