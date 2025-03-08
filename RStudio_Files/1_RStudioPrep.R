@@ -33,7 +33,9 @@ remotes::install_github("ropensci/bold", upgrade = TRUE)
 remotes::install_github("ropensci/taxize", upgrade = TRUE)
 remotes::install_github("fkeck/refdb", upgrade = TRUE)
 remotes::install_github("tobiasgf/lulu", upgrade = TRUE)
+remotes::install_github("boldsystems-central/BOLDconnectR", upgrade = TRUE)
 install.packages("rMSA", repos = "https://mhahsler.r-universe.dev")
+
 
 ## File Housekeeping ===========================================================
 
