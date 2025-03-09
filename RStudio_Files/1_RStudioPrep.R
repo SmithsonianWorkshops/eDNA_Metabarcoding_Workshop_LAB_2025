@@ -51,12 +51,16 @@ dir_names <- c(
 # Create the directories using sapply
 sapply(dir_names, dir.create, recursive = TRUE)
 
-# Find all the read files you downloaded (in the download folder), save their
-# paths, and confirm. Change USERNAME to your computer username, and DATASET to
-# the name of your downloaded reads directory.
-downloads <- "/Users/USERNAME/Downloads/DATASET"
+# Find the compressed (.zip) folder of read files you downloaded (in the
+# download folder) and save the paths. Change USERNAME to your computer
+# username, and DATASET to the name of your dataset.
+download <- "/Users/USERNAME/Downloads/DATASET.zip"
+
+# This will unzip the downloaded folder into your working directory
+unzip(download)
+
 # Find all the files in the downloaded reads folder that end with .fastq.gz.
-raw_reads <- list.files(downloads, pattern = ".fastq.gz", recursive = TRUE)
+raw_reads <- list.files("DATASET", pattern = ".fastq.gz", recursive = TRUE)
 head(raw_reads)
 
 # Copy the read files to the "data/raw" directory, and confirm that they are
