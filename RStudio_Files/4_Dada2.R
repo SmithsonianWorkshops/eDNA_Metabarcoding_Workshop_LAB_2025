@@ -33,20 +33,18 @@ trimmed_R <- sort(list.files(
 ))
 
 
-# Make sure you have the correct number of samples, and that they match the
-# number of sample names you made in the previous section (2a or 2b: Cutadapt).
+# Look at the number of samples you have to trim (trimmed_F and trimmed_R should
+# match).
 length(trimmed_F)
 length(trimmed_R)
-length(sample_names_raw)
 
-# Make a new vector of sample names containing only trimmed reads
+# Make a new vector of sample names from your trimmed reads.
 sample_names_trimmed <- sapply(strsplit(basename(trimmed_F), "_"), `[`, 1)
 head(sample_names_trimmed)
 length(sample_names_trimmed)
 
 # Now count the number of reads in each trimmed sample. Since cutadapt only
-# keeps paired reads, again we only need to count forward samples
-
+# keeps paired reads, we only need to count forward samples.
 sequence_counts_trimmed <- sapply(trimmed_F, function(file) {
   fastq_data <- readFastq(file)
   length(fastq_data)
@@ -208,7 +206,7 @@ filtered_summary <- filterAndTrim(
   filtered_R,
   truncLen = c(X, Y),
   maxN = 0,
-  maxEE = c(2, 2),
+  maxEE = c(4, 4),
   rm.phix = TRUE,
   truncQ = 2,
   compress = TRUE,
@@ -237,7 +235,7 @@ names(sequence_counts_filtered) <- sample_names_filtered
 sequence_counts_filtered
 
 
-# Export out as a tsv
+# Export filtered_summary as a tsv
 write.table(
   filtered_summary,
   file = "data/results/filtered_read_count.tsv",
@@ -547,8 +545,7 @@ write.table(
   file = "data/results/track_reads_table.tsv",
   quote = FALSE,
   sep = "\t",
-  row.names = FALSE,
-  col.names = NA
+  row.names = FALSE
 )
 
 ## Export Sequence-Table =======================================================
@@ -680,8 +677,7 @@ write.table(
   file = "data/results/PROJECTNAME_feature-table_md5.tsv",
   quote = FALSE,
   sep = "\t",
-  row.names = TRUE,
-  col.names = NA
+  row.names = FALSE
 )
 
 ## Export Representative Sequences table/fasta =================================
