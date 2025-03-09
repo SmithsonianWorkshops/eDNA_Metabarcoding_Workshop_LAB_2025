@@ -157,17 +157,18 @@ simpson_plot
 # We need metadata, so we have to import your metadata.
 # First we have to download it. Replace "LINK_TO_DATASET_METADATA" with the link
 # assigned to you in the spreadsheet.
-meta_download <- "LINK_TO_DATASET_METADATA"
-download.file(meta_download, paste0("data/working/", basename(meta_download)))
-cleaned_file <- sub("\\?dl=1$", "", meta_download)
-file.rename(meta_downlaod, cleaned_file)
+meta_url <- "https://www.dropbox.com/s/q609u43rfm623zv/dataset2_meta.tsv?dl=1"
+dest_file_meta <- sub("\\?dl=1$", "", basename(meta_url))
+download.file(meta_url, paste0("data/working/", dest_file_meta), mode = "wb")
 
 # Now load that .tsv. First replace "DATASET.tsv" with the assigned dataset name
+# Now load that .tsv.
 meta <- read.delim(
-  "data/working/DATASET.tsv",
+  list.files(path = "data/working", pattern = "meta.tsv", full.names = TRUE),
   header = TRUE,
   sep = "\t"
 )
+
 # However, you may have some data that looks like a continuous variable that is
 # actually a discreete variable (such as filter size or depth). Check to see how
 # read.delim interpreted your data
@@ -175,10 +176,14 @@ str(meta)
 # If you want to change the data type of some columns, you can add the arguement
 # "colClasses" to read.delim
 meta <- read.delim(
-  "data/working/DATASET.tsv",
+  list.files(path = "data/working", pattern = "meta.tsv", full.names = TRUE),
   header = TRUE,
   sep = "\t",
-  colClasses = c(depth_ft = "character", arms_num = "character")
+  colClasses = c(
+    depth_ft = "character",
+    arms_num = "character",
+    retrieval_year = "character"
+  )
 )
 str(meta)
 View(meta)
