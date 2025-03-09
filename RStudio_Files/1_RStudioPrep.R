@@ -1,3 +1,4 @@
+# 1 RStudio Preparation ###########
 ## Open RStudio ================================================================
 ### Install and Load R Libraries ------------------------------------------------
 # These are the libraries that will be used for this pipeline. Not all will be
@@ -57,7 +58,8 @@ sapply(dir_names, dir.create, recursive = TRUE)
 download <- list.files(
   path = "/Users/USERNAME/Downloads",
   pattern = "^dataset.*\\.zip$",
-  full.names = TRUE)
+  full.names = TRUE
+)
 # Confirm that you have found the correct (and only!) folder.
 download
 # This will unzip the downloaded folder into your working directory
