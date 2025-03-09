@@ -677,8 +677,7 @@ write.table(
   file = "data/results/PROJECTNAME_feature-table_md5.tsv",
   quote = FALSE,
   sep = "\t",
-  row.names = TRUE,
-  col.names = NA
+  row.names = FALSE
 )
 
 ## Export Representative Sequences table/fasta =================================
