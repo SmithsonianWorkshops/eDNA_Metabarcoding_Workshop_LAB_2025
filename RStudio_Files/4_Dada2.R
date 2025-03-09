@@ -235,7 +235,7 @@ names(sequence_counts_filtered) <- sample_names_filtered
 sequence_counts_filtered
 
 
-# Export out as a tsv
+# Export filtered_summary as a tsv
 write.table(
   filtered_summary,
   file = "data/results/filtered_read_count.tsv",
@@ -545,8 +545,7 @@ write.table(
   file = "data/results/track_reads_table.tsv",
   quote = FALSE,
   sep = "\t",
-  row.names = FALSE,
-  col.names = NA
+  row.names = FALSE
 )
 
 ## Export Sequence-Table =======================================================
