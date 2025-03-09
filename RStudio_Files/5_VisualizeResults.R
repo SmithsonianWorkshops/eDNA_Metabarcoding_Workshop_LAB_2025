@@ -188,6 +188,15 @@ meta <- read.delim(
 str(meta)
 View(meta)
 
+# You can look at the different variables and see how many different values
+# there are
+unique(read_count_asv_count_expected_asv_meta$Sample_ID)
+unique(read_count_asv_count_expected_asv_meta$fraction)
+unique(read_count_asv_count_expected_asv_meta$depth_ft)
+unique(read_count_asv_count_expected_asv_meta$retrieval_year)
+# You can also see how many insances of each value there are
+table(rarecurve_df_meta$depth_ft)
+
 # Your metadata may have samples that are not on this run, so you can perform
 # a left_join to add the metadata only to the samples that you are analyzing.
 # Lets add the metadata to our dataframe containing read counts, ASV counts, and
@@ -294,23 +303,13 @@ rarecurve_df_meta <- left_join(
 )
 head(rarecurve_df_meta)
 
-# You can look at the different variables and see how many different values
-# there are
-unique(rarecurve_df_meta$Sample_ID)
-unique(rarecurve_df_meta$fraction)
-unique(rarecurve_df_meta$depth_ft)
-unique(rarecurve_df_meta$retrieval_year)
-# You can also see how many insances of each value there are
-table(rarecurve_df_meta$fraction)
-table(rarecurve_df_meta$depth_ft)
-
 # Make a line plot of this data.
 rarecurve_df_meta_plot <- ggplot(rarecurve_df_meta) +
   geom_line(
     aes(
       x = reads,
       y = ASVs,
-      color = fraction,
+      color = Thermo_type,
       linetype = depth_ft,
     ),
     linewidth = 0.75
@@ -324,7 +323,7 @@ rarecurve_df_meta_plot <- ggplot(rarecurve_df_meta) +
     aes(
       x = reads,
       y = ASVs,
-      color = fraction,
+      color = Thermo_type,
       linetype = depth_ft,
       group = Sample_ID
     ),
@@ -379,13 +378,6 @@ head(nmds_scores_meta)
 nmds_scores_meta_plot <- ggplot(nmds_scores_meta, aes(x = NMDS1, y = NMDS2)) +
   geom_point(size = 4, aes(fill = depth_ft, color = depth_ft, shape = fraction))
 nmds_scores_meta_plot
-# I want
-# define hidden vegan function that finds coordinates for drawing a covariance ellipse
-veganCovEllipse <- function(cov, center = c(0, 0), scale = 1, npoints = 100) {
-  theta <- (0:npoints) * 2 * pi / npoints
-  Circle <- cbind(cos(theta), sin(theta))
-  t(center + scale * t(Circle %*% chol(cov)))
-}
 
 
 # We can do some very basic statistics to see if these factors are significantly
@@ -400,10 +392,10 @@ anosim_depth <- anosim(
 )
 anosim_depth
 # Then, looking at fraction
-anosim_fraction <- anosim(
+anosim_thermo <- anosim(
   x = seqtab_nochim_md5,
-  grouping = read_count_asv_count_expected_asv_meta$fraction,
+  grouping = read_count_asv_count_expected_asv_meta$Thermo_type,
   permutations = 9999,
   distance = "bray"
 )
-anosim_fraction
+anosim_thermo
