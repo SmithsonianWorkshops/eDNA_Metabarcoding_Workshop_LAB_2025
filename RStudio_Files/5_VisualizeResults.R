@@ -20,6 +20,7 @@ read_count <- enframe(rowSums(seqtab_nochim_md5)) %>%
     reads = value
   )
 View(read_count)
+
 # We can plot this out in a bar plot
 read_count_plot <- ggplot(read_count, aes(x = Sample_ID, y = reads)) +
   geom_bar(stat = "identity") +
