@@ -251,7 +251,7 @@ read_count_asv_count_meta_plot <- ggplot(
 ) +
   geom_point(
     size = 4,
-    aes(fill = depth_ft, color = depth_ft, shape = fraction)
+    aes(fill = depth_ft, color = depth_ft, shape = Thermo_type)
   ) +
   scale_x_continuous(labels = scales::comma)
 read_count_asv_count_meta_plot
