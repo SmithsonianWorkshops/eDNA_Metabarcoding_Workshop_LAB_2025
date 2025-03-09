@@ -172,6 +172,9 @@ filtered_R <- file.path(
     "_R_filt.fastq.gz"
   )
 )
+# Give filtered_F and filtered_R names.
+names(filtered_F) <- sample_names_trimmed
+names(filtered_R) <- sample_names_trimmed
 
 # filterAndTrim filters all reads depending upon the quality (as assigned by the
 # user) and trims the ends off the reads for all samples as determined by the
