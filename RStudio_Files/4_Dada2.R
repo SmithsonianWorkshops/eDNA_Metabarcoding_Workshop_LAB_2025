@@ -33,20 +33,19 @@ trimmed_R <- sort(list.files(
 ))
 
 
-# Make sure you have the correct number of samples, and that they match the
-# number of sample names you made in the previous section (2a or 2b: Cutadapt).
+# Look at the number of samples you have to trim (trimmed_F and trimmed_R should
+# match).
 length(trimmed_F)
 length(trimmed_R)
-length(sample_names_raw)
 
-# Make a new vector of sample names containing only trimmed reads
+# Make a new vector of sample names from your trimmed reads.
 sample_names_trimmed <- sapply(strsplit(basename(trimmed_F), "_"), `[`, 1)
 head(sample_names_trimmed)
 length(sample_names_trimmed)
 
 # Now count the number of reads in each trimmed sample. Since cutadapt only
-# keeps paired reads, again we only need to count forward samples
-
+# keeps paired reads, and we've already seen that we have the same number of
+# forward and reverse trimmed reads, we only need to count forward samples
 sequence_counts_trimmed <- sapply(trimmed_F, function(file) {
   fastq_data <- readFastq(file)
   length(fastq_data)
