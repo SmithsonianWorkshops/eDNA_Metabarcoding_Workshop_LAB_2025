@@ -9,17 +9,14 @@ read_count
 
 # Create a dataframe of the number of reads for each sample instead of a named
 # vector
-read_count <- enframe(rowSums(seqtab_nochim_md5))
+read_count <- enframe(
+  rowSums(seqtab_nochim_md5),
+  name = "Sample_ID",
+  value = "reads")
 View(read_count)
 read_count
 
-# Now do again while changing column names
-read_count <- enframe(rowSums(seqtab_nochim_md5)) %>%
-  rename(
-    Sample_ID = name,
-    reads = value
-  )
-View(read_count)
+
 
 # We can plot this out in a bar plot
 read_count_plot <- ggplot(read_count, aes(x = Sample_ID, y = reads)) +
@@ -33,15 +30,16 @@ read_count_plot
 
 # We can also look at the number of ASVs for each sample, first by creating a
 # dataframe of the number of ASVs for each sample
-asv_count <- enframe(apply(
-  seqtab_nochim_md5,
-  1,
+asv_count <- enframe(
+  apply(
+    seqtab_nochim_md5,
+    1,
   function(row) sum(row != 0)
-)) %>%
-  rename(
-    Sample_ID = name,
-    ASVs = value
-  )
+ ),
+ name = "Sample_ID",
+ value = "ASVs"
+)
+
 # and plotting this out in a bar plot
 asv_count_plot <- ggplot(asv_count, aes(x = Sample_ID, y = ASVs)) +
   geom_bar(stat = "identity") +
@@ -74,11 +72,12 @@ raremin <- min(rowSums(seqtab_nochim_md5))
 # Then we can use this value and the vegan command rarefy to calculate the
 # expected number of ASVs for each sample if all had the same number of reads
 # as the smallest sample.
-asv_count_rarefied <- enframe(rarefy(seqtab_nochim_md5, raremin)) %>%
-  rename(
-    Sample_ID = name,
-    expected_ASVs = value
-  )
+asv_count_rarefied <- enframe(
+  rarefy(seqtab_nochim_md5, raremin),
+  name = "Sample_ID",
+  value = "expected_ASVs"
+)
+
 asv_rarefied_plot <- ggplot(
   asv_count_rarefied,
   aes(x = Sample_ID, y = expected_ASVs)
@@ -121,11 +120,12 @@ hist(shannon)
 
 
 # We can make a dataframe of Shannon-Weaver index measures per sample
-shannon_sample <- enframe(shannon) %>%
-  rename(
-    Sample_ID = name,
-    shannon = value
-  )
+shannon_sample <- enframe(
+  shannon,
+  name = "Sample_ID",
+  value = "shannon"
+)
+
 # And plot them
 shannon_plot <- ggplot(shannon_sample, aes(x = Sample_ID, y = shannon)) +
   geom_bar(stat = "identity") +
@@ -137,11 +137,12 @@ shannon_plot <- ggplot(shannon_sample, aes(x = Sample_ID, y = shannon)) +
 shannon_plot
 
 # We can do the same for the Simpson index
-simpson_sample <- enframe(simpson) %>%
-  rename(
-    Sample_ID = name,
-    simpson = value
-  )
+simpson_sample <- enframe(
+  simpson,
+  name = "Sample_ID",
+  value = "simpson"
+)
+
 simpson_plot <- ggplot(simpson_sample, aes(x = Sample_ID, y = simpson)) +
   geom_bar(stat = "identity") +
   scale_y_continuous(labels = scales::comma) +
