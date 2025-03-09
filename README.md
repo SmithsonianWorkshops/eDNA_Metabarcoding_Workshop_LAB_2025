@@ -104,6 +104,6 @@ Here we learn how to import and convert read count data from various formats to 
 
 ## Create a custom database
 
-In this section we will use the [refdb R package](https://github.com/fkeck/refdb) and the just-released [BOLDconnectR](https://github.com/boldsystems-central/BOLDconnectR) to create a custom reference database using sequences from both [BOLD](https://v4.boldsystems.org/) and [NCBI](https://www.ncbi.nlm.nih.gov/). Open [9_CustomDatabases.R](RStudio_Files/9_CustomDatabases.R) and follow the directions.
+In this section we will use the [refdb R package](https://github.com/fkeck/refdb) and the just-released [BOLDconnectR](https://github.com/boldsystems-central/BOLDconnectR) to create a custom reference database using sequences from both [BOLD](https://v4.boldsystems.org/) and [NCBI](https://www.ncbi.nlm.nih.gov/). Open [9_CustomDatabases.R](RStudio_Files/9_CustomDatabases.R) and follow the directions. 
 
 
