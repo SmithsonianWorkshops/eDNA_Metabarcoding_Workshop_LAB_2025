@@ -206,7 +206,7 @@ filtered_summary <- filterAndTrim(
   filtered_R,
   truncLen = c(X, Y),
   maxN = 0,
-  maxEE = c(2, 2),
+  maxEE = c(4, 4),
   rm.phix = TRUE,
   truncQ = 2,
   compress = TRUE,
