@@ -44,8 +44,7 @@ head(sample_names_trimmed)
 length(sample_names_trimmed)
 
 # Now count the number of reads in each trimmed sample. Since cutadapt only
-# keeps paired reads, and we've already seen that we have the same number of
-# forward and reverse trimmed reads, we only need to count forward samples
+# keeps paired reads, we only need to count forward samples.
 sequence_counts_trimmed <- sapply(trimmed_F, function(file) {
   fastq_data <- readFastq(file)
   length(fastq_data)
