@@ -43,7 +43,7 @@ gunzip(paste0("ref/", dest_file), remove = TRUE)
 # taxLevels defines what taxonomic rank each of the levels shown in the above
 # example represents.
 
-taxoomy <- assignTaxonomy(
+taxonomy <- assignTaxonomy(
   seqtab_nochim,
   "ref/midori_COI_genus_dada2.fasta",
   taxLevels = c(
