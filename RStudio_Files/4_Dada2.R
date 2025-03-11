@@ -73,7 +73,7 @@ trimmed_R_exists <- trimmed_R[
   file.size(trimmed_F) > 50 & file.size(trimmed_R) > 50
 ]
 length(trimmed_R_exists)
-file_size(trimmed_F_exists)
+file.size(trimmed_F_exists)
 
 # Redefine trimmed_F and trimmed_R as only the existing read files, and check
 trimmed_F <- trimmed_F_exists # nolint: object_name_linter.
