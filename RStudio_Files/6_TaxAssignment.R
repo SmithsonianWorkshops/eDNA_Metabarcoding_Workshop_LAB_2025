@@ -17,6 +17,7 @@ dest_file <- sub("\\?dl=1$", "", basename(reference_url))
 download.file(reference_url, paste0("ref/", dest_file), mode = "wb")
 gunzip(paste0("ref/", dest_file), remove = TRUE)
 
+
 ## Assign Taxonomy With DADA2 ==================================================
 # Assign taxonomy using the RDP naive Bayesian classifier. tryRC determines
 # whether to also include the reverse
