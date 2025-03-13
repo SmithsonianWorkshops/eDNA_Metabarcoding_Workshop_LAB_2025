@@ -55,12 +55,12 @@ lulu_matchlist <- lulu_blast %>%
 
 ## Run Lulu Analysis ===========================================================
 # We need our feature-table, but need to have ASV as rownames instead of a
-# named column (columns can only be count).
+# named column (columns can only be counts).
 seqtab_nochim_transpose_md5_lulu <- seqtab_nochim_transpose_md5 %>%
   column_to_rownames(var = "ASV")
 
 # Curate the feature table using lulu. This gives a curated table and various
-# information and statistics in an object
+# information and statistics in an object list.
 curated_result <- lulu(
   seqtab_nochim_transpose_md5_lulu,
   lulu_matchlist,
