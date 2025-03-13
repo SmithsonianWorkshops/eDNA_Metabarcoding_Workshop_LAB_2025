@@ -8,6 +8,7 @@
 # Load all R packages you may need, if necessary
 library(tidyverse)
 library(dada2)
+library(data.table)
 
 list.files("data/results")
 
@@ -121,19 +122,15 @@ seqtab_md5_PROJECT_MISEQRUN <- transpose(
   feattab_md5_PROJECT_MISEQRUN,
   keep.names = "Sample",
   make.names = 1
-)
-
-# Convert the first column into rownames to match the format of the DADA2 output
-row.names(seqtab_PROJECT_MISEQRUN) <- seqtab_PROJECT_MISEQRUN[, 1]
-
-# Remove the 1st column, which is now a duplicate of the row names
-seqtab_PROJECT_MISEQRUN <- seqtab_PROJECT_MISEQRUN[, -1]
+) %>%
+  column_to_rownames(var = "Sample")
 
 # Finally, convert the data.frame into a matrix, as required by DADA2
 seqtab_PROJECT_MISEQRUN <- as.matrix(seqtab_PROJECT_MISEQRUN)
 
 # Look at your newly MISEQRUN sequence-table for PROJECT.
 View(seqtab_PROJECT_MISEQRUN)
+
 ### Sequence-List_Table to Feature-Table ---------------------------------------
 
 # Convert your tall (and tidy) table into a wide table, in form like a
