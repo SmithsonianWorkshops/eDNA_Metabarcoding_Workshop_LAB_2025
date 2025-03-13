@@ -188,15 +188,6 @@ meta <- read.delim(
 str(meta)
 View(meta)
 
-# You can look at the different variables and see how many different values
-# there are
-unique(read_count_asv_count_expected_asv_meta$Sample_ID)
-unique(read_count_asv_count_expected_asv_meta$fraction)
-unique(read_count_asv_count_expected_asv_meta$depth_ft)
-unique(read_count_asv_count_expected_asv_meta$retrieval_year)
-# You can also see how many insances of each value there are
-table(rarecurve_df_meta$depth_ft)
-
 # Your metadata may have samples that are not on this run, so you can perform
 # a left_join to add the metadata only to the samples that you are analyzing.
 # Lets add the metadata to our dataframe containing read counts, ASV counts, and
@@ -208,6 +199,14 @@ read_count_asv_count_expected_asv_meta <- left_join(
 )
 View(read_count_asv_count_expected_asv_meta)
 
+# You can look at the different variables and see how many different values
+# there are
+unique(read_count_asv_count_expected_asv_meta$Sample_ID)
+unique(read_count_asv_count_expected_asv_meta$fraction)
+unique(read_count_asv_count_expected_asv_meta$depth_ft)
+unique(read_count_asv_count_expected_asv_meta$retrieval_year)
+# You can also see how many insances of each value there are
+table(read_count_asv_count_expected_asv_meta$depth_ft)
 
 # Lets go back to our original read_count and asv_count plots, but use the new
 # dataframe we just created that has both counts and expected ASV, but lets
