@@ -78,7 +78,7 @@ We use [Cutadapt](https://cutadapt.readthedocs.io/en/stable/index.html) to remov
 
 ## Visualize Results
 
-Here we use priarily [vegan](https://github.com/vegandevs/vegan) programs to visualize your results. We will explore our results multiple ways. Open [5_VisualizeResults.R](RStudio_Files/5_VisualizeResults.R) and follow the directions. vegan is a very expansive diversity tool and what we do here is only a fraction of it's capabilities. [vegan vignetes](https://vegandevs.r-universe.dev/vegan) is one place to go to find lots of links other aspects of the program, although it gets a little into the weeds. Most of the visualization for this pipeline is from an unaffiliated website [Vegan tutorial](https://peat-clark.github.io/BIO381/veganTutorial.html).
+Here we use primarily [vegan](https://github.com/vegandevs/vegan) to visualize your results. We will explore our results multiple ways. Open [5_VisualizeResults.R](RStudio_Files/5_VisualizeResults.R) and follow the directions. vegan is a very expansive diversity tool and what we do here is only a fraction of it's capabilities. [vegan vignetes](https://vegandevs.r-universe.dev/vegan) is one place to go to find lots of links other aspects of the program, although it gets a little into the weeds. Most of the visualization for this pipeline is from an unaffiliated website [Vegan tutorial](https://peat-clark.github.io/BIO381/veganTutorial.html).
 
 ## Assign Taxonomy
 
