@@ -51,6 +51,8 @@ sequence_counts_trimmed <- sapply(trimmed_F, function(file) {
 })
 names(sequence_counts_trimmed) <- sample_names_trimmed
 print(sequence_counts_trimmed)
+# Look at this
+sequence_counts_trimmed
 
 # !!!!!!! You should not have to do this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ### Remove empty sample files --------------------------------------------------
@@ -116,7 +118,7 @@ quality_plot_F
 # starts at 190 bp, ends at 220 bp, and has axis ticks every 2 bp.
 quality_plot_F +
   scale_x_continuous(limits = c(250, 290), breaks = seq(250, 290, 5))
-
+# Export this plot as a pdf
 ggsave(
   "data/results/qualplotF.pdf",
   plot = quality_plot_F,
@@ -132,7 +134,7 @@ quality_plot_R <- plotQualityProfile(
 quality_plot_R
 quality_plot_R +
   scale_x_continuous(limits = c(250, 290), breaks = seq(250, 290, 5))
-
+# Export this plot as a pdf
 ggsave(
   "data/results/qualplotR.pdf",
   plot = quality_plot_R,
@@ -234,6 +236,7 @@ sequence_counts_filtered <- sapply(filtered_F, function(file) {
   fastq_data <- readFastq(file)
   length(fastq_data)
 })
+# Name the counts with sample names
 names(sequence_counts_filtered) <- sample_names_filtered
 sequence_counts_filtered
 
@@ -276,6 +279,10 @@ errors_F <- learnErrors(
   verbose = FALSE
 )
 
+# If you save Sys.time() as two objects at the start and end of your function,
+# then subract the start time from the end time, you get a quick and dirty way
+# to see how long your function took to run. You need to select the function and
+# both start and end times and run them all together.
 start <- Sys.time()
 errors_R <- learnErrors(
   filtered_R,
@@ -302,12 +309,14 @@ error_plots_F <- plotErrors(errors_F, nominalQ = TRUE)
 error_plots_F
 error_plots_R <- plotErrors(errors_R, nominalQ = TRUE)
 error_plots_R
+# Export this plot as a pdf
 ggsave(
   "data/results/errorplotsF.pdf",
   plot = error_plots_F,
   width = 9,
   height = 9
 )
+# Export this plot as a pdf
 ggsave(
   "data/results/errorplotsR.pdf",
   plot = error_plots_R,
@@ -365,8 +374,8 @@ save(
 ## Merge Paired Sequences ======================================================
 
 # Here we merge the paired reads. merged calls for the forward denoising result
-# (denoised_F), then the forward filtered and truncated reads (filtered_F), then the
-# same for the reverse reads (denoised_R and filtered_R).
+# (denoised_F), then the forward filtered and truncated reads (filtered_F),
+# then the same for the reverse reads (denoised_R and filtered_R).
 
 # You can change the minimum overlap (minOverlap), and the number of mismatches
 # that are allowed in the overlap region (maxMismatch). Default values are
@@ -415,6 +424,7 @@ seqtab_nochim <- removeBimeraDenovo(
   verbose = TRUE
 )
 # We look at the dimensions of the new sequence-table
+dim(seqtab)
 dim(seqtab_nochim)
 
 # Make a list of the ASVs that are considered chimeras, in case you want to look
